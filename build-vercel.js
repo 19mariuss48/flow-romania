@@ -11,11 +11,10 @@ function copyDir(src, dest) {
   }
 }
 
-fs.rmSync('.vercel/output', { recursive: true, force: true });
+// Nitro automatically creates .vercel/output/config.json, so we just add to it.
 fs.mkdirSync('.vercel/output/functions/__server.func', { recursive: true });
 fs.mkdirSync('.vercel/output/static', { recursive: true });
 
-fs.copyFileSync('dist/config.json', '.vercel/output/config.json');
 copyDir('dist/server', '.vercel/output/functions/__server.func');
 copyDir('dist/client', '.vercel/output/static');
 
