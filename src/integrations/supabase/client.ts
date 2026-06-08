@@ -15,7 +15,9 @@ function createSupabaseClient() {
     ];
     const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Connect Supabase in Lovable Cloud.`;
     console.error(`[Supabase] ${message}`);
-    throw new Error(message);
+    // Do not throw so Vercel doesn't crash. Use dummy credentials
+    SUPABASE_URL = "http://localhost:54321";
+    SUPABASE_PUBLISHABLE_KEY = "eyJh...";
   }
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {

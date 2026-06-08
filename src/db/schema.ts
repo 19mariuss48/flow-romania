@@ -122,3 +122,17 @@ export const verification = mysqlTable("verification", {
 	createdAt: datetime('createdAt'),
 	updatedAt: datetime('updatedAt')
 });
+
+export const applications = mysqlTable("applications", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  user_id: varchar("user_id", { length: 36 }).notNull().references(() => profiles.id, { onDelete: 'cascade' }),
+  type: varchar("type", { length: 50 }).notNull(),
+  character_name: varchar("character_name", { length: 255 }).notNull(),
+  age: int("age").notNull(),
+  playtime_hours: int("playtime_hours").notNull(),
+  motivation: text("motivation").notNull(),
+  status: varchar("status", { length: 50 }).default("in_asteptare").notNull(),
+  admin_response: text("admin_response"),
+  created_at: datetime("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  updated_at: datetime("updated_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
