@@ -52,7 +52,6 @@ type DatabaseProfile = {
   avatar_url: string | null;
   character_name: string | null;
   faction: string | null;
-  reputation: number;
   bio: string | null;
   fivem_connected: boolean;
   fivem_username: string | null;
@@ -184,7 +183,7 @@ function ProfilePage() {
       const { data, error } = await supabase
         .from("profiles")
         .select(`
-          id, username, display_name, avatar_url, character_name, faction, reputation, bio,
+          id, username, display_name, avatar_url, character_name, faction, bio,
           fivem_connected, fivem_username, fivem_license, fivem_discord_id, fivem_steam_hex,
           fivem_cash, fivem_bank, fivem_job, fivem_playtime, fivem_character_data, fivem_synced_at
         `)
@@ -201,7 +200,6 @@ function ProfilePage() {
         avatar_url: data.avatar_url,
         character_name: data.character_name,
         faction: data.faction,
-        reputation: data.reputation || 0,
         bio: data.bio,
         fivem_connected: data.fivem_connected ?? false,
         fivem_username: data.fivem_username ?? null,
@@ -262,7 +260,6 @@ function ProfilePage() {
         username: user.email?.split("@")[0] || "jucator",
         display_name: user.email?.split("@")[0] || "Jucător",
         avatar_url: localStorage.getItem(`flowro_avatar_${user.id}`) || "",
-        reputation: 0,
         fivem_connected: false
       };
       setProfile(mockProfile as any);
@@ -922,12 +919,7 @@ function ProfilePage() {
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-white/5 flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] text-muted-foreground tracking-wider">REPUTAȚIE COMUNITATE</span>
-                    <span className="text-lg font-light text-silver-gradient">{profile.reputation} REP</span>
-                  </div>
-                  
+                <div className="pt-2 border-t border-white/5 flex items-center justify-end">
                   <Button 
                     type="submit" 
                     disabled={updatingProfile}

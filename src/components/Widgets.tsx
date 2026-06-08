@@ -19,11 +19,11 @@ const topics = [
 ];
 
 const members = [
-  { n: "alexandru.r", rep: 2840, rank: "Fondator" },
-  { n: "mirela.s", rep: 1920, rank: "Administrator" },
-  { n: "cristian.b", rep: 1741, rank: "Moderator" },
-  { n: "andreea.v", rep: 1503, rank: "Veteran" },
-  { n: "vlad.n", rep: 1389, rank: "Veteran" },
+  { n: "alexandru.r", rank: "Fondator" },
+  { n: "mirela.s", rank: "Administrator" },
+  { n: "cristian.b", rank: "Moderator" },
+  { n: "andreea.v", rank: "Veteran" },
+  { n: "vlad.n", rank: "Veteran" },
 ];
 
 export function Widgets() {
@@ -59,10 +59,6 @@ export function Widgets() {
                 <div className="flex-1 min-w-0">
                   <div className="text-sm text-foreground truncate">{m.n}</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground">{m.rank}</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm text-silver-gradient font-medium">{m.rep.toLocaleString()}</div>
-                  <div className="text-[9px] tracking-widest text-muted-foreground">REP</div>
                 </div>
               </li>
             ))}

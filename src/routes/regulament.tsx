@@ -696,10 +696,10 @@ function RegulamentPage() {
             </div>
 
             {/* Premium IP.Board style locked announcements box */}
-            <div className="max-w-5xl mx-auto bg-[#0a0c16]/80 border border-white/5 rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-md">
+            <div className="max-w-5xl mx-auto glass border border-white/10 rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-md">
               
               {/* Box Top Header */}
-              <div className="flex justify-between items-center px-6 py-4 bg-[#0f1122] border-b border-white/5">
+              <div className="flex justify-between items-center px-6 py-4 bg-white/5 border-b border-white/10">
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="text-[10px] tracking-[0.25em] font-bold text-silver uppercase">Anunțuri Oficiale / Subiecte Importante</span>

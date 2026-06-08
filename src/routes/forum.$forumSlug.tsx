@@ -338,7 +338,7 @@ function SubForumPage() {
                         <div className="text-[10px] text-muted-foreground tracking-widest uppercase">VIZUALIZĂRI</div>
                         <div className="text-xs font-semibold text-silver font-mono flex items-center gap-1 justify-end">
                           <Eye className="h-3.5 w-3.5 text-muted-foreground/60" />
-                          {thread.views_count.toLocaleString()}
+                          {typeof thread.views_count === 'number' ? thread.views_count.toLocaleString() : (thread.views_count || 0)}
                         </div>
                       </div>
 

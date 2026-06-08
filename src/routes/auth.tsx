@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -84,7 +84,7 @@ function SignInForm({ onForgotPassword }: { onForgotPassword: () => void }) {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await authClient.signIn.email({ email, password });
     setLoading(false);
     if (error) toast.error(error.message);
     else toast.success("Bine ai revenit pe FLOW.");
@@ -145,20 +145,16 @@ function SignUpForm() {
     if (username.length < 3) return toast.error("Numele de utilizator trebuie să aibă cel puțin 3 caractere.");
     if (password.length < 8) return toast.error("Parola trebuie să aibă cel puțin 8 caractere.");
     setLoading(true);
-    const redirectUrl = `${window.location.origin}/`;
-    const { error } = await supabase.auth.signUp({
+    const { error } = await authClient.signUp.email({
       email,
       password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: { username, display_name: username },
-      },
+      name: username,
     });
     setLoading(false);
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("Contul a fost creat. Verifică-ți căsuța poștală pentru a valida adresa de email.");
+      toast.success("Contul a fost creat cu succes.");
     }
   };
 
@@ -208,9 +204,9 @@ function RecoveryForm({ onBack }: { onBack: () => void }) {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const redirectUrl = `${window.location.origin}/auth`;
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: redirectUrl,
+    const { error } = await authClient.forgetPassword({
+      email,
+      redirectTo: `${window.location.origin}/auth`,
     });
     setLoading(false);
     if (error) {

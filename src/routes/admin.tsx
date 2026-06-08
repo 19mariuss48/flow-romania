@@ -100,7 +100,7 @@ function AdminPage() {
       try {
         const { data, error } = await supabase
           .from("profiles")
-          .select("id, username, display_name, avatar_url, faction, bio, created_at, reputation")
+          .select("id, username, display_name, avatar_url, faction, bio, created_at")
           .order("created_at", { ascending: false });
 
         if (error) throw error;
@@ -144,10 +144,13 @@ function AdminPage() {
       return ["Jucător", "Polițist", "Tester Poliție", "Chestor General", "Medic", "Tester Medic", "Director General", "Moderator", "Administrator", "Fondator"];
     }
     if (currentUserFaction === "Chestor General") {
-      return ["Jucător", "Polițist", "Tester Poliție"];
+      return ["Jucător", "Polițist", "Tester Poliție", "Chestor General"];
     }
     if (currentUserFaction === "Director General") {
-      return ["Jucător", "Medic", "Tester Medic"];
+      return ["Jucător", "Medic", "Tester Medic", "Director General"];
+    }
+    if (currentUserFaction === "Moderator") {
+      return ["Jucător", "Moderator"];
     }
     return ["Jucător"];
   };
@@ -303,18 +306,17 @@ function AdminPage() {
                     <tr>
                       <th className="px-6 py-4 font-semibold">Jucător</th>
                       <th className="px-6 py-4 font-semibold">Grad / Faction</th>
-                      <th className="px-6 py-4 font-semibold">Reputație</th>
                       <th className="px-6 py-4 font-semibold text-right">Acțiuni</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {loadingProfiles ? (
                       <tr>
-                        <td colSpan={4} className="px-6 py-8 text-center text-xs animate-pulse">Se încarcă jucătorii...</td>
+                        <td colSpan={3} className="px-6 py-8 text-center text-xs animate-pulse">Se încarcă jucătorii...</td>
                       </tr>
                     ) : filteredProfiles.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="px-6 py-8 text-center text-xs">Niciun utilizator găsit.</td>
+                        <td colSpan={3} className="px-6 py-8 text-center text-xs">Niciun utilizator găsit.</td>
                       </tr>
                     ) : (
                       filteredProfiles.map((p) => (
@@ -346,7 +348,6 @@ function AdminPage() {
                               {(p.faction === "Administrator" || p.faction?.includes("Admin")) ? "Fondator" : (p.faction || "Jucător")}
                             </span>
                           </td>
-                          <td className="px-6 py-3 font-mono text-[10px]">{p.reputation || 0} REP</td>
                           <td className="px-6 py-3 text-right">
                             <div className="flex items-center justify-end gap-2">
                               <Button 

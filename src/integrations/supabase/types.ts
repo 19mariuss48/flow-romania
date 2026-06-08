@@ -23,7 +23,6 @@ export type Database = {
           display_name: string | null
           faction: string | null
           id: string
-          reputation: number
           updated_at: string
           username: string
           fivem_connected: boolean
@@ -46,7 +45,6 @@ export type Database = {
           display_name?: string | null
           faction?: string | null
           id: string
-          reputation?: number
           updated_at?: string
           username: string
           fivem_connected?: boolean
@@ -69,7 +67,6 @@ export type Database = {
           display_name?: string | null
           faction?: string | null
           id?: string
-          reputation?: number
           updated_at?: string
           username?: string
           fivem_connected?: boolean

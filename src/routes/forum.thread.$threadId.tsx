@@ -36,21 +36,21 @@ const mockDiscussions: Record<string, { thread: any; posts: any[] }> = {
   "mock-t1": {
     thread: { id: "mock-t1", title: "Actualizare Server v0.9.5 - Note de Patch (Lansare Moduri Noi)", is_pinned: true, is_locked: false, forum_slug: "anunturi", forum_name: "Anunțuri Oficiale" },
     posts: [
-      { id: "p1", user_name: "alexandru.r", avatar_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80", rank: "Fondator", reputation: 2840, content: "Salutare tuturor! Suntem încântați să vă prezentăm notele de patch pentru versiunea v0.9.5 a serverului de joc.\n\nÎn acest update, am implementat:\n1. O nouă gamă de mașini de patrulare pentru Poliție și SMURD.\n2. Optimizări majore ale bazei de date (latența a scăzut la 28ms).\n3. Noul sistem avansat de inventar cu drag-and-drop și sloturi rapide.\n\nVă așteptăm la joc! Lăsați feedback-ul vostru mai jos.", created_at: "2026-05-28T10:00:00.000Z", likes: 42, liked: true },
-      { id: "p2", user_name: "cristian.b", avatar_url: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80", rank: "Moderator", reputation: 1741, content: "Superb update! Noul inventar arată demențial și sloturile rapide ajută foarte mult în scenariile tensionate de roleplay. Felicitări developerilor!", created_at: "2026-05-28T11:20:00.000Z", likes: 12 },
-      { id: "p3", user_name: "andreea.v", avatar_url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&auto=format&fit=crop&q=80", rank: "Veteran", reputation: 1503, content: "Latența scăzută se simte perfect în zonele aglomerate din Los Santos. Jobul de mecanic funcționează acum mult mai fluid! Keep up the good work!", created_at: "2026-05-28T12:05:00.000Z", likes: 8 }
+      { id: "p1", user_name: "alexandru.r", avatar_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80", rank: "Fondator", content: "Salutare tuturor! Suntem încântați să vă prezentăm notele de patch pentru versiunea v0.9.5 a serverului de joc.\n\nÎn acest update, am implementat:\n1. O nouă gamă de mașini de patrulare pentru Poliție și SMURD.\n2. Optimizări majore ale bazei de date (latența a scăzut la 28ms).\n3. Noul sistem avansat de inventar cu drag-and-drop și sloturi rapide.\n\nVă așteptăm la joc! Lăsați feedback-ul vostru mai jos.", created_at: "2026-05-28T10:00:00.000Z", likes: 42, liked: true },
+      { id: "p2", user_name: "cristian.b", avatar_url: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80", rank: "Moderator", content: "Superb update! Noul inventar arată demențial și sloturile rapide ajută foarte mult în scenariile tensionate de roleplay. Felicitări developerilor!", created_at: "2026-05-28T11:20:00.000Z", likes: 12 },
+      { id: "p3", user_name: "andreea.v", avatar_url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&auto=format&fit=crop&q=80", rank: "Veteran", content: "Latența scăzută se simte perfect în zonele aglomerate din Los Santos. Jobul de mecanic funcționează acum mult mai fluid! Keep up the good work!", created_at: "2026-05-28T12:05:00.000Z", likes: 8 }
     ]
   },
   "mock-t4": {
     thread: { id: "mock-t4", title: "Regulament Oficial Jucători FiveM FLOW ROMÂNIA (Obligatoriu Citit)", is_pinned: true, is_locked: true, forum_slug: "regulamente", forum_name: "Regulamente" },
     posts: [
-      { id: "p4", user_name: "mirela.s", avatar_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80", rank: "Administrator", reputation: 1920, content: "Regulamentul oficial al comunității de roleplay FLOW ROMÂNIA.\n\nFiecare jucător este rugat să citească și să asimileze regulile de mai jos:\n1. **Meta-gaming (MG):** Este interzisă utilizarea informațiilor OOC în scopuri IC.\n2. **Power-gaming (PG):** Este interzis roleplay-ul nerealist în care nu dai șanse egale celeilalte persoane.\n3. **Deathmatch (DM):** Uciderea sau rănirea altui jucător fără un motiv solid IC (RP bun) este strict interzisă.\n\nNerespectarea acestor reguli va atrage sancțiuni administrative.", created_at: "2026-05-20T12:00:00.000Z", likes: 104, liked: false }
+      { id: "p4", user_name: "mirela.s", avatar_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80", rank: "Administrator", content: "Regulamentul oficial al comunității de roleplay FLOW ROMÂNIA.\n\nFiecare jucător este rugat să citească și să asimileze regulile de mai jos:\n1. **Meta-gaming (MG):** Este interzisă utilizarea informațiilor OOC în scopuri IC.\n2. **Power-gaming (PG):** Este interzis roleplay-ul nerealist în care nu dai șanse egale celeilalte persoane.\n3. **Deathmatch (DM):** Uciderea sau rănirea altui jucător fără un motiv solid IC (RP bun) este strict interzisă.\n\nNerespectarea acestor reguli va atrage sancțiuni administrative.", created_at: "2026-05-20T12:00:00.000Z", likes: 104, liked: false }
     ]
   },
   "mock-t9": {
     thread: { id: "mock-t9", title: "Recrutări Academia de Poliție deschise (Sesiunea Q2)", is_pinned: true, is_locked: false, forum_slug: "politia-romana", forum_name: "Poliția Română" },
     posts: [
-      { id: "p5", user_name: "andrei.p", avatar_url: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80", rank: "Inspector Poliție", reputation: 840, content: "Inspectoratul de Poliție FLOW anunță deschiderea oficială a sesiunii de recrutare Q2!\n\nCăutăm cetățeni responsabili, disciplinați și dornici de carieră militară.\nCerințe:\n- Vârstă minimă IRL: 16 ani.\n- Minim 20 de ore de joc pe server.\n- Cunoașterea perfectă a codului penal și a regulamentului de poliție.\n\nDepuneți CV-ul (Aplicația) direct prin Panoul de Control al Profilului de pe acest site!", created_at: "2026-05-28T08:00:00.000Z", likes: 35 }
+      { id: "p5", user_name: "andrei.p", avatar_url: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80", rank: "Inspector Poliție", content: "Inspectoratul de Poliție FLOW anunță deschiderea oficială a sesiunii de recrutare Q2!\n\nCăutăm cetățeni responsabili, disciplinați și dornici de carieră militară.\nCerințe:\n- Vârstă minimă IRL: 16 ani.\n- Minim 20 de ore de joc pe server.\n- Cunoașterea perfectă a codului penal și a regulamentului de poliție.\n\nDepuneți CV-ul (Aplicația) direct prin Panoul de Control al Profilului de pe acest site!", created_at: "2026-05-28T08:00:00.000Z", likes: 35 }
     ]
   }
 };
@@ -58,7 +58,7 @@ const mockDiscussions: Record<string, { thread: any; posts: any[] }> = {
 const genericThreadFallback = {
   thread: { id: "mock-generic", title: "Subiect Forum", is_pinned: false, is_locked: false, forum_slug: "discutii-generale", forum_name: "Discuții Generale" },
   posts: [
-    { id: "p-g1", user_name: "alexandru.r", avatar_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80", rank: "Fondator", reputation: 2840, content: "Bine ai venit pe noul forum oficial FLOW ROMÂNIA! Acesta este un subiect demonstrativ deschis pentru a arăta funcționalitatea live a noului sistem de forum.", created_at: "2026-05-30T10:00:00.000Z", likes: 5 }
+    { id: "p-g1", user_name: "alexandru.r", avatar_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80", rank: "Fondator", content: "Bine ai venit pe noul forum oficial FLOW ROMÂNIA! Acesta este un subiect demonstrativ deschis pentru a arăta funcționalitatea live a noului sistem de forum.", created_at: "2026-05-30T10:00:00.000Z", likes: 5 }
   ]
 };
 
@@ -81,7 +81,7 @@ function ThreadDetailPage() {
     if (user) {
       supabase
         .from("profiles")
-        .select("username, display_name, avatar_url, reputation, faction")
+        .select("username, display_name, avatar_url, faction")
         .eq("id", user.id)
         .single()
         .then(({ data }) => {
@@ -98,7 +98,7 @@ function ThreadDetailPage() {
       try {
         const { data } = await supabase
           .from("profiles")
-          .select("username, display_name, avatar_url, reputation, faction")
+          .select("username, display_name, avatar_url, faction")
           .eq("id", user.id)
           .single();
         if (data) {
@@ -153,7 +153,7 @@ function ThreadDetailPage() {
       // 1. Fetch thread details
       const { data: th, error: thError } = await supabase
         .from("forum_threads")
-        .select("id, title, is_pinned, is_locked, forum_id, user_id")
+        .select("id, title, is_pinned, is_locked, forum_id, user_id, views_count")
         .eq("id", threadId)
         .single();
 
@@ -190,7 +190,7 @@ function ThreadDetailPage() {
         const userIds = pts.map(p => p.user_id);
         const { data: prfs } = await supabase
           .from("profiles")
-          .select("id, username, display_name, avatar_url, reputation, faction, fivem_connected, fivem_username, fivem_playtime, fivem_job")
+          .select("id, username, display_name, avatar_url, faction, fivem_connected, fivem_username, fivem_playtime, fivem_job")
           .in("id", userIds);
 
         // Fetch likes for these posts (or simplified likes)
@@ -202,13 +202,9 @@ function ThreadDetailPage() {
             created_at: p.created_at,
             user_name: prf?.display_name || prf?.username || "Jucător",
             avatar_url: prf?.avatar_url || "",
-            rank: prf?.faction || (prf?.reputation && prf.reputation >= 1000 ? "Veteran" : "Jucător"),
-            reputation: prf?.reputation || 0,
-            fivem_connected: prf?.fivem_connected || false,
-            fivem_username: prf?.fivem_username || "",
-            fivem_playtime: prf?.fivem_playtime || 0,
+            rank: prf?.faction || "Jucător",
             fivem_job: prf?.fivem_job || "",
-            likes: Math.floor(Math.random() * 5), // Simplified local mock likes representation
+            likes: Math.floor(Math.random() * 5),
             liked: false
           };
         });
@@ -239,8 +235,10 @@ function ThreadDetailPage() {
   const handlePostReply = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !replyContent.trim()) return;
-
-    // Cooldown check removed so users can reply freely
+    if (threadDetails?.is_locked) {
+      toast.error("Acest subiect este închis! Nu poți adăuga răspunsuri.");
+      return;
+    }
 
     setSubmittingReply(true);
 
@@ -254,7 +252,6 @@ function ThreadDetailPage() {
           user_name: userDisplayName,
           avatar_url: currentUserProfile?.avatar_url || "",
           rank: currentUserProfile?.faction || "Jucător",
-          reputation: currentUserProfile?.reputation || 0,
           content: replyContent,
           created_at: new Date().toISOString(),
           likes: 0,
@@ -297,14 +294,6 @@ function ThreadDetailPage() {
 
       if (error) throw error;
 
-      // Award reputation points for replying to a topic (+5 REP)
-      if (currentUserProfile) {
-        const currentReputation = currentUserProfile.reputation || 0;
-        await supabase
-          .from("profiles")
-          .update({ reputation: currentReputation + 5 })
-          .eq("id", user.id);
-      }
 
       // Set cooldown timestamp
       localStorage.setItem("flowro_last_action_timestamp", Date.now().toString());
@@ -321,7 +310,6 @@ function ThreadDetailPage() {
         user_name: userDisplayName,
         avatar_url: currentUserProfile?.avatar_url || "",
         rank: currentUserProfile?.faction || "Jucător",
-        reputation: currentUserProfile?.reputation || 0,
         content: replyContent,
         created_at: new Date().toISOString(),
         likes: 0,
@@ -344,17 +332,36 @@ function ThreadDetailPage() {
   };
 
   const handleLikePost = (postId: string) => {
+    if (!user) {
+      toast.error("Trebuie să te conectezi pentru a aprecia o postare.");
+      return;
+    }
+    const targetPost = posts.find(p => p.id === postId);
+    if (!targetPost) return;
+
+    const newLikesCount = targetPost.liked ? Math.max(0, targetPost.likes - 1) : targetPost.likes + 1;
+
     setPosts(posts.map(p => {
       if (p.id === postId) {
         return {
           ...p,
           liked: !p.liked,
-          likes: p.liked ? p.likes - 1 : p.likes + 1
+          likes: newLikesCount
         };
       }
       return p;
     }));
-    toast.success("Ai apreciat postarea!");
+
+    if (String(postId).startsWith("local-p-")) {
+      const localPosts = JSON.parse(localStorage.getItem("flowro_local_posts") || "[]");
+      const idx = localPosts.findIndex((p: any) => p.id === postId);
+      if (idx !== -1) {
+        localPosts[idx].likes = newLikesCount;
+        localStorage.setItem("flowro_local_posts", JSON.stringify(localPosts));
+      }
+    }
+
+    toast.success(targetPost.liked ? "Apreciere ștearsă!" : "Ai apreciat postarea!");
   };
 
   // Staff Moderation Actions
@@ -548,7 +555,7 @@ function ThreadDetailPage() {
                   </h1>
                 </div>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
-                  Categorie: {threadDetails.forum_name}
+                  Categorie: {threadDetails.forum_name} • Vizualizări: <span className="text-silver font-bold font-mono">{threadDetails.views_count || 0}</span>
                 </p>
               </div>
 
@@ -626,8 +633,7 @@ function ThreadDetailPage() {
                   ...p,
                   user_name: currentUserProfile.display_name || currentUserProfile.username,
                   avatar_url: currentUserProfile.avatar_url || "",
-                  rank: currentUserProfile.faction || "Jucător",
-                  reputation: currentUserProfile.reputation || 0
+                  rank: currentUserProfile.faction || "Jucător"
                 } : p;
 
                 const isOp = index === 0;
@@ -677,9 +683,6 @@ function ThreadDetailPage() {
                             {mappedRank}
                           </div>
 
-                          <div className="text-[9px] tracking-widest text-muted-foreground uppercase pt-1 font-mono">
-                            REPUTAȚIE: <span className="text-silver font-semibold">{post.reputation} REP</span>
-                          </div>
 
                           {post.fivem_connected && (
                             <div className="text-[9px] tracking-wider text-emerald-400 font-bold uppercase flex items-center justify-center gap-1.5 mt-2 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.08)]">

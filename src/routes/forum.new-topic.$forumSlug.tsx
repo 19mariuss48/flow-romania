@@ -49,7 +49,7 @@ function NewTopicPage() {
     if (user) {
       supabase
         .from("profiles")
-        .select("username, display_name, avatar_url, reputation, faction")
+        .select("username, display_name, avatar_url, faction")
         .eq("id", user.id)
         .single()
         .then(({ data }) => {
@@ -129,14 +129,6 @@ function NewTopicPage() {
 
       if (postError) throw postError;
 
-      // 3. Award reputation points for creating a new topic (+10 REP)
-      if (profile) {
-        const currentReputation = profile.reputation || 0;
-        await supabase
-          .from("profiles")
-          .update({ reputation: currentReputation + 10 })
-          .eq("id", user.id);
-      }
 
       // Set cooldown timestamp
       localStorage.setItem("flowro_last_action_timestamp", Date.now().toString());
@@ -177,7 +169,6 @@ function NewTopicPage() {
         user_name: userDisplayName,
         avatar_url: userAvatar,
         rank: profile?.faction || "Jucător",
-        reputation: profile?.reputation || 0,
         content: content.trim(),
         created_at: newThread.created_at,
         likes: 0,
@@ -218,6 +209,35 @@ function NewTopicPage() {
 
   if (!user) {
     return null;
+  }
+
+  const userRank = profile?.faction || "Jucător";
+  const isSuperAdmin = profile?.username === "19mariuss48" || userRank === "Fondator" || userRank === "Administrator" || userRank?.includes("Admin");
+  
+  let canCreateTopic = true;
+  if (forumSlug.includes("polit") || forumSlug === "politia-romana" || forumSlug === "aplicatii-politie" || forumSlug === "regulament-politie") {
+    canCreateTopic = isSuperAdmin || userRank === "Chestor General";
+  } else if (forumSlug.includes("medic") || forumSlug.includes("smurd") || forumSlug === "spitalul-general" || forumSlug === "aplicatii-smurd" || forumSlug === "regulament-smurd") {
+    canCreateTopic = isSuperAdmin || userRank === "Director General";
+  }
+
+  if (!canCreateTopic) {
+    return (
+      <div className="min-h-screen bg-[#0B0B0B] text-foreground flex flex-col justify-between relative overflow-hidden">
+        <SiteHeader />
+        <main className="flex-1 max-w-4xl w-full mx-auto px-6 pt-32 pb-24 relative z-10 flex flex-col items-center justify-center text-center">
+          <ShieldAlert className="h-16 w-16 text-rose-500 mb-6" />
+          <h1 className="text-2xl font-light text-silver mb-2">ACCES RESTRICȚIONAT</h1>
+          <p className="text-sm text-muted-foreground max-w-md">
+            Nu ai permisiunea necesară pentru a deschide un subiect în această secțiune. Doar liderul facțiunii poate adăuga regulamente sau deschide aplicații.
+          </p>
+          <Button onClick={() => navigate({ to: "/forum/$forumSlug", params: { forumSlug } })} className="mt-8 bg-white text-black">
+            Înapoi la Forum
+          </Button>
+        </main>
+        <SiteFooter />
+      </div>
+    );
   }
 
   return (
