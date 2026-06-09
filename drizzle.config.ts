@@ -5,6 +5,11 @@ export default defineConfig({
   out: "./drizzle",
   dialect: "mysql",
   dbCredentials: {
-    url: process.env.DATABASE_URL || "mysql://root:@localhost:3306/flowro",
+    host: 'serverless-europe-west2.sysp0000.db2.skysql.com',
+    port: 4078,
+    user: 'dbpgf35443969',
+    password: '4SEOQ8xA5Ckj77wdN0(4Q9',
+    database: 'flowro',
+    ssl: "require" as any,
   },
 });
