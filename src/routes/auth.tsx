@@ -154,7 +154,7 @@ function SignUpForm() {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("Contul a fost creat cu succes.");
+      toast.success("Cont creat! Te rugăm să îți verifici emailul pentru activare.");
     }
   };
 

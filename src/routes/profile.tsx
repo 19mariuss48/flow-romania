@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
+import { authClient } from "@/lib/auth-client";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -131,9 +132,11 @@ function ProfilePage() {
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   
   // Password change form fields
+  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [updatingPassword, setUpdatingPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -358,6 +361,10 @@ function ProfilePage() {
         localStorage.setItem(`flowro_avatar_${user.id}`, avatarUrl);
       }
 
+      await authClient.updateUser({
+        name: displayName,
+      });
+
       const { error } = await supabase
         .from("profiles")
         .update({
@@ -383,8 +390,11 @@ function ProfilePage() {
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!currentPassword) {
+      return toast.error("Te rugăm să introduci parola curentă.");
+    }
     if (newPassword.length < 8) {
-      return toast.error("Parola trebuie să aibă cel puțin 8 caractere.");
+      return toast.error("Noua parolă trebuie să aibă cel puțin 8 caractere.");
     }
     if (newPassword !== confirmPassword) {
       return toast.error("Parolele introduse nu coincid.");
@@ -392,9 +402,14 @@ function ProfilePage() {
 
     setUpdatingPassword(true);
     try {
-      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      const { error } = await authClient.changePassword({ 
+        newPassword, 
+        currentPassword,
+        revokeOtherSessions: true 
+      });
       if (error) throw error;
       toast.success("Parola a fost actualizată cu succes!");
+      setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (err: any) {
@@ -943,6 +958,28 @@ function ProfilePage() {
               </h2>
               
               <form onSubmit={handleUpdatePassword} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="prof-cur-pw" className="text-xs text-muted-foreground tracking-wider uppercase">Parola Curentă</Label>
+                  <div className="relative">
+                    <Input 
+                      id="prof-cur-pw" 
+                      type={showCurrentPassword ? "text" : "password"} 
+                      required 
+                      value={currentPassword} 
+                      onChange={(e) => setCurrentPassword(e.target.value)} 
+                      placeholder="Parola actuală a contului"
+                      className="bg-white/5 border-white/10 text-foreground pr-10 text-sm focus:border-white/40" 
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
+                    >
+                      {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="prof-new-pw" className="text-xs text-muted-foreground tracking-wider uppercase">Noua Parolă</Label>
                   <div className="relative">
