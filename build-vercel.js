@@ -20,14 +20,22 @@ copyDir('dist/client', '.vercel/output/static');
 
 // Patch Vercel function configuration to use supported Node.js version
 const vcConfigPath = '.vercel/output/functions/__server.func/.vc-config.json';
+let vcConfig = {
+  "runtime": "nodejs20.x",
+  "handler": "index.mjs",
+  "launcherType": "Nodejs"
+};
+
 if (fs.existsSync(vcConfigPath)) {
-  const vcConfig = JSON.parse(fs.readFileSync(vcConfigPath, 'utf8'));
-  // Vercel only supports up to nodejs22.x currently, defaulting to 20.x for stability
+  vcConfig = JSON.parse(fs.readFileSync(vcConfigPath, 'utf8'));
   if (vcConfig.runtime && vcConfig.runtime.startsWith('nodejs24')) {
     vcConfig.runtime = 'nodejs20.x';
-    fs.writeFileSync(vcConfigPath, JSON.stringify(vcConfig, null, 2));
     console.log('Patched Vercel runtime to nodejs20.x');
   }
+} else {
+  console.log('Created .vc-config.json for Vercel');
 }
+
+fs.writeFileSync(vcConfigPath, JSON.stringify(vcConfig, null, 2));
 
 console.log('Vercel output structure generated successfully!');

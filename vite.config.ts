@@ -7,6 +7,11 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  vite: {
+    ssr: {
+      external: ['better-auth', 'zod', 'kysely']
+    }
+  },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
@@ -14,6 +19,9 @@ export default defineConfig({
   },
   nitro: { 
     preset: "vercel",
+    externals: {
+      external: ["better-auth", "kysely", "zod", "@better-auth/kysely-adapter", "better-auth/adapters/drizzle"]
+    },
     output: { dir: ".vercel/output" }
   }
 });
