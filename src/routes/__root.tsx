@@ -52,6 +52,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">
           Ceva nu a funcționat corect din partea noastră. Poți încerca să reîncarci pagina sau să te întorci la pagina principală.
         </p>
+        <div className="mt-4 p-4 bg-black/50 border border-red-500 rounded text-left overflow-auto text-xs text-red-400">
+          <strong>{error?.name}: {error?.message}</strong>
+          <pre className="mt-2 text-[10px] whitespace-pre-wrap">{error?.stack}</pre>
+        </div>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
