@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+
 import { Link } from "@tanstack/react-router";
 
 type LocalSub = { name: string; topics: number };
@@ -60,23 +60,9 @@ export function ForumIndex() {
     const fetchForumStructure = async () => {
       try {
         setLoading(true);
-        // Fetch categories
-        const { data: cats, error: catsError } = await supabase
-          .from("forum_categories")
-          .select("*")
-          .order("order_index", { ascending: true });
-          
-        if (catsError) throw catsError;
-
-        // Fetch forums
-        const { data: fms, error: fmsError } = await supabase
-          .from("forums")
-          .select("*")
-          .order("order_index", { ascending: true });
-
-        if (fmsError) throw fmsError;
-
-        // Group forums by category, filtering only the target ones
+        throw new Error("Supabase is disabled");
+        const cats: any[] = [];
+        const fms: any[] = [];
         const filteredCats = cats.filter(cat => cat.slug === "flow-romania-ooc" || cat.slug === "flow-romania-ic");
         const structured: LocalCategory[] = filteredCats.map((cat, idx) => {
           const categoryForums = fms.filter(f => f.category_id === cat.id);

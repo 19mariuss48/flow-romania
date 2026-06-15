@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import logo from "@/assets/flow-logo.png";
 import { useAuth } from "@/hooks/use-auth";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,21 +61,7 @@ export function SiteHeader() {
       }
     }
 
-    // Query columns that are guaranteed to exist in database
-    supabase
-      .from("profiles")
-      .select("avatar_url, display_name, username, faction")
-      .eq("id", user.id)
-      .single()
-      .then(({ data }) => {
-        if (data) {
-          if (data.avatar_url) setAvatarUrl(data.avatar_url);
-          if (data.display_name) setDisplayName(data.display_name);
-          if (data.username === "19mariuss48" || data.faction === "Fondator" || data.faction === "Administrator" || data.faction?.includes("Poliți") || data.faction?.includes("Admin")) {
-            setIsAdmin(true);
-          }
-        }
-      });
+
   }, [user]);
 
   const initial = (

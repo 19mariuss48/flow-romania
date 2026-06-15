@@ -2,38 +2,42 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db";
 import { profiles } from "../db/schema";
+import nodemailer from "nodemailer";
 
 async function sendAuthEmail(to: string, subject: string, html: string) {
-  const resendApiKey = process.env.RESEND_API_KEY || process.env.VITE_RESEND_API_KEY;
-  if (!resendApiKey) {
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailPass = process.env.GMAIL_APP_PASSWORD;
+
+  if (!gmailUser || !gmailPass) {
     console.log(`[AUTH EMAIL SIMULATION] To: ${to} | Subject: ${subject}`);
     console.log(`[AUTH EMAIL URL] Extracted URL: ${html.match(/href="([^"]+)"/)?.[1]}`);
     return;
   }
   
   try {
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${resendApiKey}`
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: gmailUser,
+        pass: gmailPass,
       },
-      body: JSON.stringify({
-        from: "FLOW ROMANIA <autentificare@flowromania.ro>",
-        to: [to],
-        subject: subject,
-        html: html
-      })
+    });
+
+    await transporter.sendMail({
+      from: `"Flowromania.RO" <${gmailUser}>`,
+      to,
+      subject,
+      html,
     });
   } catch (err) {
-    console.error("Failed to send auth email:", err);
+    console.error("Failed to send auth email via Gmail:", err);
   }
 }
 
 
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:8080"),
-  trustedOrigins: ["https://flow-romania.vercel.app", "http://localhost:8080", "http://localhost:8081", "http://localhost:5173", process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : ""].filter(Boolean),
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:8080",
+  trustedOrigins: ["http://localhost:8080", "http://localhost:8081", "http://localhost:5173"],
   secret: process.env.BETTER_AUTH_SECRET || "fallback_secret_for_development",
   database: drizzleAdapter(db, {
     provider: "mysql", // or "pg" or "sqlite"
