@@ -12,7 +12,9 @@ export default defineConfig({
       external: ['better-auth', 'zod', 'kysely']
     }
   },
-  tanstackStart: {},
+  tanstackStart: {
+    server: { entry: "server" }
+  },
   nitro: { 
     preset: "vercel",
     externals: {
