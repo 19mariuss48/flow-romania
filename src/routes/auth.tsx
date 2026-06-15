@@ -148,8 +148,7 @@ function SignUpForm() {
     const { error } = await authClient.signUp.email({
       email,
       password,
-      name: username,
-      callbackURL: `${window.location.origin}/`
+      name: username
     });
     setLoading(false);
     if (error) {
