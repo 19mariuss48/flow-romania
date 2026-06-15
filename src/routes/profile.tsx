@@ -10,8 +10,8 @@ import {
   updateFiveMSync, 
   getUserApplications, 
   submitApplication 
-} from "@/lib/api/profile.functions";
-import { updateApplicationStatus } from "@/lib/api/admin.functions";
+} from "@/lib/api/profile.server";
+import { updateApplicationStatus } from "@/lib/api/admin.server";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

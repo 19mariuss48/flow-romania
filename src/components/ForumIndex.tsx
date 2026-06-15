@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getForumStructure } from "@/lib/api/forum.functions";
+import { getForumStructure } from "@/lib/api/forum.server";
 import { Link } from "@tanstack/react-router";
 
 type LocalSub = { name: string; topics: number };

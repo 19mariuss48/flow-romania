@@ -1,8 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { getUserProfile } from "@/lib/api/profile.functions";
-import { getForumDetails, getForumThreads } from "@/lib/api/forum.functions";
+import { getUserProfile } from "@/lib/api/profile.server";
+import { getForumDetails, getForumThreads } from "@/lib/api/forum.server";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";

@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import logo from "@/assets/flow-logo.png";
 import { useAuth } from "@/hooks/use-auth";
 import { useEffect, useState } from "react";
-import { getUserProfile } from "@/lib/api/profile.functions";
+import { getUserProfile } from "@/lib/api/profile.server";
 
 import {
   DropdownMenu,
