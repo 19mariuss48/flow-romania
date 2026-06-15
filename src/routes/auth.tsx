@@ -148,7 +148,8 @@ function SignUpForm() {
     const { error } = await authClient.signUp.email({
       email,
       password,
-      name: username
+      name: username,
+      callbackURL: "https://flow-romania.vercel.app/"
     });
     setLoading(false);
     if (error) {

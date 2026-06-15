@@ -43,6 +43,7 @@ export const auth = betterAuth({
     "http://localhost:8081", 
     "http://localhost:5173", 
     "https://flow-community.vercel.app",
+    "https://flow-romania.vercel.app",
     ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : [])
   ],
   secret: process.env.BETTER_AUTH_SECRET || "fallback_secret_for_development",
