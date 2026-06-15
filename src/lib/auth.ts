@@ -36,8 +36,7 @@ async function sendAuthEmail(to: string, subject: string, html: string) {
 
 
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL || 
-           (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:8080"),
+  baseURL: process.env.BETTER_AUTH_URL || "https://flow-romania.vercel.app",
   trustedOrigins: [
     "http://localhost:8080", 
     "http://localhost:8081", 
