@@ -149,7 +149,7 @@ function SignUpForm() {
       email,
       password,
       name: username,
-      callbackURL: "https://flow-romania.vercel.app/"
+      callbackURL: `${window.location.origin}/`
     });
     setLoading(false);
     if (error) {
