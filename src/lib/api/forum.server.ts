@@ -34,7 +34,7 @@ export const getForumStructure = createServerFn({ method: "GET" })
   });
 
 export const getForumDetails = createServerFn({ method: "POST" })
-  .validator(z.object({ slug: z.string() }))
+  .inputValidator(z.object({ slug: z.string() }))
   .handler(async ({ data }) => {
     const forum = await db.query.forums.findFirst({
       where: eq(forums.slug, data.slug)
@@ -43,7 +43,7 @@ export const getForumDetails = createServerFn({ method: "POST" })
   });
 
 export const getForumThreads = createServerFn({ method: "POST" })
-  .validator(z.object({ forumId: z.string() }))
+  .inputValidator(z.object({ forumId: z.string() }))
   .handler(async ({ data }) => {
     const threads = await db.query.forumThreads.findMany({
       where: eq(forumThreads.forum_id, data.forumId),
@@ -68,7 +68,7 @@ export const getForumThreads = createServerFn({ method: "POST" })
   });
 
 export const getThreadDetails = createServerFn({ method: "POST" })
-  .validator(z.object({ threadId: z.string() }))
+  .inputValidator(z.object({ threadId: z.string() }))
   .handler(async ({ data }) => {
     const thread = await db.query.forumThreads.findFirst({
       where: eq(forumThreads.id, data.threadId)
@@ -112,7 +112,7 @@ export const getThreadDetails = createServerFn({ method: "POST" })
   });
 
 export const createThread = createServerFn({ method: "POST" })
-  .validator(z.object({
+  .inputValidator(z.object({
     forumId: z.string(),
     userId: z.string(),
     title: z.string(),
@@ -143,7 +143,7 @@ export const createThread = createServerFn({ method: "POST" })
   });
 
 export const createPost = createServerFn({ method: "POST" })
-  .validator(z.object({
+  .inputValidator(z.object({
     threadId: z.string(),
     userId: z.string(),
     content: z.string()

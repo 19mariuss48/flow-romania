@@ -5,7 +5,7 @@ import { profiles, applications } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export const getUserProfile = createServerFn({ method: "POST" })
-  .validator(z.object({ userId: z.string() }))
+  .inputValidator(z.object({ userId: z.string() }))
   .handler(async ({ data }) => {
     const profile = await db.query.profiles.findFirst({
       where: eq(profiles.id, data.userId),
@@ -14,7 +14,7 @@ export const getUserProfile = createServerFn({ method: "POST" })
   });
 
 export const updateUserProfile = createServerFn({ method: "POST" })
-  .validator(z.object({
+  .inputValidator(z.object({
     userId: z.string(),
     displayName: z.string().optional(),
     bio: z.string().optional(),
@@ -35,7 +35,7 @@ export const updateUserProfile = createServerFn({ method: "POST" })
   });
 
 export const disconnectFiveM = createServerFn({ method: "POST" })
-  .validator(z.object({ userId: z.string() }))
+  .inputValidator(z.object({ userId: z.string() }))
   .handler(async ({ data }) => {
     await db.update(profiles).set({
       fivem_connected: false,
@@ -54,7 +54,7 @@ export const disconnectFiveM = createServerFn({ method: "POST" })
   });
 
 export const updateFiveMSync = createServerFn({ method: "POST" })
-  .validator(z.object({
+  .inputValidator(z.object({
     userId: z.string(),
     syncData: z.any()
   }))
@@ -68,7 +68,7 @@ export const updateFiveMSync = createServerFn({ method: "POST" })
   });
 
 export const getUserApplications = createServerFn({ method: "POST" })
-  .validator(z.object({ userId: z.string() }))
+  .inputValidator(z.object({ userId: z.string() }))
   .handler(async ({ data }) => {
     const apps = await db.query.applications.findMany({
       where: eq(applications.user_id, data.userId),
@@ -78,7 +78,7 @@ export const getUserApplications = createServerFn({ method: "POST" })
   });
 
 export const submitApplication = createServerFn({ method: "POST" })
-  .validator(z.object({
+  .inputValidator(z.object({
     userId: z.string(),
     type: z.string(),
     characterName: z.string(),

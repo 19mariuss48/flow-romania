@@ -12,7 +12,7 @@ export const getAllProfiles = createServerFn({ method: "POST" })
   });
 
 export const adminUpdateProfile = createServerFn({ method: "POST" })
-  .validator((d: any) => d)
+  .inputValidator((d: any) => d)
   .handler(async ({ data }) => {
     await db.update(profiles).set({
       ...data.updates,
@@ -30,7 +30,7 @@ export const getAllApplications = createServerFn({ method: "POST" })
   });
 
 export const updateApplicationStatus = createServerFn({ method: "POST" })
-  .validator((d: any) => d)
+  .inputValidator((d: any) => d)
   .handler(async ({ data }) => {
     await db.update(applications).set({
       status: data.status,
