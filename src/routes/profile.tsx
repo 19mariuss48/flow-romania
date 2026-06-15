@@ -2,8 +2,16 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { authClient } from "@/lib/auth-client";
-import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
+import { 
+  getUserProfile, 
+  updateUserProfile, 
+  disconnectFiveM, 
+  updateFiveMSync, 
+  getUserApplications, 
+  submitApplication 
+} from "@/lib/api/profile.functions";
+import { updateApplicationStatus } from "@/lib/api/admin.functions";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -183,17 +191,9 @@ function ProfilePage() {
     try {
       setProfileLoading(true);
       // Query all columns including the FiveM sync details from the database
-      const { data, error } = await supabase
-        .from("profiles")
-        .select(`
-          id, username, display_name, avatar_url, character_name, faction, bio,
-          fivem_connected, fivem_username, fivem_license, fivem_discord_id, fivem_steam_hex,
-          fivem_cash, fivem_bank, fivem_job, fivem_playtime, fivem_character_data, fivem_synced_at
-        `)
-        .eq("id", user.id)
-        .single();
+      const data = await getUserProfile({ data: { userId: user.id } });
         
-      if (error) throw error;
+      if (!data) throw new Error("Profile not found");
       
       // Build the profile object from loaded database fields
       const dbProfile: DatabaseProfile = {
@@ -214,7 +214,7 @@ function ProfilePage() {
         fivem_job: data.fivem_job ?? null,
         fivem_playtime: data.fivem_playtime ?? 0,
         fivem_character_data: data.fivem_character_data ?? [],
-        fivem_synced_at: data.fivem_synced_at ?? null
+        fivem_synced_at: data.fivem_synced_at ? String(data.fivem_synced_at) : null
       };
       
       // Fallback for localStorage FiveM sync only if not connected in database yet
@@ -277,14 +277,8 @@ function ProfilePage() {
     if (!user) return;
     try {
       setAppsLoading(true);
-      const { data, error } = await supabase
-        .from("applications")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-        
-      if (error) throw error;
-      setApplications(data || []);
+      const apps = await getUserApplications({ data: { userId: user.id } });
+      setApplications(apps || []);
     } catch (err: any) {
       console.warn("Failed to fetch applications:", err);
     } finally {
@@ -312,40 +306,25 @@ function ProfilePage() {
     const toastId = toast.loading("Se procesează fotografia de profil...");
 
     try {
-      // 1. Attempt to upload to Supabase Storage avatars bucket
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${user!.id}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
-
-      const { data, error } = await supabase.storage
-        .from("avatars")
-        .upload(filePath, file, { upsert: true });
-
-      if (error) {
-        throw error;
-      }
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from("avatars")
-        .getPublicUrl(filePath);
-
-      setAvatarUrl(publicUrl);
-      toast.success("Fotografia de profil a fost încărcată cu succes!", { id: toastId });
-    } catch (err: any) {
-      console.warn("Storage bucket upload failed, falling back to base64 encoding:", err);
-      
-      // 2. Fallback to base64 Data URL
+      // 2. Fallback to base64 Data URL (Supabase Removed)
       const reader = new FileReader();
-      reader.onload = (uploadEvent) => {
+      reader.onload = async (uploadEvent) => {
         const base64Url = uploadEvent.target?.result as string;
         setAvatarUrl(base64Url);
+        await updateUserProfile({
+          data: {
+            userId: user.id,
+            avatarUrl: base64Url
+          }
+        });
         toast.success("Fotografia de profil a fost actualizată!", { id: toastId });
       };
       reader.onerror = () => {
         toast.error("Eroare la citirea fișierului imagine.", { id: toastId });
       };
       reader.readAsDataURL(file);
+    } catch (err: any) {
+      toast.error("Eroare la actualizare imagine.", { id: toastId });
     } finally {
       setUploadingPhoto(false);
     }
@@ -365,19 +344,16 @@ function ProfilePage() {
         name: displayName,
       });
 
-      const { error } = await supabase
-        .from("profiles")
-        .update({
-          display_name: displayName,
+      await updateUserProfile({
+        data: {
+          userId: user.id,
+          displayName: displayName,
           bio: bio,
-          character_name: charName,
+          characterName: charName,
           faction: faction,
-          avatar_url: avatarUrl,
-          updated_at: new Date().toISOString()
-        })
-        .eq("id", user.id);
-
-      if (error) throw error;
+          avatarUrl: avatarUrl
+        }
+      });
       
       toast.success("Profilul a fost actualizat cu succes!");
       fetchProfile();
@@ -434,19 +410,16 @@ function ProfilePage() {
       const hours = profile.fivem_playtime ? Math.floor(profile.fivem_playtime / 60) : 0;
       const charNameValue = profile.character_name || profile.display_name || profile.username || "Cetățean";
 
-      const { error } = await supabase
-        .from("applications")
-        .insert({
-          user_id: user.id,
+      await submitApplication({
+        data: {
+          userId: user.id,
           type: appType,
-          character_name: charNameValue,
+          characterName: charNameValue,
           age: Number(appAge),
-          playtime_hours: hours,
-          motivation: appMotivation,
-          status: "in_asteptare"
-        });
-
-      if (error) throw error;
+          playtimeHours: hours,
+          motivation: appMotivation
+        }
+      });
       
       toast.success("Aplicația ta a fost înregistrată cu succes în stare: În așteptare.");
       setAppAge("");
@@ -468,16 +441,13 @@ function ProfilePage() {
       const app = applications.find(a => a.id === simulatingAppId);
       if (!app) throw new Error("Aplicația nu a fost găsită.");
 
-      const { error } = await supabase
-        .from("applications")
-        .update({
+      await updateApplicationStatus({
+        data: {
+          appId: simulatingAppId,
           status: simStatus,
-          admin_response: simResponseText,
-          updated_at: new Date().toISOString()
-        })
-        .eq("id", simulatingAppId);
-
-      if (error) throw error;
+          adminResponse: simResponseText
+        }
+      });
 
       toast.success(`Aplicația a fost ${simStatus === "acceptat" ? "ACCEPTATĂ" : "RESPINSĂ"}! Se trimite email-ul...`);
       
@@ -561,26 +531,24 @@ function ProfilePage() {
             const primaryChar = mockFiveMCharacters[0];
             // Save mock data to database
             try {
-              const { error } = await supabase
-                .from("profiles")
-                .update({
-                  fivem_connected: true,
-                  fivem_username: fUsername,
-                  fivem_license: fLicense,
-                  fivem_discord_id: fDiscord,
-                  fivem_steam_hex: fSteam,
-                  fivem_cash: mockFiveMCharacters.reduce((acc, char) => acc + char.cash, 0),
-                  fivem_bank: mockFiveMCharacters.reduce((acc, char) => acc + char.bank, 0),
-                  fivem_job: primaryChar.jobShort,
-                  fivem_playtime: mockFiveMCharacters.reduce((acc, char) => acc + char.playtime, 0),
-                  fivem_character_data: mockFiveMCharacters as any,
-                  character_name: primaryChar.name,
-                  faction: primaryChar.faction,
-                  fivem_synced_at: new Date().toISOString()
-                })
-                .eq("id", user!.id);
-
-              if (error) throw error;
+              await updateFiveMSync({
+                data: {
+                  userId: user.id,
+                  syncData: {
+                    fivem_username: fUsername,
+                    fivem_license: fLicense,
+                    fivem_discord_id: fDiscord,
+                    fivem_steam_hex: fSteam,
+                    fivem_cash: mockFiveMCharacters.reduce((acc, char) => acc + char.cash, 0),
+                    fivem_bank: mockFiveMCharacters.reduce((acc, char) => acc + char.bank, 0),
+                    fivem_job: primaryChar.jobShort,
+                    fivem_playtime: mockFiveMCharacters.reduce((acc, char) => acc + char.playtime, 0),
+                    fivem_character_data: mockFiveMCharacters,
+                    character_name: primaryChar.name,
+                    faction: primaryChar.faction
+                  }
+                }
+              });
               
               setSyncStep(3);
               toast.success("Profilul FiveM a fost conectat cu succes!");
@@ -628,24 +596,7 @@ function ProfilePage() {
         localStorage.removeItem(`flowro_fivem_sync_${user!.id}`);
       }
 
-      const { error } = await supabase
-        .from("profiles")
-        .update({
-          fivem_connected: false,
-          fivem_username: null,
-          fivem_license: null,
-          fivem_discord_id: null,
-          fivem_steam_hex: null,
-          fivem_cash: 0,
-          fivem_bank: 0,
-          fivem_job: null,
-          fivem_playtime: 0,
-          fivem_character_data: [] as any,
-          fivem_synced_at: null
-        })
-        .eq("id", user!.id);
-
-      if (error) throw error;
+      await disconnectFiveM({ data: { userId: user.id } });
       toast.success("Profilul FiveM a fost deconectat.");
       fetchProfile();
     } catch (err: any) {
@@ -672,14 +623,12 @@ function ProfilePage() {
           }
         }
 
-        const { error } = await supabase
-          .from("profiles")
-          .update({
-            fivem_synced_at: new Date().toISOString()
-          })
-          .eq("id", user!.id);
-
-        if (error) throw error;
+        await updateFiveMSync({
+          data: {
+            userId: user.id,
+            syncData: {} // Just triggers updated timestamp inside the function
+          }
+        });
         toast.success("Datele profilului FiveM au fost reîmprospătate!", { id: "refresh-sync" });
         fetchProfile();
       } catch (err) {

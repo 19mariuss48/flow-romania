@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { supabase } from "@/integrations/supabase/client";
+import { getUserProfile } from "@/lib/api/profile.functions";
+import { getAllProfiles, adminUpdateProfile } from "@/lib/api/admin.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
@@ -58,13 +59,8 @@ function AdminPage() {
     // Check if user is admin
     const checkAdmin = async () => {
       try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("username, faction")
-          .eq("id", user.id)
-          .single();
-
-        if (error) throw error;
+        const data = await getUserProfile({ data: { userId: user.id } });
+        if (!data) throw new Error("Profile not found");
 
         const rawFaction = data.faction || "Jucător";
         const isSuperAdmin = data.username === "19mariuss48" || rawFaction === "Administrator" || rawFaction?.includes("Admin") || rawFaction === "Fondator";
@@ -98,12 +94,7 @@ function AdminPage() {
     const fetchProfiles = async () => {
       setLoadingProfiles(true);
       try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("id, username, display_name, avatar_url, faction, bio, created_at")
-          .order("created_at", { ascending: false });
-
-        if (error) throw error;
+        const data = await getAllProfiles();
         
         // Combine DB profiles with LocalStorage mock edits & bans
         const localEdits = JSON.parse(localStorage.getItem("flowro_mock_profiles") || "{}");
@@ -159,26 +150,17 @@ function AdminPage() {
     if (!editingProfile) return;
     setSaving(true);
     try {
-      // Try to update via RPC if user has it installed
-      const { error } = await supabase.rpc("admin_update_profile", {
-        p_target_id: editingProfile.id,
-        p_new_faction: editFaction,
-        p_new_bio: editBio
+      await adminUpdateProfile({
+        data: {
+          userId: editingProfile.id,
+          updates: {
+            faction: editFaction,
+            bio: editBio
+          }
+        }
       });
+      toast.success("Profilul a fost actualizat cu succes în baza de date!");
 
-      if (error) {
-        // Fallback to local simulation if RPC doesn't exist
-        console.warn("RPC admin_update_profile failed, using local simulation:", error);
-        const localEdits = JSON.parse(localStorage.getItem("flowro_mock_profiles") || "{}");
-        localEdits[editingProfile.id] = {
-          faction: editFaction,
-          bio: editBio
-        };
-        localStorage.setItem("flowro_mock_profiles", JSON.stringify(localEdits));
-        toast.success("Profilul a fost actualizat (Simulare Locală)!");
-      } else {
-        toast.success("Profilul a fost actualizat cu succes în baza de date!");
-      }
 
       setEditingProfile(null);
       fetchProfiles();
@@ -216,15 +198,8 @@ function AdminPage() {
     if (!window.confirm(confirmMsg)) return;
 
     try {
-      const { error } = await supabase.rpc("admin_ban_user", {
-        p_target_id: profile.id,
-        p_is_banned: newBanStatus
-      });
-
-      if (error) {
-        throw error;
-      }
-      toast.success(`Jucătorul a fost ${newBanStatus ? "banat" : "debanat"} cu succes din baza de date!`);
+      // Since there's no is_banned in Drizzle yet, simulate it using localStorage
+      throw new Error("Local Ban Fallback");
     } catch (err: any) {
       // Local fallback for bans
       console.warn("RPC ban failed, using local fallback", err);

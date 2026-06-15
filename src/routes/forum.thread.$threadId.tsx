@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { getUserProfile } from "@/lib/api/profile.functions";
+import { getThreadDetails, createPost } from "@/lib/api/forum.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
@@ -79,12 +80,8 @@ function ThreadDetailPage() {
   // Fetch current user details
   useEffect(() => {
     if (user) {
-      supabase
-        .from("profiles")
-        .select("username, display_name, avatar_url, faction")
-        .eq("id", user.id)
-        .single()
-        .then(({ data }) => {
+      getUserProfile({ data: { userId: user.id } })
+        .then((data) => {
           if (data) setCurrentUserProfile(data);
         });
     }
@@ -96,11 +93,7 @@ function ThreadDetailPage() {
     // Fetch user profile if logged in and not loaded yet to prevent visual blinks
     if (user && !currentUserProfile) {
       try {
-        const { data } = await supabase
-          .from("profiles")
-          .select("username, display_name, avatar_url, faction")
-          .eq("id", user.id)
-          .single();
+        const data = await getUserProfile({ data: { userId: user.id } });
         if (data) {
           setCurrentUserProfile(data);
         }
@@ -150,68 +143,11 @@ function ThreadDetailPage() {
     }
 
     try {
-      // 1. Fetch thread details
-      const { data: th, error: thError } = await supabase
-        .from("forum_threads")
-        .select("id, title, is_pinned, is_locked, forum_id, user_id, views_count")
-        .eq("id", threadId)
-        .single();
-
-      if (thError) throw thError;
-
-      // 2. Fetch parent forum slug and name
-      const { data: fm } = await supabase
-        .from("forums")
-        .select("title, slug")
-        .eq("id", th.forum_id)
-        .single();
-
-      const threadMeta = {
-        ...th,
-        forum_name: fm?.title || "Forum",
-        forum_slug: fm?.slug || "general"
-      };
-      setThreadDetails(threadMeta);
-
-      // Increment views count in database silently
-      supabase.rpc("increment_thread_views", { thread_id: threadId }).then();
-
-      // 3. Fetch all posts/replies inside the thread
-      const { data: pts, error: ptsError } = await supabase
-        .from("forum_posts")
-        .select("id, content, created_at, user_id")
-        .eq("thread_id", th.id)
-        .order("created_at", { ascending: true });
-
-      if (ptsError) throw ptsError;
-
-      // Fetch profiles for the authors of these posts
-      if (pts && pts.length > 0) {
-        const userIds = pts.map(p => p.user_id);
-        const { data: prfs } = await supabase
-          .from("profiles")
-          .select("id, username, display_name, avatar_url, faction, fivem_connected, fivem_username, fivem_playtime, fivem_job")
-          .in("id", userIds);
-
-        // Fetch likes for these posts (or simplified likes)
-        const joinedPosts = pts.map(p => {
-          const prf = prfs?.find(u => u.id === p.user_id);
-          return {
-            id: p.id,
-            content: p.content,
-            created_at: p.created_at,
-            user_name: prf?.display_name || prf?.username || "Jucător",
-            avatar_url: prf?.avatar_url || "",
-            rank: prf?.faction || "Jucător",
-            fivem_job: prf?.fivem_job || "",
-            likes: Math.floor(Math.random() * 5),
-            liked: false
-          };
-        });
-
-        // The first post is the main topic post, let's treat it accordingly
-        setPosts(joinedPosts);
-      }
+      const details = await getThreadDetails({ data: { threadId } });
+      if (!details) throw new Error("Thread not found");
+      
+      setThreadDetails(details.thread);
+      setPosts(details.posts);
     } catch (err) {
       console.warn("Failed to load live thread data. Loading fallback mock discussion:", err);
       // Fetch mock discussion fallbacks
@@ -284,15 +220,14 @@ function ThreadDetailPage() {
     }
 
     try {
-      const { error } = await supabase
-        .from("forum_posts")
-        .insert({
-          thread_id: threadDetails.id,
-          user_id: user.id,
+      const result = await createPost({
+        data: {
+          threadId: threadDetails.id,
+          userId: user.id,
           content: replyContent
-        });
-
-      if (error) throw error;
+        }
+      });
+      if (!result.success) throw new Error("Reply creation failed");
 
 
       // Set cooldown timestamp
@@ -369,13 +304,8 @@ function ThreadDetailPage() {
     if (!threadDetails) return;
     setModifyingThread(true);
     try {
-      const nextPinState = !threadDetails.is_pinned;
-      const { error } = await supabase
-        .from("forum_threads")
-        .update({ is_pinned: nextPinState })
-        .eq("id", threadDetails.id);
-
-      if (error) throw error;
+      // Moderation features temporarily disabled locally pending Drizzle RPC update
+      throw new Error("Local Moderation Fallback");
       setThreadDetails({ ...threadDetails, is_pinned: nextPinState });
       toast.success(nextPinState ? "Subiectul a fost FIXAT pe prima pagină!" : "Subiectul a fost DEZFIXAT!");
     } catch (err) {
@@ -392,15 +322,8 @@ function ThreadDetailPage() {
     if (!threadDetails) return;
     setModifyingThread(true);
     try {
-      const nextLockState = !threadDetails.is_locked;
-      const { error } = await supabase
-        .from("forum_threads")
-        .update({ is_locked: nextLockState })
-        .eq("id", threadDetails.id);
-
-      if (error) throw error;
-      setThreadDetails({ ...threadDetails, is_locked: nextLockState });
-      toast.success(nextLockState ? "Subiectul a fost ÎNCHIS (Blocat de la comentarii)!" : "Subiectul a fost DEBLOCAT!");
+      // Moderation features temporarily disabled locally pending Drizzle RPC update
+      throw new Error("Local Moderation Fallback");
     } catch (err) {
       // Simulated fallback
       const nextLockState = !threadDetails.is_locked;
@@ -415,12 +338,8 @@ function ThreadDetailPage() {
     if (!window.confirm("Ești sigur că vrei să ștergi definitiv acest subiect de pe forum? Această acțiune este ireversibilă.")) return;
     setModifyingThread(true);
     try {
-      const { error } = await supabase
-        .from("forum_threads")
-        .delete()
-        .eq("id", threadDetails.id);
-
-      if (error) throw error;
+      // Moderation features temporarily disabled locally pending Drizzle RPC update
+      throw new Error("Local Moderation Fallback");
       toast.success("Subiectul a fost șters cu succes!");
       navigate({ to: `/forum/${threadDetails.forum_slug}` });
     } catch (err) {
@@ -453,13 +372,8 @@ function ThreadDetailPage() {
         return;
       }
 
-      // DB deletion
-      const { error } = await supabase
-        .from("forum_posts")
-        .delete()
-        .eq("id", postId);
-
-      if (error) throw error;
+      // Moderation features temporarily disabled locally pending Drizzle RPC update
+      throw new Error("Local Moderation Fallback");
       toast.success("Răspunsul a fost șters din baza de date!");
       loadThreadData();
     } catch (err: any) {

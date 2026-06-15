@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { getForumStructure } from "@/lib/api/forum.functions";
 import { Link } from "@tanstack/react-router";
 
 type LocalSub = { name: string; topics: number };
@@ -60,19 +60,15 @@ export function ForumIndex() {
     const fetchForumStructure = async () => {
       try {
         setLoading(true);
-        throw new Error("Supabase is disabled");
-        const cats: any[] = [];
-        const fms: any[] = [];
-        const filteredCats = cats.filter(cat => cat.slug === "flow-romania-ooc" || cat.slug === "flow-romania-ic");
-        const structured: LocalCategory[] = filteredCats.map((cat, idx) => {
-          const categoryForums = fms.filter(f => f.category_id === cat.id);
-          const tagNum = String(idx + 1).padStart(2, "0");
+        const structured = await getForumStructure();
+        
+        // Map the result to match LocalCategory structure with fallbacks
+        const finalStructured: LocalCategory[] = structured.map(cat => {
           return {
-            group: cat.title,
+            group: cat.group,
             slug: cat.slug,
-            tag: tagNum,
-            cats: categoryForums.map(f => {
-              // Find matching static fallback for the sub-tags counts
+            tag: cat.tag,
+            cats: cat.cats.map(f => {
               const matchingFallbackCat = localFallbackCategories
                 .flatMap(g => g.cats)
                 .find(c => c.slug === f.slug);
@@ -80,8 +76,8 @@ export function ForumIndex() {
               return {
                 title: f.title,
                 slug: f.slug,
-                desc: f.description || "",
-                icon: f.icon || "◆",
+                desc: f.desc,
+                icon: f.icon,
                 threads_count: f.threads_count,
                 posts_count: f.posts_count,
                 subs: matchingFallbackCat?.subs || []
@@ -90,8 +86,8 @@ export function ForumIndex() {
           };
         });
 
-        if (structured.length > 0) {
-          setDbCategories(structured);
+        if (finalStructured.length > 0) {
+          setDbCategories(finalStructured);
         }
       } catch (err) {
         console.warn("Failed to load live forum structure. Using local fallback:", err);

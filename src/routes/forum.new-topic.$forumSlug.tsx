@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { getUserProfile } from "@/lib/api/profile.functions";
+import { getForumDetails, createThread } from "@/lib/api/forum.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
@@ -47,12 +48,8 @@ function NewTopicPage() {
 
   useEffect(() => {
     if (user) {
-      supabase
-        .from("profiles")
-        .select("username, display_name, avatar_url, faction")
-        .eq("id", user.id)
-        .single()
-        .then(({ data }) => {
+      getUserProfile({ data: { userId: user.id } })
+        .then((data) => {
           if (data) setProfile(data);
         });
     }
@@ -62,13 +59,9 @@ function NewTopicPage() {
     const fetchForumDetails = async () => {
       try {
         setForumLoading(true);
-        const { data, error } = await supabase
-          .from("forums")
-          .select("id, title, slug")
-          .eq("slug", forumSlug)
-          .single();
+        const data = await getForumDetails({ data: { slug: forumSlug } });
         
-        if (error) throw error;
+        if (!data) throw new Error("Forum not found");
         setForumDetails(data);
       } catch (err) {
         console.warn("Failed to load forum details for new topic. Using slug fallback:", err);
@@ -104,30 +97,16 @@ function NewTopicPage() {
 
     setPublishing(true);
     try {
-      // 1. Insert thread
-      const { data: threadData, error: threadError } = await supabase
-        .from("forum_threads")
-        .insert({
-          forum_id: forumDetails.id,
-          user_id: user.id,
+      const result = await createThread({
+        data: {
+          forumId: forumDetails.id,
+          userId: user.id,
           title: title.trim(),
-          content: content.trim() // Duplicate content on thread directly as backup summary
-        })
-        .select()
-        .single();
-
-      if (threadError) throw threadError;
-
-      // 2. Insert first post (which serves as the main content body)
-      const { error: postError } = await supabase
-        .from("forum_posts")
-        .insert({
-          thread_id: threadData.id,
-          user_id: user.id,
           content: content.trim()
-        });
+        }
+      });
 
-      if (postError) throw postError;
+      if (!result.success) throw new Error("Thread creation failed");
 
 
       // Set cooldown timestamp
@@ -136,7 +115,7 @@ function NewTopicPage() {
       toast.success("Subiectul tău a fost publicat cu succes!");
       navigate({ 
         to: "/forum/thread/$threadId", 
-        params: { threadId: threadData.id } 
+        params: { threadId: result.threadId } 
       });
     } catch (err: any) {
       console.warn("Could not submit thread to Supabase. Simulating local mock submission:", err);

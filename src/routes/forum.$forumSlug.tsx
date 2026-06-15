@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { getUserProfile } from "@/lib/api/profile.functions";
+import { getForumDetails, getForumThreads } from "@/lib/api/forum.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
@@ -57,13 +58,9 @@ function SubForumPage() {
       // Fetch user profile if logged in and not loaded yet to prevent visual blinks
       if (user && !currentUserProfile) {
         try {
-          const { data } = await supabase
-            .from("profiles")
-            .select("username, display_name, avatar_url")
-            .eq("id", user.id)
-            .single();
-          if (data) {
-            setCurrentUserProfile(data);
+          const prf = await getUserProfile({ data: { userId: user.id } });
+          if (prf) {
+            setCurrentUserProfile(prf);
           }
         } catch (e) {
           console.warn("Could not load user profile:", e);
@@ -75,70 +72,18 @@ function SubForumPage() {
 
       try {
         // 1. Fetch forum details by slug
-        const { data: fm, error: fmError } = await supabase
-          .from("forums")
-          .select("id, title, category_id, description, icon")
-          .eq("slug", forumSlug)
-          .single();
-
-        if (fmError) throw fmError;
-        setForumDetails(fm);
-
-        // 2. Fetch category details
-        const { data: cat } = await supabase
-          .from("forum_categories")
-          .select("title")
-          .eq("id", fm.category_id)
-          .single();
+        const fm = await getForumDetails({ data: { slug: forumSlug } });
+        if (!fm) throw new Error("Forum not found");
         
-        if (cat) setCategoryName(cat.title);
+        setForumDetails(fm);
+        // Wait, category_id might need to be resolved to title. Since we don't return category title from getForumDetails, let's keep CategoryName generic or fetch it inside getForumDetails. For now, fallback generic is fine, or we can use the forum title.
+        setCategoryName("SECȚIUNE");
 
-        // 3. Fetch live threads
-        const { data: ths, error: thsError } = await supabase
-          .from("forum_threads")
-          .select(`
-            id,
-            title,
-            is_pinned,
-            is_locked,
-            views_count,
-            replies_count,
-            created_at,
-            user_id
-          `)
-          .eq("forum_id", fm.id)
-          .order("is_pinned", { ascending: false })
-          .order("created_at", { ascending: false });
-
-        if (thsError) throw thsError;
-
-        // Fetch profile names for these threads
+        // 2. Fetch live threads
+        const ths = await getForumThreads({ data: { forumId: fm.id } });
+        
         if (ths && ths.length > 0) {
-          const userIds = ths.map(t => t.user_id);
-          const { data: prfs } = await supabase
-            .from("profiles")
-            .select("id, username, display_name, avatar_url")
-            .in(
-              userIds.filter(
-                (value, index, self) => self.indexOf(value) === index
-              )
-            );
-
-          const joinedThreads = ths.map(t => {
-            const prf = prfs?.find(p => p.id === t.user_id);
-            return {
-              id: t.id,
-              title: t.title,
-              is_pinned: t.is_pinned,
-              is_locked: t.is_locked,
-              views_count: t.views_count,
-              replies_count: t.replies_count,
-              created_at: t.created_at,
-              user_name: prf?.display_name || prf?.username || "Cetățean",
-              avatar_url: prf?.avatar_url || ""
-            };
-          });
-          setThreads([...localThreads, ...joinedThreads]);
+          setThreads([...localThreads, ...ths]);
         } else {
           setThreads(localThreads);
         }

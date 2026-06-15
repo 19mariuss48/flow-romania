@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import logo from "@/assets/flow-logo.png";
 import { useAuth } from "@/hooks/use-auth";
 import { useEffect, useState } from "react";
+import { getUserProfile } from "@/lib/api/profile.functions";
 
 import {
   DropdownMenu,
@@ -42,9 +43,26 @@ export function SiteHeader() {
     if (!user) {
       setAvatarUrl(null);
       setDisplayName(null);
+      setIsAdmin(false);
       return;
     }
     
+    // Fetch profile data from server function
+    getUserProfile({ data: { userId: user.id } }).then(profile => {
+      if (profile) {
+        setAvatarUrl(profile.avatar_url);
+        setDisplayName(profile.display_name || profile.username);
+        setIsAdmin(profile.faction === "Fondator" || profile.faction === "Admin" || profile.faction === "Staff");
+        
+        // Update local cache
+        if (typeof window !== "undefined") {
+          if (profile.avatar_url) {
+            localStorage.setItem(`flowro_avatar_${user.id}`, profile.avatar_url);
+          }
+        }
+      }
+    }).catch(console.error);
+
     // Quick load from local storage fallback cache if available
     if (typeof window !== "undefined") {
       const localSync = localStorage.getItem(`flowro_fivem_sync_${user.id}`);
