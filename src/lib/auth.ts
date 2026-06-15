@@ -36,8 +36,15 @@ async function sendAuthEmail(to: string, subject: string, html: string) {
 
 
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:8080",
-  trustedOrigins: ["http://localhost:8080", "http://localhost:8081", "http://localhost:5173"],
+  baseURL: process.env.BETTER_AUTH_URL || 
+           (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:8080"),
+  trustedOrigins: [
+    "http://localhost:8080", 
+    "http://localhost:8081", 
+    "http://localhost:5173", 
+    "https://flow-community.vercel.app",
+    ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : [])
+  ],
   secret: process.env.BETTER_AUTH_SECRET || "fallback_secret_for_development",
   database: drizzleAdapter(db, {
     provider: "mysql", // or "pg" or "sqlite"
