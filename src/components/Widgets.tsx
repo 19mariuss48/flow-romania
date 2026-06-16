@@ -1,3 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
+import { getTopDonators } from "../lib/api/tebex.server";
+
 function Widget({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="glass rounded-xl p-6">
@@ -27,6 +30,13 @@ const members = [
 ];
 
 export function Widgets() {
+  const { data: topDonators = [], isLoading } = useQuery({
+    queryKey: ["topDonators"],
+    queryFn: () => getTopDonators(),
+  });
+
+  const displayMembers = topDonators.length > 0 ? topDonators : members;
+
   return (
     <section className="relative py-24 px-6">
       <div className="mx-auto max-w-7xl grid lg:grid-cols-3 gap-6">
@@ -49,20 +59,41 @@ export function Widgets() {
         </Widget>
 
         <Widget title="MEMBRI DE TOP">
-          <ul className="space-y-3">
-            {members.map((m, i) => (
-              <li key={m.n} className="flex items-center gap-3">
-                <span className="text-xs tracking-widest text-muted-foreground w-6">0{i + 1}</span>
-                <div className="h-9 w-9 rounded-full bg-gradient-to-br from-white/30 to-white/5 border border-white/10 flex items-center justify-center text-xs text-silver">
-                  {m.n[0].toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm text-foreground truncate">{m.n}</div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground">{m.rank}</div>
-                </div>
-              </li>
-            ))}
-          </ul>
+          {isLoading ? (
+            <div className="flex justify-center py-4">
+              <span className="text-xs text-muted-foreground">Se încarcă...</span>
+            </div>
+          ) : (
+            <ul className="space-y-3">
+              {displayMembers.map((m, i) => (
+                <li key={m.n} className="flex items-center gap-3">
+                  <span className="text-xs tracking-widest text-muted-foreground w-6">0{i + 1}</span>
+                  <div className="h-9 w-9 rounded-full bg-gradient-to-br from-white/30 to-white/5 border border-white/10 flex items-center justify-center text-xs text-silver">
+                    {m.n[0].toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0 flex items-center justify-between">
+                    <div className="min-w-0 pr-4">
+                      <div className="text-sm text-foreground truncate">{m.n}</div>
+                      <div className="text-[10px] tracking-widest text-muted-foreground flex items-center gap-2 mt-0.5 truncate">
+                        <span>{m.rank}</span>
+                        {m.purchased && (
+                          <>
+                            <span className="h-1 w-1 rounded-full bg-white/20 shrink-0" />
+                            <span className="text-silver truncate">{m.purchased}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    {m.amount ? (
+                      <div className="text-xs font-mono text-emerald-400/90 shrink-0 bg-emerald-400/10 px-2 py-0.5 rounded-md">
+                        {m.amount} {m.currency}
+                      </div>
+                    ) : null}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </Widget>
 
         <Widget title="STATUS SERVER">
