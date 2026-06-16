@@ -162,7 +162,7 @@ export function Widgets() {
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">DISCORD</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-light text-silver-gradient">v0.9.4</div>
+                  <div className="text-2xl font-light text-silver-gradient">v2.00</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">VERSIUNE</div>
                 </div>
               </div>
