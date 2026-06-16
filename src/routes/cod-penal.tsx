@@ -16,166 +16,7 @@ export const Route = createFileRoute("/cod-penal")({
   component: CodPenalPage,
 });
 
-type LawArticle = {
-  id: string;
-  category: "contra-persoanei" | "contra-proprietatii" | "rutiere" | "ordine-publica";
-  categoryLabel: string;
-  title: string;
-  description: string;
-  amenda: number;
-  inchisoare: number; // minutes
-  cautiune: boolean;
-};
-
-const articlesData: LawArticle[] = [
-  // Contra Persoanei
-  {
-    id: "Art. 1.1",
-    category: "contra-persoanei",
-    categoryLabel: "Contra Persoanei",
-    title: "Vătămare corporală",
-    description: "Lovirea sau orice alte acte de violență cauzatoare de suferințe fizice aduse unui cetățean.",
-    amenda: 5000,
-    inchisoare: 15,
-    cautiune: true
-  },
-  {
-    id: "Art. 1.2",
-    category: "contra-persoanei",
-    categoryLabel: "Contra Persoanei",
-    title: "Tentativă de omor",
-    description: "Încercarea deliberată de a pune capăt vieții unui alt cetățean, indiferent de mijloacele folosite.",
-    amenda: 15000,
-    inchisoare: 35,
-    cautiune: true
-  },
-  {
-    id: "Art. 1.3",
-    category: "contra-persoanei",
-    categoryLabel: "Contra Persoanei",
-    title: "Omor deosebit de grav (Crimă)",
-    description: "Uciderea cu intenție a unuia sau a mai multor cetățeni.",
-    amenda: 30000,
-    inchisoare: 60,
-    cautiune: false
-  },
-  {
-    id: "Art. 1.4",
-    category: "contra-persoanei",
-    categoryLabel: "Contra Persoanei",
-    title: "Răpire / Luare de ostatici",
-    description: "Lipsirea de libertate a unei persoane în mod ilegal, adusă sub amenințare în scopul obținerii de foloase sau șantaj.",
-    amenda: 25000,
-    inchisoare: 45,
-    cautiune: false
-  },
-
-  // Contra Proprietății
-  {
-    id: "Art. 2.1",
-    category: "contra-proprietatii",
-    categoryLabel: "Contra Proprietății",
-    title: "Furt calificat / Furt de vehicul",
-    description: "Sustragerea unui bun mobil sau a unui autovehicul fără consimțământul proprietarului de drept.",
-    amenda: 4000,
-    inchisoare: 10,
-    cautiune: true
-  },
-  {
-    id: "Art. 2.2",
-    category: "contra-proprietatii",
-    categoryLabel: "Contra Proprietății",
-    title: "Jaf armat magazin / bancă",
-    description: "Sustragerea de bunuri sau bani prin violență, amenințare cu arme de foc asupra personalului unei bănci sau magazin.",
-    amenda: 20000,
-    inchisoare: 40,
-    cautiune: false
-  },
-  {
-    id: "Art. 2.3",
-    category: "contra-proprietatii",
-    categoryLabel: "Contra Proprietății",
-    title: "Pătrundere prin efracție",
-    description: "Pătrunderea ilegală pe o proprietate privată, locuință sau sediu securizat prin distrugerea sistemelor de închidere.",
-    amenda: 6000,
-    inchisoare: 15,
-    cautiune: true
-  },
-
-  // Rutiere
-  {
-    id: "Art. 3.1",
-    category: "rutiere",
-    categoryLabel: "Infracțiuni Rutiere",
-    title: "Conducere sub influența substanțelor",
-    description: "Operarea unui vehicul pe drumurile publice având reflexele alterate de alcool sau substanțe psihoactive.",
-    amenda: 8000,
-    inchisoare: 15,
-    cautiune: true
-  },
-  {
-    id: "Art. 3.2",
-    category: "rutiere",
-    categoryLabel: "Infracțiuni Rutiere",
-    title: "Conducere fără permis / Vehicul neînmatriculat",
-    description: "Conducerea unui vehicul fără a deține un permis de conducere valid sau operarea unui autovehicul fără numere/acte.",
-    amenda: 3000,
-    inchisoare: 5,
-    cautiune: true
-  },
-  {
-    id: "Art. 3.3",
-    category: "rutiere",
-    categoryLabel: "Infracțiuni Rutiere",
-    title: "Fuga de la locul accidentului",
-    description: "Părăsirea locului unui accident rutier soldat cu victime sau daune materiale majore fără acordul autorităților.",
-    amenda: 10000,
-    inchisoare: 20,
-    cautiune: true
-  },
-
-  // Ordine Publică / Stat
-  {
-    id: "Art. 4.1",
-    category: "ordine-publica",
-    categoryLabel: "Ordine Publică",
-    title: "Deținere / Trafic de substanțe ilegale",
-    description: "Posesia sau distribuția de droguri de risc sau mare risc pe teritoriul statului Los Santos.",
-    amenda: 12000,
-    inchisoare: 25,
-    cautiune: true
-  },
-  {
-    id: "Art. 4.2",
-    category: "ordine-publica",
-    categoryLabel: "Ordine Publică",
-    title: "Posesie de armament militar / ilegal",
-    description: "Deținerea sau utilizarea de arme automate, explozibili sau arme de calibru mare fără licență specială.",
-    amenda: 25000,
-    inchisoare: 35,
-    cautiune: false
-  },
-  {
-    id: "Art. 4.3",
-    category: "ordine-publica",
-    categoryLabel: "Ordine Publică",
-    title: "Ultraj / Agresarea unui funcționar public",
-    description: "Amenințarea, jignirea sau lovirea unui organ de poliție, cadru medical sau membru al departamentului de justiție în exercițiul funcțiunii.",
-    amenda: 15000,
-    inchisoare: 30,
-    cautiune: true
-  },
-  {
-    id: "Art. 4.4",
-    category: "ordine-publica",
-    categoryLabel: "Ordine Publică",
-    title: "Corupție pasivă / activă",
-    description: "Oferirea sau primirea de foloase necuvenite (mită) de către sau către un funcționar al statului.",
-    amenda: 20000,
-    inchisoare: 30,
-    cautiune: false
-  }
-];
+import { articlesData } from "@/data/cod-penal-data";
 
 function CodPenalPage() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -223,10 +64,10 @@ function CodPenalPage() {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {[
-            { label: "CATEGORII GENERALE", value: "4", icon: Scale },
+            { label: "CATEGORII GENERALE", value: "9", icon: Scale },
             { label: "ARTICOLE DE LEGE", value: articlesData.length.toString(), icon: Gavel },
-            { label: "AMENDĂ MAXIMĂ", value: "30.000 €", icon: AlertTriangle },
-            { label: "CAUȚIUNE PERMISĂ", value: "65%", icon: ShieldCheck },
+            { label: "AMENDĂ MAXIMĂ", value: "75.000 $", icon: AlertTriangle },
+            { label: "PEDEAPSĂ MAXIMĂ", value: "500 MINUTE", icon: ShieldCheck },
           ].map((stat, i) => {
             const Icon = stat.icon;
             return (
@@ -272,10 +113,15 @@ function CodPenalPage() {
           <div className="flex flex-wrap gap-2.5">
             {[
               { id: "all", label: "Toate Articolele", icon: Scale },
-              { id: "contra-persoanei", label: "Contra Persoanei", icon: ShieldAlert },
-              { id: "contra-proprietatii", label: "Contra Proprietății", icon: EyeOff },
-              { id: "rutiere", label: "Rutier", icon: Car },
-              { id: "ordine-publica", label: "Ordine Publică", icon: ShieldCheck },
+              { id: "contra-persoanei", label: "Persoană", icon: ShieldAlert },
+              { id: "ordine-publica", label: "Ordine", icon: ShieldCheck },
+              { id: "convietuire-sociala", label: "Conviețuire", icon: ShieldCheck },
+              { id: "moralitate-publica", label: "Moralitate", icon: ShieldAlert },
+              { id: "contra-proprietatii", label: "Proprietate", icon: EyeOff },
+              { id: "justitie", label: "Justiție", icon: Gavel },
+              { id: "arme", label: "Arme", icon: AlertTriangle },
+              { id: "contraventii-rutiere", label: "Amenzi", icon: Car },
+              { id: "infractiuni-rutiere", label: "Rutiere", icon: Car },
             ].map((cat) => {
               const Icon = cat.icon;
               const isActive = activeCategory === cat.id;
@@ -337,29 +183,15 @@ function CodPenalPage() {
                       <div>
                         <div className="text-[9px] tracking-widest text-muted-foreground uppercase">AMENDĂ</div>
                         <div className="text-sm font-semibold text-foreground font-mono mt-0.5">
-                          {art.amenda.toLocaleString()} €
+                          {art.amenda || "-"}
                         </div>
                       </div>
                       <div>
                         <div className="text-[9px] tracking-widest text-muted-foreground uppercase">TIMP ÎNCHISOARE</div>
                         <div className="text-sm font-semibold text-foreground font-mono mt-0.5">
-                          {art.inchisoare} min.
+                          {art.inchisoare || "-"}
                         </div>
                       </div>
-                    </div>
-
-                    {/* Bail Status */}
-                    <div className="flex items-center justify-between text-[10px] tracking-wider">
-                      <span className="text-muted-foreground">CAUȚIUNE:</span>
-                      {art.cautiune ? (
-                        <span className="font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded uppercase text-[9px]">
-                          PERMISĂ
-                        </span>
-                      ) : (
-                        <span className="font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded uppercase text-[9px] animate-pulse">
-                          INTERZISĂ
-                        </span>
-                      )}
                     </div>
                   </div>
                 </div>
