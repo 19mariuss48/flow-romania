@@ -9,6 +9,7 @@ export const getTopDonators = createServerFn({ method: "GET" }).handler(async ()
     { n: "cristian.b", rank: "Donator", amount: 80, currency: "EUR", purchased: "VIP Gold" },
     { n: "andreea.v", rank: "Sustinător", amount: 50, currency: "EUR", purchased: "Unban (O singură dată)" },
     { n: "vlad.n", rank: "Sustinător", amount: 30, currency: "EUR", purchased: "Pachet Arme Personalizate" },
+    { n: "george.m", rank: "Sustinător", amount: 15, currency: "EUR", purchased: "Pachet VIP Silver" },
   ];
 
   if (!secretKey) {
@@ -51,10 +52,10 @@ export const getTopDonators = createServerFn({ method: "GET" }).handler(async ()
       }
     }
 
-    // Sort and get top 5
+    // Sort and get top 6
     const topDonators = Object.entries(donations)
       .sort(([, a], [, b]) => b - a)
-      .slice(0, 5)
+      .slice(0, 6)
       .map(([username, amount]) => ({
         n: username,
         rank: amount >= 100 ? "Donator ★" : "Donator",
