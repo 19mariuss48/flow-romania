@@ -18,12 +18,22 @@ function getCountdown(targetDate: string) {
   return { d, h, m, s };
 }
 
-function Widget({ title, children }: { title: string; children: React.ReactNode }) {
+function Widget({ title, children, live }: { title: string; children: React.ReactNode; live?: boolean }) {
   return (
     <div className="glass rounded-xl p-6">
       <div className="flex items-center justify-between mb-5">
         <h4 className="text-xs tracking-[0.35em] text-silver">{title}</h4>
-        <span className="h-1.5 w-1.5 rounded-full bg-white/70 shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
+        {live ? (
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="text-[9px] tracking-[0.2em] font-bold text-emerald-400 uppercase">Live</span>
+          </div>
+        ) : (
+          <span className="h-1.5 w-1.5 rounded-full bg-white/70 shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
+        )}
       </div>
       {children}
     </div>
@@ -61,6 +71,39 @@ export function Widgets() {
   });
 
   const [timeLeft, setTimeLeft] = useState({ d: "00", h: "00", m: "00", s: "00" });
+
+  // Test states for restart simulation
+  const [restartPhase, setRestartPhase] = useState<'countdown' | 'restarting' | 'online'>('countdown');
+  const [restartTime, setRestartTime] = useState(120); // 2 minutes in seconds
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (restartPhase === 'countdown') {
+      timer = setInterval(() => {
+        setRestartTime((prev) => {
+          if (prev <= 1) {
+            setRestartPhase('restarting');
+            setRestartTime(60); // 1 minute for restarting phase
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else if (restartPhase === 'restarting') {
+      timer = setInterval(() => {
+        setRestartTime((prev) => {
+          if (prev <= 1) {
+            setRestartPhase('online');
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(timer);
+  }, [restartPhase]);
 
   useEffect(() => {
     if (!serverStatus?.launchDate) return;
@@ -134,7 +177,7 @@ export function Widgets() {
           )}
         </Widget>
 
-        <Widget title="STATUS SERVER">
+        <Widget title="STATUS SERVER" live>
           <div className="space-y-5">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Locuri Jucători</span>
@@ -166,6 +209,30 @@ export function Widgets() {
                 <div>
                   <div className="text-2xl font-light text-silver-gradient">v2.00</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">VERSIUNE</div>
+                </div>
+                <div>
+                  {restartPhase === 'countdown' ? (
+                    <>
+                      <div className="text-2xl font-light text-rose-400">
+                        {Math.floor(restartTime / 60).toString().padStart(2, '0')}:{(restartTime % 60).toString().padStart(2, '0')}
+                      </div>
+                      <div className="text-[10px] tracking-widest text-rose-400/80 mt-1 animate-pulse">RESTART ÎN</div>
+                    </>
+                  ) : restartPhase === 'restarting' ? (
+                    <>
+                      <div className="text-xl font-light text-amber-400 mt-1 animate-pulse">RESTARTING</div>
+                      <div className="text-[10px] tracking-widest text-muted-foreground mt-1">STARE</div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-2xl font-light text-emerald-400">ONLINE</div>
+                      <div className="text-[10px] tracking-widest text-muted-foreground mt-1">STARE</div>
+                    </>
+                  )}
+                </div>
+                <div>
+                  <div className="text-2xl font-light text-silver-gradient">60Hz</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">TICKRATE</div>
                 </div>
               </div>
 
