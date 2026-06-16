@@ -32,15 +32,25 @@ export const getServerStatus = createServerFn({ method: "GET" }).handler(async (
       }
     }
 
-    // 2. Fetch Discord Status
-    if (discordId) {
-      const res = await fetch(`https://discord.com/api/guilds/${discordId}/widget.json`)
+    // 2. Fetch Discord Status (Total Members via Invite API)
+    // We use the vanity URL 'flowro' which is public and gives approximate_member_count
+    const inviteCode = "flowro";
+    const res = await fetch(`https://discord.com/api/v10/invites/${inviteCode}?with_counts=true`)
+      .catch(() => null);
+      
+    if (res && res.ok) {
+      const data = await res.json();
+      if (data && data.approximate_member_count) {
+        const count = data.approximate_member_count;
+        status.discord = count > 999 ? (count / 1000).toFixed(1) + 'k' : count.toString();
+      }
+    } else if (discordId) {
+      // Fallback to widget.json (which only gives online count) if invite fails
+      const fallbackRes = await fetch(`https://discord.com/api/guilds/${discordId}/widget.json`)
         .catch(() => null);
-        
-      if (res && res.ok) {
-        const data = await res.json();
+      if (fallbackRes && fallbackRes.ok) {
+        const data = await fallbackRes.json();
         if (data && data.presence_count) {
-          // Format discord members like "1.2k" or "450"
           const count = data.presence_count;
           status.discord = count > 999 ? (count / 1000).toFixed(1) + 'k' : count.toString();
         }
