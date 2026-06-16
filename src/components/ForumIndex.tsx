@@ -35,6 +35,8 @@ const localFallbackCategories: LocalCategory[] = [
         subs: [] },
       { title: "Sugestii și Feedback", slug: "sugestii", desc: "Ajută-ne să modelăm viitorul FLOW propunând idei noi.", icon: "💡",
         subs: [{ name: "Acceptate", topics: 31 }, { name: "Respinse", topics: 22 }] },
+      { title: "Discuții Generale", slug: "discutii-generale", desc: "Discuții libere (Free Chat) și subiecte diverse legate de comunitate.", icon: "💬",
+        subs: [] },
     ],
   },
   {

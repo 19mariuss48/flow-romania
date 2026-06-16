@@ -10,6 +10,6 @@ export default defineConfig({
     user: 'dbpgf35443969',
     password: '4SEOQ8xA5Ckj77wdN0(4Q9',
     database: 'flowro',
-    ssl: "require" as any,
+    ssl: { rejectUnauthorized: false } as any,
   },
 });

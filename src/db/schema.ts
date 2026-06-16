@@ -49,6 +49,7 @@ export const forumThreads = mysqlTable("forum_threads", {
   id: varchar("id", { length: 36 }).primaryKey(),
   forum_id: varchar("forum_id", { length: 36 }).notNull().references(() => forums.id, { onDelete: 'cascade' }),
   user_id: varchar("user_id", { length: 36 }).notNull().references(() => profiles.id, { onDelete: 'cascade' }),
+  category: varchar("category", { length: 50 }),
   title: varchar("title", { length: 255 }).notNull(),
   content: text("content").notNull(),
   is_pinned: boolean("is_pinned").default(false).notNull(),

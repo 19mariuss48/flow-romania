@@ -251,6 +251,11 @@ function SubForumPage() {
                               Închis
                             </span>
                           )}
+                          {thread.category && (
+                            <span className="inline-flex items-center gap-0.5 text-[9px] font-bold tracking-widest bg-white/5 border border-white/10 text-silver px-2 py-0.5 rounded uppercase">
+                              {thread.category}
+                            </span>
+                          )}
                           
                           <h3 className="text-sm md:text-base font-medium text-foreground tracking-wide group-hover:text-silver-gradient transition duration-300 truncate">
                             {thread.title}

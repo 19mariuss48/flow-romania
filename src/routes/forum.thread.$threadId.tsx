@@ -304,6 +304,7 @@ function ThreadDetailPage() {
   const handleTogglePin = async () => {
     if (!threadDetails) return;
     setModifyingThread(true);
+    const nextPinState = !threadDetails.is_pinned;
     try {
       // Moderation features temporarily disabled locally pending Drizzle RPC update
       throw new Error("Local Moderation Fallback");
@@ -311,7 +312,6 @@ function ThreadDetailPage() {
       toast.success(nextPinState ? "Subiectul a fost FIXAT pe prima pagină!" : "Subiectul a fost DEZFIXAT!");
     } catch (err) {
       // Simulated fallback
-      const nextPinState = !threadDetails.is_pinned;
       setThreadDetails({ ...threadDetails, is_pinned: nextPinState });
       toast.success(nextPinState ? "Subiectul a fost FIXAT (Simulare locală)!" : "Subiectul a fost DEZFIXAT!");
     } finally {
@@ -462,6 +462,11 @@ function ThreadDetailPage() {
                     <span className="inline-flex items-center gap-0.5 text-[9px] font-bold tracking-widest bg-rose-400/10 border border-rose-400/20 text-rose-400 px-2 py-0.5 rounded uppercase">
                       <Lock className="h-2.5 w-2.5 shrink-0" />
                       Închis
+                    </span>
+                  )}
+                  {threadDetails.category && (
+                    <span className="inline-flex items-center gap-0.5 text-[10px] font-bold tracking-widest bg-white/5 border border-white/10 text-silver px-2.5 py-0.5 rounded uppercase">
+                      {threadDetails.category}
                     </span>
                   )}
                   <h1 className="text-xl md:text-2xl font-medium tracking-wide text-foreground leading-tight">

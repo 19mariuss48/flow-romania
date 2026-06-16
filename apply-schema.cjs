@@ -2,7 +2,7 @@ const fs = require('fs');
 const mysql = require('mysql2/promise');
 
 async function apply() {
-  const sql = fs.readFileSync('drizzle/0000_curved_rocket_racer.sql', 'utf8');
+  const sql = fs.readFileSync('drizzle/0001_quick_madame_web.sql', 'utf8');
   const statements = sql.split('--> statement-breakpoint').map(s => s.trim()).filter(s => s.length > 0);
   
   // Connect without specifying a database first

@@ -115,6 +115,7 @@ export const createThread = createServerFn({ method: "POST" })
   .inputValidator(z.object({
     forumId: z.string(),
     userId: z.string(),
+    category: z.string().optional(),
     title: z.string(),
     content: z.string()
   }))
@@ -125,6 +126,7 @@ export const createThread = createServerFn({ method: "POST" })
       id: threadId,
       forum_id: data.forumId,
       user_id: data.userId,
+      category: data.category || null,
       title: data.title,
       content: data.content,
       views_count: 0,
