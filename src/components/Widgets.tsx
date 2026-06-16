@@ -36,14 +36,16 @@ const topics = [
   { t: "Showroom Auto: Gama GT 2026", a: "garage.flow", c: "Media", time: "1h" },
   { t: "Recrutare S.M.U.R.D. — Sesiunea Q2 Deschisă", a: "dr.ionescu", c: "S.M.U.R.D.", time: "2h" },
   { t: "Actualizare Server v0.9.4 Note Patch", a: "staff.flow", c: "Update-uri", time: "3h" },
+  { t: "Eveniment Cursă Ilegală: Premiu 100k", a: "razvan.t", c: "Evenimente", time: "5h" },
 ];
 
 const members = [
-  { n: "alexandru.r", rank: "Fondator" },
-  { n: "mirela.s", rank: "Administrator" },
-  { n: "cristian.b", rank: "Moderator" },
-  { n: "andreea.v", rank: "Veteran" },
-  { n: "vlad.n", rank: "Veteran" },
+  { n: "alexandru.r", rank: "VIP DIAMOND", amount: "50", currency: "EUR" },
+  { n: "mirela.s", rank: "VIP GOLD", amount: "25", currency: "EUR" },
+  { n: "cristian.b", rank: "Pachet Arme", amount: "15", currency: "EUR" },
+  { n: "andreea.v", rank: "Mașină Custom", amount: "30", currency: "EUR" },
+  { n: "vlad.n", rank: "VIP SILVER", amount: "10", currency: "EUR" },
+  { n: "george.m", rank: "Bani In-Game", amount: "5", currency: "EUR" },
 ];
 
 export function Widgets() {
@@ -94,7 +96,7 @@ export function Widgets() {
           </ul>
         </Widget>
 
-        <Widget title="MEMBRI DE TOP">
+        <Widget title="ULTIMELE DONAȚII">
           {isLoading ? (
             <div className="flex justify-center py-4">
               <span className="text-xs text-muted-foreground">Se încarcă...</span>
