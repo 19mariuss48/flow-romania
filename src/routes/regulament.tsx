@@ -548,9 +548,9 @@ const termeniData = [
 // 3. New Robbery Rules data
 const jafuriData = {
   tipuri: [
-    { name: "Jafuri de tip Heist", items: ["Flecca Heist", "Paleto Heist", "Humane Labs", "Pacific Heist", "Casino Heist"] },
+    { name: "Jafuri de tip Heist", items: ["Flecca Heist", "Paleto Heist", "Humane Labs", "Pacific Heist", "Underground Heist", "Casino Heist"] },
     { name: "Jafuri independente", items: ["Bijuterie", "Union Heist"] },
-    { name: "Răpirea", items: ["Răpirea este singurul jaf care nu are cooldown"] }
+    { name: "Răpirea", items: ["Acțiune de Răpire (Jaf persoane)"] }
   ],
   informatii: [
     "O organizație poate da un singur jaf care face parte din categoria Heist o dată la 24H.",
