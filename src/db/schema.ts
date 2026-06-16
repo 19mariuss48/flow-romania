@@ -136,3 +136,9 @@ export const applications = mysqlTable("applications", {
   created_at: datetime("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
   updated_at: datetime("updated_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
 });
+
+export const pageMetrics = mysqlTable("page_metrics", {
+  id: varchar("id", { length: 255 }).primaryKey(),
+  views_count: int("views_count").default(0).notNull(),
+});
+

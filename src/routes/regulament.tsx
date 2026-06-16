@@ -21,6 +21,7 @@ import {
   ChevronRight,
   BookOpen
 } from "lucide-react";
+import { getPageViews, incrementPageViews } from "@/lib/api/metrics.server";
 
 export const Route = createFileRoute("/regulament")({
   head: () => ({
@@ -587,7 +588,7 @@ const lockedTopics = [
     avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
     date: "1 iunie 2026",
     replies: "0 replies",
-    views: "19k views",
+    views: "0 views",
     color: "#6b7280"
   },
   {
@@ -597,7 +598,7 @@ const lockedTopics = [
     avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80",
     date: "1 iunie 2026",
     replies: "0 replies",
-    views: "990.5k views",
+    views: "0 views",
     color: "#14b8a6"
   },
   {
@@ -607,7 +608,7 @@ const lockedTopics = [
     avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
     date: "1 iunie 2026",
     replies: "0 replies",
-    views: "146.8k views",
+    views: "0 views",
     color: "#3b82f6"
   }
 ];
@@ -626,6 +627,62 @@ function RegulamentPage() {
       ...prev,
       [key]: !prev[key]
     }));
+  };
+
+  const [viewsData, setViewsData] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    // Fetch initial views
+    const loadViews = async () => {
+      try {
+        const termeniV = await getPageViews({ data: { pageId: "termeni" } });
+        const regulamentV = await getPageViews({ data: { pageId: "regulament" } });
+        const jafuriV = await getPageViews({ data: { pageId: "jafuri" } });
+
+        const newViews = {
+          termeni: termeniV || 0,
+          regulament: regulamentV || 0,
+          jafuri: jafuriV || 0
+        };
+
+        // Fallback local storage
+        if (typeof window !== "undefined") {
+          lockedTopics.forEach(t => {
+            const lv = localStorage.getItem(`flowro_views_${t.id}`);
+            if (lv && !newViews[t.id as keyof typeof newViews]) {
+              newViews[t.id as keyof typeof newViews] = parseInt(lv, 10);
+            }
+          });
+        }
+        setViewsData(newViews);
+      } catch (e) {
+        // Fallback
+        if (typeof window !== "undefined") {
+          const nv: Record<string, number> = {};
+          lockedTopics.forEach(t => {
+            nv[t.id] = parseInt(localStorage.getItem(`flowro_views_${t.id}`) || "0", 10);
+          });
+          setViewsData(nv);
+        }
+      }
+    };
+    loadViews();
+  }, []);
+
+  const handleSelectTopic = async (topicId: string) => {
+    setSelectedTopic(topicId);
+    try {
+      const newCount = await incrementPageViews({ data: { pageId: topicId } });
+      if (newCount) {
+        setViewsData(prev => ({ ...prev, [topicId]: newCount }));
+      }
+    } catch (e) {
+      if (typeof window !== "undefined") {
+        const cur = parseInt(localStorage.getItem(`flowro_views_${topicId}`) || "0", 10);
+        localStorage.setItem(`flowro_views_${topicId}`, (cur + 1).toString());
+        setViewsData(prev => ({ ...prev, [topicId]: cur + 1 }));
+      }
+    }
   };
 
   const activeData = regulamenteData.find((c) => c.id === activeCategory) || regulamenteData[0];
@@ -714,7 +771,7 @@ function RegulamentPage() {
                 {lockedTopics.map((topic) => (
                   <div
                     key={topic.id}
-                    onClick={() => setSelectedTopic(topic.id)}
+                    onClick={() => handleSelectTopic(topic.id)}
                     className="flex flex-col md:flex-row md:items-center justify-between p-6 hover:bg-white/[0.02] cursor-pointer transition-all duration-300 group"
                   >
                     
@@ -753,7 +810,7 @@ function RegulamentPage() {
                     <div className="flex gap-8 my-4 md:my-0 md:px-12 text-left md:text-right shrink-0">
                       <div className="flex flex-col min-w-[70px]">
                         <span className="text-xs font-semibold text-silver/80 font-mono leading-tight">{topic.replies}</span>
-                        <span className="text-[10px] text-muted-foreground uppercase tracking-widest">{topic.views}</span>
+                        <span className="text-[10px] text-muted-foreground uppercase tracking-widest">{viewsData[topic.id] || 0} views</span>
                       </div>
                     </div>
 
