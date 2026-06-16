@@ -1,5 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import { getTopDonators } from "../lib/api/tebex.server";
+import { getServerStatus } from "../lib/api/status.server";
+import { useState, useEffect } from "react";
+
+function getCountdown(targetDate: string) {
+  const target = new Date(targetDate).getTime();
+  const now = new Date().getTime();
+  const diff = target - now;
+
+  if (diff <= 0) return { d: "00", h: "00", m: "00", s: "00" };
+
+  const d = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, "0");
+  const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, "0");
+  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, "0");
+  const s = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, "0");
+
+  return { d, h, m, s };
+}
 
 function Widget({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -34,6 +51,25 @@ export function Widgets() {
     queryKey: ["topDonators"],
     queryFn: () => getTopDonators(),
   });
+
+  const { data: serverStatus } = useQuery({
+    queryKey: ["serverStatus"],
+    queryFn: () => getServerStatus(),
+    refetchInterval: 60000, // refresh every minute
+  });
+
+  const [timeLeft, setTimeLeft] = useState({ d: "00", h: "00", m: "00", s: "00" });
+
+  useEffect(() => {
+    if (!serverStatus?.launchDate) return;
+    
+    setTimeLeft(getCountdown(serverStatus.launchDate));
+    const interval = setInterval(() => {
+      setTimeLeft(getCountdown(serverStatus.launchDate));
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [serverStatus?.launchDate]);
 
   const displayMembers = topDonators.length > 0 ? topDonators : members;
 
@@ -100,10 +136,16 @@ export function Widgets() {
           <div className="space-y-5">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Locuri Jucători</span>
-              <span className="text-sm text-foreground">184<span className="text-muted-foreground">/300</span></span>
+              <span className="text-sm text-foreground">
+                {serverStatus?.players || 0}
+                <span className="text-muted-foreground">/{serverStatus?.maxPlayers || 300}</span>
+              </span>
             </div>
             <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-white/80 to-white/40 shine" style={{ width: "61%" }} />
+              <div 
+                className="h-full bg-gradient-to-r from-white/80 to-white/40 shine transition-all duration-1000" 
+                style={{ width: `${Math.min(100, ((serverStatus?.players || 0) / (serverStatus?.maxPlayers || 300)) * 100)}%` }} 
+              />
             </div>
 
               <div className="grid grid-cols-2 gap-4 pt-2">
@@ -116,7 +158,7 @@ export function Widgets() {
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">LATENȚĂ</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-light text-silver-gradient">14.2k</div>
+                  <div className="text-2xl font-light text-silver-gradient">{serverStatus?.discord || "0"}</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">DISCORD</div>
                 </div>
                 <div>
@@ -129,10 +171,10 @@ export function Widgets() {
                 <div className="text-[10px] tracking-[0.4em] text-muted-foreground mb-2">LANSARE</div>
                 <div className="grid grid-cols-4 gap-2 text-center">
                   {[
-                    { v: "156", l: "ZILE" },
-                    { v: "08", l: "ORE" },
-                    { v: "42", l: "MIN" },
-                    { v: "11", l: "SEC" },
+                    { v: timeLeft.d, l: "ZILE" },
+                    { v: timeLeft.h, l: "ORE" },
+                    { v: timeLeft.m, l: "MIN" },
+                    { v: timeLeft.s, l: "SEC" },
                   ].map((c) => (
                   <div key={c.l} className="bg-white/[0.03] rounded-md py-2">
                     <div className="text-lg font-light text-foreground">{c.v}</div>
