@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Home, MessageSquare, BookOpen, Gavel } from "lucide-react";
+import { Home, MessageSquare, BookOpen, Gavel, ShoppingCart } from "lucide-react";
 
 const DiscordIcon = ({ className }: { className?: string }) => (
   <svg
@@ -30,6 +30,7 @@ const nav = [
   { label: "FORUM", href: "/forum", icon: MessageSquare },
   { label: "REGULAMENT", href: "/regulament", icon: BookOpen },
   { label: "CODUL PENAL", href: "/cod-penal", icon: Gavel },
+  { label: "SHOP", href: "https://flowromania.tebex.io", icon: ShoppingCart },
   { label: "DISCORD", href: "https://discord.gg/flowro", icon: DiscordIcon },
 ];
 
