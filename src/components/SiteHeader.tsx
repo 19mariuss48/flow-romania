@@ -188,15 +188,15 @@ export function SiteHeader() {
           </div>
 
           {/* Navigation Items (Scrollable horizontally on mobile) */}
-          <div className="flex w-full lg:flex-1 justify-start lg:justify-center overflow-x-auto scrollbar-none pb-1 lg:pb-0 px-1 -mx-2 lg:mx-0">
-            <nav className="flex items-start gap-3 min-w-max">
+          <div className="flex w-full lg:flex-1 overflow-x-auto scrollbar-none pb-2 lg:pb-0 mt-2 lg:mt-0">
+            <nav className="flex items-start gap-2 sm:gap-4 lg:gap-6 min-w-max m-auto px-2 lg:px-0">
               {nav.map((n) => {
                 const Icon = n.icon;
                 const isHash = n.href.startsWith("/#");
                 const isExternal = n.href.startsWith("http");
               
               const itemContent = (
-                <div className="flex flex-col items-center gap-1.5 group cursor-pointer w-20 sm:w-24 shrink-0">
+                <div className="flex flex-col items-center gap-1.5 group cursor-pointer w-16 sm:w-20 lg:w-24 shrink-0">
                   <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.03] border border-white/5 group-hover:bg-white/[0.08] group-hover:border-white/15 transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
                     <Icon className="h-4 w-4 text-silver group-hover:text-white transition-colors duration-300" />
                   </div>
