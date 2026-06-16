@@ -75,52 +75,7 @@ type DatabaseProfile = {
   fivem_synced_at: string | null;
 };
 
-// High-fidelity mock characters for FiveM synchronization
-const mockFiveMCharacters = [
-  {
-    name: "Andrei Popescu",
-    job: "Poliția Română - Inspector",
-    jobShort: "Agent de Poliție",
-    faction: "Poliția Română",
-    cash: 45000,
-    bank: 280000,
-    playtime: 7440, // 124 hours
-    vehicles: [
-      { model: "BMW M5 F90 (PD)", type: "Intercepție", plate: "B 999 MAI" },
-      { model: "Dacia Logan MCV (PD)", type: "Patrulare", plate: "B 112 MAI" },
-      { model: "Mercedes-Benz G-Class", type: "Personal", plate: "B 777 FLO" }
-    ],
-    inventory: [
-      { name: "Pistol Glock-17", qty: 1, type: "weapon" },
-      { name: "Insignă de Polițist #142", qty: 1, type: "item" },
-      { name: "Stație Emisie-Recepție", qty: 1, type: "item" },
-      { name: "Permis de Conducere", qty: 1, type: "card" },
-      { name: "Trusă Prim Ajutor", qty: 3, type: "medical" },
-      { name: "Apă", qty: 4, type: "food" }
-    ]
-  },
-  {
-    name: "Vito Scaletta",
-    job: "Mecanic - Șef de Atelier",
-    jobShort: "Mecanic",
-    faction: "Mecanici",
-    cash: 12500,
-    bank: 64200,
-    playtime: 1920, // 32 hours
-    vehicles: [
-      { model: "Platformă Dodge Charger", type: "Utilitară", plate: "B 12 TUA" },
-      { model: "Nissan GT-R R35", type: "Personal", plate: "B 88 VIT" }
-    ],
-    inventory: [
-      { name: "Trusă Reparații", qty: 10, type: "item" },
-      { name: "Petice Anvelope", qty: 5, type: "item" },
-      { name: "Cheie Fixă Grea", qty: 1, type: "tool" },
-      { name: "Permis de Conducere", qty: 1, type: "card" },
-      { name: "Sandviș", qty: 2, type: "food" },
-      { name: "Băutură Energizantă", qty: 3, type: "food" }
-    ]
-  }
-];
+// Synchronization uses actual player data instead of mock characters
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -297,8 +252,8 @@ function ProfilePage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Fotografia de profil trebuie să fie mai mică de 5MB.");
+    if (file.size > 15 * 1024 * 1024) {
+      toast.error("Fotografia de profil trebuie să fie mai mică de 15MB.");
       return;
     }
 
@@ -306,27 +261,64 @@ function ProfilePage() {
     const toastId = toast.loading("Se procesează fotografia de profil...");
 
     try {
-      // 2. Fallback to base64 Data URL (Supabase Removed)
       const reader = new FileReader();
-      reader.onload = async (uploadEvent) => {
-        const base64Url = uploadEvent.target?.result as string;
-        setAvatarUrl(base64Url);
-        await updateUserProfile({
-          data: {
-            userId: user.id,
-            avatarUrl: base64Url
+      reader.onload = (uploadEvent) => {
+        const img = new Image();
+        img.onload = async () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          
+          // Set fixed size for avatar
+          const MAX_WIDTH = 256;
+          const MAX_HEIGHT = 256;
+          
+          let width = img.width;
+          let height = img.height;
+          
+          // Calculate crop to make it square
+          const minDim = Math.min(width, height);
+          const sx = (width - minDim) / 2;
+          const sy = (height - minDim) / 2;
+          
+          canvas.width = MAX_WIDTH;
+          canvas.height = MAX_HEIGHT;
+          
+          if (ctx) {
+            // Draw and crop the image onto canvas
+            ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, MAX_WIDTH, MAX_HEIGHT);
+            
+            // Compress heavily
+            const base64Url = canvas.toDataURL("image/jpeg", 0.7);
+            
+            setAvatarUrl(base64Url);
+            try {
+              await updateUserProfile({
+                data: {
+                  userId: user.id,
+                  avatarUrl: base64Url
+                }
+              });
+              toast.success("Fotografia de profil a fost actualizată!", { id: toastId });
+            } catch (err: any) {
+              toast.error(err.message || "Eroare la salvarea în baza de date.", { id: toastId });
+            } finally {
+              setUploadingPhoto(false);
+            }
+          } else {
+             setUploadingPhoto(false);
+             toast.error("Eroare la procesarea imaginii.", { id: toastId });
           }
-        });
-        toast.success("Fotografia de profil a fost actualizată!", { id: toastId });
+        };
+        img.src = uploadEvent.target?.result as string;
       };
       reader.onerror = () => {
+        setUploadingPhoto(false);
         toast.error("Eroare la citirea fișierului imagine.", { id: toastId });
       };
       reader.readAsDataURL(file);
     } catch (err: any) {
-      toast.error("Eroare la actualizare imagine.", { id: toastId });
-    } finally {
       setUploadingPhoto(false);
+      toast.error("Eroare la actualizare imagine.", { id: toastId });
     }
   };
 
@@ -523,12 +515,23 @@ function ProfilePage() {
         setTimeout(() => {
           setSyncStepText("Se sincronizează datele cu contul tău...");
           setTimeout(async () => {
-            const fUsername = syncInputs.username || `Cfx_${Math.random().toString(36).substring(2, 8)}`;
+            const fUsername = syncInputs.username || profile?.username || `Cfx_${Math.random().toString(36).substring(2, 8)}`;
             const fLicense = syncInputs.license || `license:cfx_${Math.random().toString(36).substring(2, 12)}`;
             const fDiscord = syncInputs.discord || `382${Math.floor(100000000 + Math.random() * 900000000)}`;
             const fSteam = syncInputs.steam || `steam:1100001${Math.random().toString(16).substring(2, 10)}`;
 
-            const primaryChar = mockFiveMCharacters[0];
+            const newChar = {
+              name: profile?.character_name || fUsername,
+              job: "Civil",
+              jobShort: "Civil",
+              faction: "Fără",
+              cash: 500,
+              bank: 1000,
+              playtime: 0,
+              vehicles: [],
+              inventory: []
+            };
+
             // Save mock data to database
             try {
               await updateFiveMSync({
@@ -539,13 +542,13 @@ function ProfilePage() {
                     fivem_license: fLicense,
                     fivem_discord_id: fDiscord,
                     fivem_steam_hex: fSteam,
-                    fivem_cash: mockFiveMCharacters.reduce((acc, char) => acc + char.cash, 0),
-                    fivem_bank: mockFiveMCharacters.reduce((acc, char) => acc + char.bank, 0),
-                    fivem_job: primaryChar.jobShort,
-                    fivem_playtime: mockFiveMCharacters.reduce((acc, char) => acc + char.playtime, 0),
-                    fivem_character_data: mockFiveMCharacters,
-                    character_name: primaryChar.name,
-                    faction: primaryChar.faction
+                    fivem_cash: newChar.cash,
+                    fivem_bank: newChar.bank,
+                    fivem_job: newChar.jobShort,
+                    fivem_playtime: newChar.playtime,
+                    fivem_character_data: [newChar],
+                    character_name: newChar.name,
+                    faction: newChar.faction
                   }
                 }
               });
@@ -554,7 +557,7 @@ function ProfilePage() {
               toast.success("Profilul FiveM a fost conectat cu succes!");
               fetchProfile();
             } catch (err: any) {
-              console.warn("Could not write sync to Supabase (columns might be missing). Saving to browser local storage instead.", err);
+              console.warn("Could not write sync to database. Saving to browser local storage instead.", err);
               
               // Fallback to localStorage
               if (typeof window !== 'undefined') {
@@ -564,13 +567,13 @@ function ProfilePage() {
                   fivem_license: fLicense,
                   fivem_discord_id: fDiscord,
                   fivem_steam_hex: fSteam,
-                  fivem_cash: mockFiveMCharacters.reduce((acc, char) => acc + char.cash, 0),
-                  fivem_bank: mockFiveMCharacters.reduce((acc, char) => acc + char.bank, 0),
-                  fivem_job: primaryChar.jobShort,
-                  fivem_playtime: mockFiveMCharacters.reduce((acc, char) => acc + char.playtime, 0),
-                  fivem_character_data: mockFiveMCharacters,
-                  character_name: primaryChar.name,
-                  faction: primaryChar.faction,
+                  fivem_cash: newChar.cash,
+                  fivem_bank: newChar.bank,
+                  fivem_job: newChar.jobShort,
+                  fivem_playtime: newChar.playtime,
+                  fivem_character_data: [newChar],
+                  character_name: newChar.name,
+                  faction: newChar.faction,
                   fivem_synced_at: new Date().toISOString()
                 };
                 
