@@ -390,15 +390,14 @@ function ThreadDetailPage() {
   let canReply = true;
   const isAuthor = user && threadDetails?.user_id === user.id;
 
-  if (initialForumSlug.includes("polit") || initialForumSlug === "politia-romana" || initialForumSlug === "aplicatii-politie" || initialForumSlug === "regulament-politie") {
-    // Doar Chestorul General (sau SuperAdmin) are voie sa modereze
+  if (initialForumSlug.includes("polit") || initialForumSlug === "aplicatii-politie") {
     if (userRank === "Chestor General") isStaff = true;
-    
-    // Doar Chestorul General si autorul pot raspunde
-    canReply = isAuthor || userRank === "Chestor General" || isSuperAdmin;
-  } else if (initialForumSlug.includes("medic") || initialForumSlug.includes("smurd") || initialForumSlug === "spitalul-general" || initialForumSlug === "aplicatii-smurd" || initialForumSlug === "regulament-smurd") {
+    canReply = isAuthor || userRank === "Chestor General" || userRank === "Tester Politie" || isSuperAdmin;
+  } else if (initialForumSlug.includes("medic") || initialForumSlug.includes("smurd") || initialForumSlug === "aplicatii-smurd") {
     if (userRank === "Director General") isStaff = true;
-    canReply = isAuthor || userRank === "Director General" || isSuperAdmin;
+    canReply = isAuthor || userRank === "Director General" || userRank === "Tester Medici" || isSuperAdmin;
+  } else if (initialForumSlug === "aplicatii-staff" || initialForumSlug === "staff") {
+    canReply = isAuthor || userRank === "Fondator" || userRank === "Moderator" || isSuperAdmin;
   }
   
   const isMockThread = String(threadId).startsWith("mock-");
@@ -696,7 +695,7 @@ function ThreadDetailPage() {
                   <ShieldAlert className="h-6 w-6 text-amber-500/40" />
                   <h4 className="text-xs font-bold tracking-widest text-amber-500 uppercase">ACȚIUNE RESTRICȚIONATĂ</h4>
                   <p className="text-[10px] text-muted-foreground max-w-xs leading-normal">
-                    Doar liderul facțiunii (Chestor General / Director General) sau autorul topicului pot scrie în această secțiune.
+                    Doar gradele aferente facțiunii sau autorul pot răspunde la această aplicație.
                   </p>
                 </div>
               ) : (

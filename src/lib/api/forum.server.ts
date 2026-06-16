@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { db } from "@/db";
-import { forumCategories, forums, forumThreads, forumPosts, profiles } from "@/db/schema";
+import { forumCategories, forums, forumThreads, forumPosts, profiles, applications } from "@/db/schema";
 import { eq, desc, inArray } from "drizzle-orm";
 
 export const getForumStructure = createServerFn({ method: "GET" })
@@ -138,6 +138,40 @@ export const createThread = createServerFn({ method: "POST" })
       user_id: data.userId,
       content: data.content
     });
+
+    const forum = await db.query.forums.findFirst({
+      where: eq(forums.id, data.forumId)
+    });
+
+    if (forum) {
+      await db.update(forums)
+        .set({ threads_count: (forum.threads_count || 0) + 1, posts_count: (forum.posts_count || 0) + 1 })
+        .where(eq(forums.id, forum.id));
+
+      let appType = "";
+      if (forum.slug === "aplicatii-politie") appType = "police";
+      else if (forum.slug === "aplicatii-smurd") appType = "medic";
+      else if (forum.slug === "aplicatii-staff") appType = "staff";
+
+      if (appType) {
+        const appId = crypto.randomUUID();
+        const userProfile = await db.query.profiles.findFirst({ where: eq(profiles.id, data.userId) });
+        const charName = userProfile?.character_name || userProfile?.display_name || userProfile?.username || "Cetățean";
+        const ageMatch = data.content.match(/V[aâă]rst[aă]:?\s*(\d+)/i);
+        const age = ageMatch ? parseInt(ageMatch[1], 10) : 18;
+        
+        await db.insert(applications).values({
+          id: appId,
+          user_id: data.userId,
+          type: appType,
+          character_name: charName,
+          age: age,
+          playtime_hours: userProfile?.fivem_playtime ? Math.floor(userProfile.fivem_playtime / 60) : 0,
+          motivation: "Aplicație depusă pe forum: " + data.content.substring(0, 100) + "...",
+          status: "in_asteptare"
+        });
+      }
+    }
 
     return { success: true, threadId };
   });

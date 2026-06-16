@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { db } from "@/db";
-import { profiles, applications } from "@/db/schema";
+import { profiles, applications, forums, forumThreads, forumPosts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export const getUserProfile = createServerFn({ method: "POST" })
@@ -98,5 +98,46 @@ export const submitApplication = createServerFn({ method: "POST" })
       motivation: data.motivation,
       status: "in_asteptare"
     });
+
+    // Create a forum thread for this application
+    let forumSlug = "";
+    if (data.type === "police") forumSlug = "aplicatii-politie";
+    else if (data.type === "medic") forumSlug = "aplicatii-smurd";
+    else if (data.type === "staff") forumSlug = "aplicatii-staff";
+
+    if (forumSlug) {
+      const forum = await db.query.forums.findFirst({
+        where: eq(forums.slug, forumSlug)
+      });
+      if (forum) {
+        const threadId = crypto.randomUUID();
+        const appTitle = `Aplicație ${data.type === "police" ? "Poliție" : data.type === "medic" ? "SMURD" : "Staff"} - ${data.characterName}`;
+        const appContent = `**Nume Caracter:** ${data.characterName}\n**Vârstă:** ${data.age}\n**Ore jucate:** ${data.playtimeHours}\n\n**Motivație:**\n${data.motivation}`;
+        
+        await db.insert(forumThreads).values({
+          id: threadId,
+          forum_id: forum.id,
+          user_id: data.userId,
+          title: appTitle,
+          content: appContent,
+          views_count: 0,
+          replies_count: 0,
+          is_locked: false // Poate fi închis ulterior de un admin
+        });
+
+        const postId = crypto.randomUUID();
+        await db.insert(forumPosts).values({
+          id: postId,
+          thread_id: threadId,
+          user_id: data.userId,
+          content: appContent
+        });
+
+        await db.update(forums)
+          .set({ threads_count: (forum.threads_count || 0) + 1, posts_count: (forum.posts_count || 0) + 1 })
+          .where(eq(forums.id, forum.id));
+      }
+    }
+
     return { success: true, id };
   });
