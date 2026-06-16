@@ -44,7 +44,7 @@ function NewTopicPage() {
   
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [category, setCategory] = useState<string>("discutie");
+  const [category, setCategory] = useState<string>("");
   const [publishing, setPublishing] = useState(false);
 
   useEffect(() => {
@@ -269,21 +269,22 @@ function NewTopicPage() {
           </div>
 
           <form onSubmit={handleSubmitTopic} className="space-y-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-silver tracking-wider uppercase">Categorie</Label>
-              <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger className="w-full bg-white/5 border-white/10 text-foreground text-sm focus:border-white/40 h-10">
-                  <SelectValue placeholder="Selectează categoria" />
-                </SelectTrigger>
-                <SelectContent className="bg-[#111] border-white/10 text-white">
-                  <SelectItem value="discutie">Discuție Generală</SelectItem>
-                  <SelectItem value="free chat">Free Chat</SelectItem>
-                  <SelectItem value="intrebare">Întrebare / Ajutor</SelectItem>
-                  <SelectItem value="anunt">Anunț</SelectItem>
-                  <SelectItem value="ghid">Ghid / Tutorial</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            {forumSlug === "discutii-generale" && (
+              <div className="space-y-2">
+                <Label className="text-xs text-silver tracking-wider uppercase">Categorie</Label>
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger className="w-full bg-white/5 border-white/10 text-foreground text-sm focus:border-white/40 h-10">
+                    <SelectValue placeholder="Selectează categoria" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#111] border-white/10 text-white">
+                    <SelectItem value="discutie">Discuție Generală</SelectItem>
+                    <SelectItem value="intrebare">Întrebare / Ajutor</SelectItem>
+                    <SelectItem value="anunt">Anunț</SelectItem>
+                    <SelectItem value="ghid">Ghid / Tutorial</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="top-title" className="text-xs text-silver tracking-wider uppercase">Titlu Subiect (Sugestiv & Scurt)</Label>
