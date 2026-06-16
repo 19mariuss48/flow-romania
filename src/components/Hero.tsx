@@ -91,20 +91,7 @@ export function Hero() {
           </Link>
         </div>
 
-        {/* Stats bar */}
-        <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-px bg-white/5 rounded-2xl overflow-hidden glass">
-          {[
-            { v: "2.847", l: "MEMBRI" },
-            { v: "184", l: "CONECTAȚI" },
-            { v: "62", l: "STAFF" },
-            { v: "T-156z", l: "PÂNĂ LA LANSARE" },
-          ].map((s) => (
-            <div key={s.l} className="bg-background/40 px-6 py-5">
-              <div className="text-2xl md:text-3xl font-light text-silver-gradient">{s.v}</div>
-              <div className="text-[10px] tracking-[0.3em] text-muted-foreground mt-1">{s.l}</div>
-            </div>
-          ))}
-        </div>
+
       </div>
 
       {/* Scroll indicator */}
