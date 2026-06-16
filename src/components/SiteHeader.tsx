@@ -93,34 +93,114 @@ export function SiteHeader() {
     .charAt(0)
     .toUpperCase();
 
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    let lastScrollY = window.scrollY;
+    
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const authContent = loading ? null : user ? (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="h-9 w-9 rounded-full bg-white text-black overflow-hidden flex items-center justify-center hover:bg-white/90 transition shadow-[0_0_30px_-8px_rgba(255,255,255,0.4)] cursor-pointer">
+          {avatarUrl ? (
+            <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+          ) : (
+            <span className="text-sm font-semibold">{initial}</span>
+          )}
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuLabel className="truncate">{displayName || user.email}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {isAdmin && (
+          <DropdownMenuItem asChild>
+            <Link to="/admin" className="cursor-pointer w-full text-left font-bold text-amber-400 focus:text-amber-500 focus:bg-amber-400/10">
+              Panou Admin
+            </Link>
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuItem asChild>
+          <Link to="/profile" className="cursor-pointer w-full text-left">
+            Profil & Sincronizare
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => signOut()}
+          className="text-destructive focus:text-destructive cursor-pointer"
+        >
+          Deconectare
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ) : (
+    <>
+      <Link
+        to="/auth"
+        className="hidden sm:inline-flex items-center justify-center rounded-full border border-border px-4 py-2 text-xs tracking-widest text-foreground/90 hover:bg-white/5 transition animate-pulse"
+      >
+        CONECTARE
+      </Link>
+      <Link
+        to="/auth"
+        className="inline-flex items-center justify-center rounded-full bg-white text-black px-4 py-2 text-xs tracking-widest font-medium hover:bg-white/90 transition shadow-[0_0_30px_-8px_rgba(255,255,255,0.4)]"
+      >
+        ALĂTURĂ-TE
+      </Link>
+    </>
+  );
+
   return (
-    <header className="fixed top-0 inset-x-0 z-50">
-      <div className="mx-auto max-w-7xl px-6 mt-4">
-        <div className="glass rounded-2xl flex items-center justify-between px-4 py-3 relative">
-          <div className="flex-1 flex justify-start">
-            <Link to="/" className="flex items-center gap-3 group relative z-10">
+    <header className={`fixed top-0 inset-x-0 z-50 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 mt-2 sm:mt-4">
+        <div className="glass rounded-2xl flex flex-col lg:flex-row items-center justify-between px-4 py-3 relative gap-3 lg:gap-0">
+          
+          {/* Top Row for Mobile (Logo + Auth) / Left section for Desktop */}
+          <div className="w-full lg:w-auto flex items-center justify-between lg:justify-start lg:flex-1">
+            <Link to="/" className="flex items-center gap-3 group relative z-10 shrink-0">
               <img src={logo} alt="FLOW" className="h-9 w-9 object-contain drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]" />
               <div className="leading-tight">
                 <div className="text-sm tracking-[0.3em] text-silver">FLOW</div>
                 <div className="text-[10px] tracking-[0.4em] text-muted-foreground">ROMANIA</div>
               </div>
             </Link>
+            
+            <div className="flex lg:hidden justify-end items-center gap-2 relative z-10">
+              {authContent}
+            </div>
           </div>
-          <div className="hidden lg:flex flex-1 justify-center">
-            <nav className="flex items-start gap-2">
+
+          {/* Navigation Items (Scrollable horizontally on mobile) */}
+          <div className="flex w-full lg:flex-1 justify-start lg:justify-center overflow-x-auto scrollbar-none pb-1 lg:pb-0 px-1 -mx-2 lg:mx-0">
+            <nav className="flex items-start gap-3 min-w-max">
               {nav.map((n) => {
                 const Icon = n.icon;
                 const isHash = n.href.startsWith("/#");
                 const isExternal = n.href.startsWith("http");
               
               const itemContent = (
-                <div className="flex flex-col items-center gap-1.5 group cursor-pointer w-24">
-                  {/* Icon Block */}
+                <div className="flex flex-col items-center gap-1.5 group cursor-pointer w-20 sm:w-24 shrink-0">
                   <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.03] border border-white/5 group-hover:bg-white/[0.08] group-hover:border-white/15 transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
                     <Icon className="h-4 w-4 text-silver group-hover:text-white transition-colors duration-300" />
                   </div>
-                  {/* Label Text */}
-                  <span className="text-[10px] font-bold tracking-[0.2em] pl-[0.2em] text-center text-silver group-hover:text-white transition-colors duration-300 whitespace-nowrap">
+                  <span className="text-[9px] sm:text-[10px] font-bold tracking-[0.2em] text-center text-silver group-hover:text-white transition-colors duration-300 whitespace-nowrap">
                     {n.label}
                   </span>
                 </div>
@@ -150,58 +230,12 @@ export function SiteHeader() {
             })}
             </nav>
           </div>
-          <div className="flex-1 flex justify-end items-center gap-2 relative z-10">
-            {loading ? null : user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="h-9 w-9 rounded-full bg-white text-black overflow-hidden flex items-center justify-center hover:bg-white/90 transition shadow-[0_0_30px_-8px_rgba(255,255,255,0.4)] cursor-pointer">
-                    {avatarUrl ? (
-                      <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
-                    ) : (
-                      <span className="text-sm font-semibold">{initial}</span>
-                    )}
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel className="truncate">{displayName || user.email}</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {isAdmin && (
-                    <DropdownMenuItem asChild>
-                      <Link to="/admin" className="cursor-pointer w-full text-left font-bold text-amber-400 focus:text-amber-500 focus:bg-amber-400/10">
-                        Panou Admin
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuItem asChild>
-                    <Link to="/profile" className="cursor-pointer w-full text-left">
-                      Profil & Sincronizare
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => signOut()}
-                    className="text-destructive focus:text-destructive cursor-pointer"
-                  >
-                    Deconectare
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <>
-                <Link
-                  to="/auth"
-                  className="hidden sm:inline-flex items-center justify-center rounded-full border border-border px-4 py-2 text-xs tracking-widest text-foreground/90 hover:bg-white/5 transition animate-pulse"
-                >
-                  CONECTARE
-                </Link>
-                <Link
-                  to="/auth"
-                  className="inline-flex items-center justify-center rounded-full bg-white text-black px-4 py-2 text-xs tracking-widest font-medium hover:bg-white/90 transition shadow-[0_0_30px_-8px_rgba(255,255,255,0.4)]"
-                >
-                  ALĂTURĂ-TE
-                </Link>
-              </>
-            )}
+
+          {/* Right section for Desktop (Auth) */}
+          <div className="hidden lg:flex flex-1 justify-end items-center gap-2 relative z-10">
+            {authContent}
           </div>
+          
         </div>
       </div>
     </header>
