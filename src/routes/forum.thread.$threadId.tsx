@@ -123,17 +123,10 @@ function ThreadDetailPage() {
             title: th.title,
             is_pinned: th.is_pinned,
             is_locked: th.is_locked,
-            views_count: (th.views_count || 0) + 1,
+            views_count: th.views_count || 0,
             forum_name: getForumName(th.forum_slug),
             forum_slug: th.forum_slug
           });
-
-          // Increment local views count
-          const idx = localThreads.findIndex((t: any) => t.id === threadId);
-          if (idx !== -1) {
-            localThreads[idx].views_count = (localThreads[idx].views_count || 0) + 1;
-            localStorage.setItem("flowro_local_threads", JSON.stringify(localThreads));
-          }
 
           // Load local posts for this thread
           const localPosts = JSON.parse(localStorage.getItem("flowro_local_posts") || "[]")

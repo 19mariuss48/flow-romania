@@ -645,25 +645,9 @@ function RegulamentPage() {
           jafuri: jafuriV || 0
         };
 
-        // Fallback local storage
-        if (typeof window !== "undefined") {
-          lockedTopics.forEach(t => {
-            const lv = localStorage.getItem(`flowro_views_${t.id}`);
-            if (lv && !newViews[t.id as keyof typeof newViews]) {
-              newViews[t.id as keyof typeof newViews] = parseInt(lv, 10);
-            }
-          });
-        }
         setViewsData(newViews);
       } catch (e) {
-        // Fallback
-        if (typeof window !== "undefined") {
-          const nv: Record<string, number> = {};
-          lockedTopics.forEach(t => {
-            nv[t.id] = parseInt(localStorage.getItem(`flowro_views_${t.id}`) || "0", 10);
-          });
-          setViewsData(nv);
-        }
+        console.error("Eroare la preluarea vizualizarilor din baza de date:", e);
       }
     };
     loadViews();
@@ -677,11 +661,7 @@ function RegulamentPage() {
         setViewsData(prev => ({ ...prev, [topicId]: newCount }));
       }
     } catch (e) {
-      if (typeof window !== "undefined") {
-        const cur = parseInt(localStorage.getItem(`flowro_views_${topicId}`) || "0", 10);
-        localStorage.setItem(`flowro_views_${topicId}`, (cur + 1).toString());
-        setViewsData(prev => ({ ...prev, [topicId]: cur + 1 }));
-      }
+      console.error("Eroare la incrementarea vizualizarilor:", e);
     }
   };
 
