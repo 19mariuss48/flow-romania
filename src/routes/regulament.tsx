@@ -994,7 +994,6 @@ function RegulamentPage() {
                               <h3 className="text-sm md:text-base font-semibold tracking-wide text-foreground group-hover:text-silver transition duration-300">
                                 {rule.title}
                               </h3>
-                              <p className="text-xs text-muted-foreground font-light line-clamp-1">{rule.description}</p>
                             </div>
                             <div className={`h-8 w-8 rounded-full border border-white/5 flex items-center justify-center text-silver transition-transform duration-300 ${
                               isExpanded ? "rotate-180 bg-white/5" : "bg-transparent"
