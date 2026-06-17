@@ -540,7 +540,7 @@ const termeniData = [
   },
   {
     title: "8. Dreptul la informație și asistență superioară",
-    content: "Fiecare jucător are dreptul la primirea informațiilor necesare din partea echipei administrative.\n\nÎn cazul în care un jucător consideră că informația / decizia luată de către administratorul curent este nepotrivită, poate solicita intervenția unui grad superior."
+    content: "Fiecare jucător are dreptul la primirea informațiilor necesare din partea echipei administrative.\n\nÎn cazul în care un jucător consideră că informația / decizia luată de către membrul staff curent este nepotrivită, poate solicita intervenția unui grad superior."
   },
   {
     title: "9. Verificarea integrității sistemului",

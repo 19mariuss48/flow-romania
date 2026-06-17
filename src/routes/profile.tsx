@@ -490,7 +490,7 @@ function ProfilePage() {
       }
     } else {
       if (simStatus === "acceptat") {
-        setSimResponseText(`Salutare, ${name}. Felicitări! Ai fost selectat pentru a intra în perioada de teste pentru funcția de Helper în cadrul echipei Staff FLOW ROMÂNIA. Aplicația ta s-a remarcat prin maturitate, o scriere impecabilă cu diacritice și o dorință sinceră de a sprijini jucătorii noștri. Te rugăm să contactezi un Administrator pe Discord în cel mai scurt timp pentru a programa ședința de onboarding.`);
+        setSimResponseText(`Salutare, ${name}. Felicitări! Ai fost selectat pentru a intra în perioada de teste pentru funcția de Helper în cadrul echipei Staff FLOW ROMÂNIA. Aplicația ta s-a remarcat prin maturitate, o scriere impecabilă cu diacritice și o dorință sinceră de a sprijini jucătorii noștri. Te rugăm să contactezi un Fondator pe Discord în cel mai scurt timp pentru a programa ședința de onboarding.`);
       } else {
         setSimResponseText(`Salutare, ${name}. Îți mulțumim pentru interesul depus de a te alătura echipei staff. În urma analizării atente a comportamentului tău general și a istoricului de sancțiuni din joc, am decis ca aplicația ta să fie RESPINSĂ. Considerăm că mai ai nevoie de timp pentru a dovedi stăpânirea de sine și cunoașterea tuturor procedurilor administrative. Te încurajăm să rămâi activ și să reaplici în 7 zile.`);
       }
@@ -537,17 +537,35 @@ function ProfilePage() {
       const fDiscord = `382${Math.floor(100000000 + Math.random() * 900000000)}`;
       const fSteam = `steam:1100001${Math.random().toString(16).substring(2, 10)}`;
 
-      const newChar = {
+      const newChar1 = {
         name: profile?.character_name || fUsername,
+        job: "Polițist",
+        jobShort: "Poliție",
+        faction: "Poliția Română",
+        cash: 15500,
+        bank: 250000,
+        playtime: 125,
+        serverId: syncInputs.serverId,
+        isLive: true,
+        vehicles: [{ model: "BMW M5 F90", type: "Personal", plate: "B 101 FLW" }],
+        inventory: [{ name: "Telefon", qty: 1 }, { name: "Apă", qty: 5 }, { name: "Pistol", qty: 1 }]
+      };
+      
+      const newChar2 = {
+        name: "Caracter Secundar",
         job: "Civil",
         jobShort: "Civil",
         faction: "Fără",
         cash: 500,
         bank: 1000,
-        playtime: 0,
+        playtime: 12,
+        serverId: "Offline",
+        isLive: false,
         vehicles: [],
-        inventory: []
+        inventory: [{ name: "Telefon", qty: 1 }, { name: "Sandwich", qty: 2 }]
       };
+      
+      const chars = [newChar1, newChar2];
 
       try {
         await updateFiveMSync({
@@ -558,13 +576,13 @@ function ProfilePage() {
               fivem_license: fLicense,
               fivem_discord_id: fDiscord,
               fivem_steam_hex: fSteam,
-              fivem_cash: newChar.cash,
-              fivem_bank: newChar.bank,
-              fivem_job: newChar.jobShort,
-              fivem_playtime: newChar.playtime,
-              fivem_character_data: [newChar],
-              character_name: newChar.name,
-              faction: newChar.faction
+              fivem_cash: newChar1.cash,
+              fivem_bank: newChar1.bank,
+              fivem_job: newChar1.jobShort,
+              fivem_playtime: newChar1.playtime,
+              fivem_character_data: chars,
+              character_name: newChar1.name,
+              faction: newChar1.faction
             }
           }
         });
@@ -586,9 +604,9 @@ function ProfilePage() {
             fivem_bank: newChar.bank,
             fivem_job: newChar.jobShort,
             fivem_playtime: newChar.playtime,
-            fivem_character_data: [newChar],
-            character_name: newChar.name,
-            faction: newChar.faction,
+            fivem_character_data: chars,
+            character_name: newChar1.name,
+            faction: newChar1.faction,
             fivem_synced_at: new Date().toISOString()
           };
           
@@ -1165,36 +1183,32 @@ function ProfilePage() {
                 </div>
 
                 {/* Character detailed section */}
-                {connectedChars.length > 0 && (
-                  <div className="glass rounded-2xl p-6 border-white/10 relative">
-                    <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
-                      <h3 className="text-xs tracking-[0.35em] text-silver uppercase flex items-center gap-2">
-                        <UserCheck className="h-4 w-4" />
-                        STATISTICI PROFIL PERSONAJ
-                      </h3>
-                      
-                      {/* Character tabs selector */}
-                      <div className="flex gap-2">
-                        {connectedChars.map((char: any, idx: number) => (
-                          <button
-                            key={char.name}
-                            onClick={() => setActiveCharIndex(idx)}
-                            className={`px-3 py-1.5 rounded-lg text-xs tracking-wider border transition-all cursor-pointer ${
-                              activeCharIndex === idx 
-                                ? 'bg-white text-black border-white' 
-                                : 'bg-white/5 text-silver border-white/5 hover:bg-white/10'
-                            }`}
-                          >
-                            {char.name}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+                {(profile?.faction === 'Fondator' || profile?.faction === 'Moderator') && connectedChars.length > 0 && (
+                  <div className="space-y-6">
+                    {connectedChars.map((char: any, idx: number) => (
+                      <div key={idx} className="glass rounded-2xl p-6 border-white/10 relative">
+                        <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+                          <h3 className="text-xs tracking-[0.35em] text-silver uppercase flex items-center gap-2">
+                            <UserCheck className="h-4 w-4" />
+                            STATISTICI PROFIL PERSONAJ {idx + 1}
+                          </h3>
+                          
+                          {char.isLive ? (
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+                              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                              <span className="text-[10px] text-emerald-400 font-bold tracking-widest uppercase">Sincronizare Live</span>
+                              {char.serverId && <span className="text-[10px] text-emerald-400/70 ml-1 border-l border-emerald-500/30 pl-2">ID: {char.serverId}</span>}
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg">
+                              <span className="h-2 w-2 rounded-full bg-red-500"></span>
+                              <span className="text-[10px] text-silver font-bold tracking-widest uppercase">Offline</span>
+                            </div>
+                          )}
+                        </div>
 
-                    {/* Active character data view */}
-                    {connectedChars[activeCharIndex] && (() => {
-                      const char = connectedChars[activeCharIndex];
-                      return (
+                        {/* Character data view */}
+                        <div className="space-y-6">
                         <div className="space-y-6">
                           
                           {/* Top Meta info */}
@@ -1283,8 +1297,9 @@ function ProfilePage() {
 
                           </div>
                         </div>
-                      );
-                    })()}
+                      </div>
+                      </div>
+                    ))}
                   </div>
                 )}
 

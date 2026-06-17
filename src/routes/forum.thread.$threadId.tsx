@@ -45,7 +45,7 @@ const mockDiscussions: Record<string, { thread: any; posts: any[] }> = {
   "mock-t4": {
     thread: { id: "mock-t4", title: "Regulament Oficial Jucători FiveM FLOW ROMÂNIA (Obligatoriu Citit)", is_pinned: true, is_locked: true, forum_slug: "regulamente", forum_name: "Regulamente" },
     posts: [
-      { id: "p4", user_name: "mirela.s", avatar_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80", rank: "Administrator", content: "Regulamentul oficial al comunității de roleplay FLOW ROMÂNIA.\n\nFiecare jucător este rugat să citească și să asimileze regulile de mai jos:\n1. **Meta-gaming (MG):** Este interzisă utilizarea informațiilor OOC în scopuri IC.\n2. **Power-gaming (PG):** Este interzis roleplay-ul nerealist în care nu dai șanse egale celeilalte persoane.\n3. **Deathmatch (DM):** Uciderea sau rănirea altui jucător fără un motiv solid IC (RP bun) este strict interzisă.\n\nNerespectarea acestor reguli va atrage sancțiuni administrative.", created_at: "2026-05-20T12:00:00.000Z", likes: 104, liked: false }
+      { id: "p4", user_name: "mirela.s", avatar_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80", rank: "Fondator", content: "Regulamentul oficial al comunității de roleplay FLOW ROMÂNIA.\n\nFiecare jucător este rugat să citească și să asimileze regulile de mai jos:\n1. **Meta-gaming (MG):** Este interzisă utilizarea informațiilor OOC în scopuri IC.\n2. **Power-gaming (PG):** Este interzis roleplay-ul nerealist în care nu dai șanse egale celeilalte persoane.\n3. **Deathmatch (DM):** Uciderea sau rănirea altui jucător fără un motiv solid IC (RP bun) este strict interzisă.\n\nNerespectarea acestor reguli va atrage sancțiuni administrative.", created_at: "2026-05-20T12:00:00.000Z", likes: 104, liked: false }
     ]
   },
   "mock-t9": {
@@ -384,7 +384,7 @@ function ThreadDetailPage() {
 
   const initialForumSlug = threadDetails?.forum_slug || "discutii-generale";
   const userRank = currentUserProfile?.faction || "Jucător";
-  const isSuperAdmin = currentUserProfile?.username === "19mariuss48" || userRank === "Fondator" || userRank === "Administrator" || userRank?.includes("Admin");
+  const isSuperAdmin = currentUserProfile?.username === "19mariuss48" || userRank === "Fondator" ;
   
   let isStaff = isSuperAdmin || userRank === "Moderator";
   let canReply = true;

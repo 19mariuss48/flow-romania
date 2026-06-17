@@ -201,7 +201,7 @@ function NewTopicPage() {
   }
 
   const userRank = profile?.faction || "Jucător";
-  const isSuperAdmin = profile?.username === "19mariuss48" || userRank === "Fondator" || userRank === "Administrator" || userRank?.includes("Admin");
+  const isSuperAdmin = profile?.username === "19mariuss48" || userRank === "Fondator" ;
   
   let canCreateTopic = true;
   if (forumSlug.includes("polit") || forumSlug === "politia-romana" || forumSlug === "aplicatii-politie" || forumSlug === "regulament-politie") {

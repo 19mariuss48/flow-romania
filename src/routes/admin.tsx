@@ -63,7 +63,7 @@ function AdminPage() {
         if (!data) throw new Error("Profile not found");
 
         const rawFaction = data.faction || "Jucător";
-        const isSuperAdmin = data.username === "19mariuss48" || rawFaction === "Administrator" || rawFaction?.includes("Admin") || rawFaction === "Fondator";
+        const isSuperAdmin = data.username === "19mariuss48" || rawFaction === "Fondator";
         const finalUserFaction = isSuperAdmin ? "Fondator" : rawFaction;
         setCurrentUserFaction(finalUserFaction);
 
@@ -119,7 +119,7 @@ function AdminPage() {
   const handleEditClick = (profile: any) => {
     // Basic protection: Non-Fondator cannot edit a Fondator or Administrator
     const targetFaction = profile.faction || "Jucător";
-    const isTargetAdmin = targetFaction === "Fondator" || targetFaction === "Administrator" || targetFaction?.includes("Admin");
+    const isTargetAdmin = targetFaction === "Fondator" ;
     if (currentUserFaction !== "Fondator" && isTargetAdmin) {
       toast.error("Nu ai permisiunea de a edita un membru Staff superior.");
       return;
@@ -132,7 +132,7 @@ function AdminPage() {
 
   const getAvailableRanks = () => {
     if (currentUserFaction === "Fondator") {
-      return ["Jucător", "Polițist", "Tester Poliție", "Chestor General", "Medic", "Tester Medic", "Director General", "Moderator", "Administrator", "Fondator"];
+      return ["Jucător", "Polițist", "Tester Poliție", "Chestor General", "Medic", "Tester Medic", "Director General", "Moderator", "Fondator"];
     }
     if (currentUserFaction === "Chestor General") {
       return ["Jucător", "Polițist", "Tester Poliție", "Chestor General"];
@@ -180,7 +180,7 @@ function AdminPage() {
   const handleToggleBan = async (profile: any) => {
     // Basic protection
     const targetFaction = profile.faction || "Jucător";
-    const isTargetAdmin = targetFaction === "Fondator" || targetFaction === "Administrator" || targetFaction?.includes("Admin");
+    const isTargetAdmin = targetFaction === "Fondator" ;
     if (currentUserFaction !== "Fondator" && isTargetAdmin) {
       toast.error("Nu ai permisiunea de a bana un membru Staff superior.");
       return;
@@ -316,7 +316,7 @@ function AdminPage() {
                           </td>
                           <td className="px-6 py-3">
                             <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-bold ${
-                              p.faction === 'Fondator' || p.faction === 'Administrator' || p.faction?.includes('Admin')
+                              p.faction === 'Fondator' 
                                 ? 'bg-amber-400/10 text-amber-400 border border-amber-400/20' 
                                 : 'bg-white/5 text-silver border border-white/5'
                             }`}>
