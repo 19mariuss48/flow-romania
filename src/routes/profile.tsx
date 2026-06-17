@@ -600,10 +600,10 @@ function ProfilePage() {
             fivem_license: fLicense,
             fivem_discord_id: fDiscord,
             fivem_steam_hex: fSteam,
-            fivem_cash: newChar.cash,
-            fivem_bank: newChar.bank,
-            fivem_job: newChar.jobShort,
-            fivem_playtime: newChar.playtime,
+            fivem_cash: newChar1.cash,
+            fivem_bank: newChar1.bank,
+            fivem_job: newChar1.jobShort,
+            fivem_playtime: newChar1.playtime,
             fivem_character_data: chars,
             character_name: newChar1.name,
             faction: newChar1.faction,
@@ -694,9 +694,23 @@ function ProfilePage() {
     return null;
   }
 
-  const connectedChars = Array.isArray(profile.fivem_character_data) 
-    ? profile.fivem_character_data 
-    : [];
+  let connectedChars: any[] = [];
+  try {
+    if (Array.isArray(profile.fivem_character_data)) {
+      connectedChars = profile.fivem_character_data;
+    } else if (typeof profile.fivem_character_data === 'string' && profile.fivem_character_data.trim() !== '') {
+      const parsed = JSON.parse(profile.fivem_character_data);
+      if (Array.isArray(parsed)) {
+        connectedChars = parsed;
+      } else if (parsed && typeof parsed === 'object') {
+        connectedChars = [parsed]; // fallback for single object
+      }
+    } else if (profile.fivem_character_data && typeof profile.fivem_character_data === 'object') {
+      connectedChars = [profile.fivem_character_data];
+    }
+  } catch(e) {
+    console.error("Failed to parse fivem_character_data", e);
+  }
 
   const factionNamesEnToRo: Record<string, string> = {
     police: "Poliția Română",
