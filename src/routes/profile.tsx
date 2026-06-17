@@ -919,14 +919,21 @@ function ProfilePage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="prof-faction" className="text-xs text-silver tracking-wider uppercase">Facțiune / Grup</Label>
-                    <Input 
-                      id="prof-faction" 
-                      type="text" 
-                      value={faction} 
-                      onChange={(e) => setFaction(e.target.value)} 
-                      placeholder="ex. Poliția Română"
-                      className="bg-white/5 border-white/10 text-foreground text-sm"
-                    />
+                                        {profile?.faction && ["fondator", "moderator", "administrator", "admin", "staff"].some(r => profile.faction.toLowerCase().includes(r)) ? (
+                      <div className="bg-white/5 border border-white/10 text-foreground/50 text-sm px-3 py-2 rounded-md flex items-center justify-between cursor-not-allowed" title="Gradul administrativ nu poate fi modificat de aici.">
+                        <span>{profile.faction}</span>
+                        <Lock className="h-3 w-3" />
+                      </div>
+                    ) : (
+                      <Input 
+                        id="prof-faction" 
+                        type="text" 
+                        value={faction} 
+                        onChange={(e) => setFaction(e.target.value)} 
+                        placeholder="ex. Poliția Română"
+                        className="bg-white/5 border-white/10 text-foreground text-sm"
+                      />
+                    )}
                   </div>
                 </div>
 

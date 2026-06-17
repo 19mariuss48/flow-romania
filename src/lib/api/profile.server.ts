@@ -23,6 +23,18 @@ export const updateUserProfile = createServerFn({ method: "POST" })
     avatarUrl: z.string().optional()
   }))
   .handler(async ({ data }) => {
+    const currentProfile = await db.query.profiles.findFirst({
+      where: eq(profiles.id, data.userId),
+    });
+
+    const restrictedRoles = ["fondator", "moderator", "administrator", "admin", "staff", "helper", "owner", "manager"];
+    const isCurrentlyStaff = currentProfile?.faction && restrictedRoles.some(r => currentProfile.faction!.toLowerCase().includes(r));
+    const isAttemptingStaff = data.faction && restrictedRoles.some(r => data.faction!.toLowerCase().includes(r));
+
+    if (!isCurrentlyStaff && isAttemptingStaff) {
+      throw new Error("Eroare de securitate: Nu ai permisiunea de a-ți seta un grad administrativ!");
+    }
+
     const updateData: any = { updated_at: new Date() };
     if (data.displayName !== undefined) updateData.display_name = data.displayName;
     if (data.bio !== undefined) updateData.bio = data.bio;
@@ -59,8 +71,28 @@ export const updateFiveMSync = createServerFn({ method: "POST" })
     syncData: z.any()
   }))
   .handler(async ({ data }) => {
+    const currentProfile = await db.query.profiles.findFirst({
+      where: eq(profiles.id, data.userId),
+    });
+
+    const restrictedRoles = ["fondator", "moderator", "administrator", "admin", "staff", "helper", "owner", "manager"];
+    const isCurrentlyStaff = currentProfile?.faction && restrictedRoles.some(r => currentProfile.faction!.toLowerCase().includes(r));
+
+    let finalSyncData = { ...data.syncData };
+
+    if (isCurrentlyStaff && finalSyncData.faction) {
+       delete finalSyncData.faction;
+    }
+    
+    if (!isCurrentlyStaff && finalSyncData.faction) {
+       const isAttemptingStaff = restrictedRoles.some(r => finalSyncData.faction.toLowerCase().includes(r));
+       if (isAttemptingStaff) {
+           delete finalSyncData.faction;
+       }
+    }
+
     await db.update(profiles).set({
-      ...data.syncData,
+      ...finalSyncData,
       fivem_connected: true,
       fivem_synced_at: new Date()
     }).where(eq(profiles.id, data.userId));
