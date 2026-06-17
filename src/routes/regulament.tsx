@@ -1022,7 +1022,7 @@ function RegulamentPage() {
                                           </p>
                                         </div>
                                         <div className="relative rounded-lg overflow-hidden border border-white/10 mt-4">
-                                          <img src="https://i.imgur.com/1fMO61C.png" alt="Harta Zone Jaf" className="w-full h-auto object-cover" />
+                                          <img src="/harta-zone.png" alt="Harta Zone Jaf" className="w-full h-auto object-cover" />
                                           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
                                         </div>
                                       </div>
