@@ -73,7 +73,7 @@ export function Widgets() {
   const [timeLeft, setTimeLeft] = useState({ d: "00", h: "00", m: "00", s: "00" });
 
   // Test states for restart simulation
-  const [restartPhase, setRestartPhase] = useState<'countdown' | 'restarting' | 'online'>('countdown');
+  const [restartPhase, setRestartPhase] = useState<'countdown' | 'restarting' | 'online' | 'offline'>('countdown');
   const [restartTime, setRestartTime] = useState(120); // 2 minutes in seconds
 
   useEffect(() => {
@@ -95,6 +95,29 @@ export function Widgets() {
         setRestartTime((prev) => {
           if (prev <= 1) {
             setRestartPhase('online');
+            setRestartTime(60); // 1 minute for online phase
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else if (restartPhase === 'online') {
+      timer = setInterval(() => {
+        setRestartTime((prev) => {
+          if (prev <= 1) {
+            setRestartPhase('offline');
+            setRestartTime(60); // 1 minute for offline phase
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else if (restartPhase === 'offline') {
+      timer = setInterval(() => {
+        setRestartTime((prev) => {
+          if (prev <= 1) {
+            setRestartPhase('countdown');
+            setRestartTime(120); // 2 minutes for countdown phase
             return 0;
           }
           return prev - 1;
@@ -177,7 +200,7 @@ export function Widgets() {
           )}
         </Widget>
 
-        <Widget title="STATUS SERVER" live>
+        <Widget title="STATUS SERVER" live={restartPhase !== 'offline'}>
           <div className="space-y-5">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Locuri Jucători</span>
@@ -221,6 +244,11 @@ export function Widgets() {
                   ) : restartPhase === 'restarting' ? (
                     <>
                       <div className="text-xl font-light text-amber-400 mt-1 animate-pulse">RESTARTING</div>
+                      <div className="text-[10px] tracking-widest text-muted-foreground mt-1">STARE</div>
+                    </>
+                  ) : restartPhase === 'offline' ? (
+                    <>
+                      <div className="text-2xl font-light text-red-500">OFFLINE</div>
                       <div className="text-[10px] tracking-widest text-muted-foreground mt-1">STARE</div>
                     </>
                   ) : (
