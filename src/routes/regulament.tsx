@@ -59,263 +59,250 @@ const regulamenteData: RuleCategory[] = [
     description: "Normele oficiale legate de comportamentul în joc, mecanicile de Roleplay, interacțiuni și limite administrative.",
     rules: [
       {
-        title: "1. Meta-Gaming [MG]",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT / FARA DREPT] între 3 și 7 zile",
-        description: "Folosirea informațiilor Out-Of-Character (OOC) în scopuri și acțiuni In-Character (IC).",
+        title: "1. Nu faceti META-GAMING [MG]",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când folosești informațiile OOC în scopuri/situații IC.",
-          "EXEMPLU: Mă uit pe live-ul unui youtuber și observ că este la casa Nr. 25 din Vinewood și mai apoi merg și eu acolo să apar pe live."
+          "DEF: Este atunci cand folosesti informatiile OOC in scopuri/situatii IC.",
+          "EX: Ma uit le live-ul unui youtuber si observ ca este la casa Nr. 25 din vinewood si mai apoi merg si eu acolo sa apar pe live."
         ]
       },
       {
-        title: "2. Power-Gaming [PG]",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT / FARA DREPT] între 1 și 3 zile",
-        description: "Efectuarea unui roleplay exagerat, nerealist sau refuzul de a oferi șanse egale celorlalți.",
+        title: "2. Nu faceti POWER-GAMING [PG]",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când faci un roleplay mult prea exagerat care în viața reală nu se poate realiza sau atunci când nu oferi șanse egale celorlalți participanți la roleplay.",
-          "EXEMPLU ACCIDENT / ANIMATII: Anulezi 'animațiile' la trusă, adrenalină, bandaj etc."
+          "DEF: Este atunci cand faci un roleplay mult prea exagerat care in viata reala nu se poate realiza sau atunci cand nu oferi sanse egale celorlalti participanti la roleplay.",
+          "EX: Anulezi 'animatiile' la trusa, adrenalina, bandaj etc."
         ]
       },
       {
-        title: "3. Mixing [MX]",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT / FARA DREPT] între 3 și 7 zile",
-        description: "Transmiterea de informații din mediul IC în mediul OOC și invers.",
+        title: "3. Nu faceti MIXING [MX]",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când transmiți informații IC-OOC, mai simplu, atunci când spui lucruri IC pe un chat OOC și invers.",
-          "EXEMPLU 1: Îi spui unui prieten pe discord că îi vinzi o mașină.",
-          "EXEMPLU 2: Deschiderea / Vorbitul OOC în IC."
+          "DEF: Este atunci cand transmiti informatii IC-OOC, mai simplu, atunci cand spui lucruri IC pe un chat OOC si invers.",
+          "EX: Ii spui unui prieten pe discord ca ii vinzi o masina.",
+          "EX: Deschiderea/Vorbitul OOC in IC"
         ]
       },
       {
-        title: "4. Random Deathmatch [RDM]",
-        pedeapsa: "În funcție de gravitate BAN [CU DREPT / FARA DREPT] între 1 și 3 zile",
-        description: "Uciderea sau atacarea unui alt jucător fără un motiv de Roleplay bine întemeiat.",
+        title: "4. Nu faceti RANDOM DEATHMATCH [RDM]",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când omori pe cineva fără un motiv Roleplay bine întemeiat.",
-          "EXEMPLU: Vezi o persoană pe stradă iar tu o omori pentru că nu îți place cum este îmbrăcată."
+          "DEF: Este atunci cand omori pe cineva fara un motiv Roleplay bine intemeiat.",
+          "EX: Vezi o persoana pe strada iar tu o omori pentru ca nu iti place cum e imbracata."
         ]
       },
       {
-        title: "5. Vehicle Deathmatch [VDM]",
-        pedeapsa: "În funcție de gravitate BAN [CU DREPT / FARA DREPT] între 1 și 3 zile",
-        description: "Călcarea intenționată a unui jucător cu un vehicul, fără motiv valid.",
+        title: "5. Nu faceti VEHICLE DEATHMATCH [VDM]",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când calci pe cineva cu mașina intenționat fără un motiv Roleplay bine întemeiat.",
-          "EXEMPLU: Vezi o persoană pe stradă iar tu o calci cu mașina.",
-          "NOTĂ EXCEPȚIE: Este permisă călcarea cuiva cu mașina ca ultimă cale de scăpare dintr-o situație de viață și de moarte."
+          "DEF: Este atunci cand calci pe cineva cu masina intentionat fara un motiv Roleplay bine intemeiat. (Este permisa calcarea cuiva cu masina ca ultima cale de scapare)",
+          "EX: Vezi o persoana pe strada iar tu o calci cu masina."
         ]
       },
       {
-        title: "6. Character-Kill [CK]",
-        pedeapsa: "Moartea permanentă a caracterului și ștergerea averii (VIP restituit în coins)",
-        description: "Moartea completă a personajului IC, pierderea identității și începerea unei vieți noi.",
+        title: "6. Despre CHARACTER-KILL [CK]",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când caracterul tău IC 'moare', unde identitatea și informațiile tale IC se pierd și vei începe un caracter nou.",
-          "SITUAȚII DE ACORDARE CK:",
-          "- Atunci când un jucător trădează o organizație.",
-          "- Atunci când un jucător încalcă condițiile impuse de sindicat IC.",
-          "- Atunci când un jucător face un roleplay complex din care se deduce că a primit CK (se aruncă de pe o clădire, este împușcat în cap de aproape etc., fiind obligat să ruleze pe /me 'moare').",
-          "- Atunci când un jucător se omoară singur, intenționat, în roleplay-ul cu poliția, ca mai apoi să primească respawn și să scape de aceștia (Dacă jucătorul este omorât de altcineva, atunci nu se acordă).",
-          "- Atunci când un jucător este prins că abuzează de un BUG sau a folosit HACK pentru a obține bani și bunuri.",
-          "NOTĂ VEHICULE / CASE VIP: Toate mașinile și casele VIP vor fi restituite jucătorului sub formă de COINS (valută premium).",
-          "NOTĂ DOVEZI: Pentru a se acorda CK este absolut necesară o filmare clară de la începutul acțiunii până la sfârșit!"
+          "DEF: Este atunci cand caracterul tau IC 'moare', unde identitatea si informatiile tale IC se pierd si vei incepe un caracter nou.",
+          "PENTRU A SE ACORDA UN CK TREBUIE SA SE INDEPLINEASCA UNA DINTRE SITUATIILE DE MAI JOS:",
+          "- Atunci cand un jucator tradeaza o organizatie.",
+          "- Atunci cand un jucator incalca conditiile impuse de sindicat IC.",
+          "- Atunci cand un jucator face un roleplay complex din care se deduce ca a primit CK (Se arunca de pe o cladire, este impuscat, etc. fiind obligat sa roleaze pe /me 'moare').",
+          "- Atunci cand un jucator se omoara singur, intentionat, in roleplay-ul cu politia, ca mai apoi sa primeasca respawn si sa scape de acestia (Daca jucatorul este omorat de altcineva atunci nu se acorda).",
+          "- Atunci cand un jucator este prins ca abuzeaza de un BUG sau a folosit HACK pentru a obtine bani si bunuri.",
+          "TOATE MASINILE / CASELE VIP VOR FI RESTITUITE SUB FORMA DE COINS.",
+          "PENTRU A SE ACORDA ESTE NEVOIE DE O FILMARE DE LA INCEPUTUL ACTIUNII PANA LA SFARSIT!"
         ]
       },
       {
-        title: "7. Player-Kill [PK] (Nerespectare PK)",
-        pedeapsa: "BAN [CU DREPT] 1 zi",
-        description: "Regula privind nerespectarea respawn-ului și reîntoarcerea în acțiunea precedentă.",
+        title: "7. Despre PLAYER-KILL [PK]",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când îți primești respawn și ajungi la spital. După PK, ești nevoit să uiți absolut toate informațiile din roleplay-ul precedent (locație, atacatori, motive).",
-          "NERESPECTARE PK: Încălcarea acestei reguli prin revenirea imediată sau folosirea informațiilor din acțiunea în care ai murit se sancționează conform tabelului."
+          "DEF: Este atunci cand iti primesti respawn si ajungi la spital. Dupa PK, esti nevoit sa uiti informatiile din roleplayul precedent."
         ]
       },
       {
-        title: "8. Olympic Swim [OS]",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT] 1 zi",
-        description: "Înotul excesiv pe distanțe lungi fără a obosi sau a simula oboseala fizică.",
+        title: "8. Nu faceti OLYMPIC SWIM [OS]",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când înoți o distanță foarte mare fără să obosești.",
-          "REGULI:",
-          "- Este PERMIS să înoți perioade lungi DOAR daca ești echipat cu un costum de scafandru complet.",
-          "- Este INTERZIS să te arunci în apă pentru a scăpa de anumite persoane sau polițiști care te urmăresc fără a avea un costum de scafandru."
+          "DEF: Este atunci cand inoti o distanta foarte mare fara sa obosesti.",
+          "- Este PERMIS sa innoti perioade lungi DOAR daca esti echipat cu un costum de scafandru.",
+          "- Este INTERZIS sa te arunci in apa pentru a scapa de anumite persoane ce te urmaresc fara a avea un costum de scafandru."
         ]
       },
       {
-        title: "9. No-Fear [NF]",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT] între 1 și 3 zile",
-        description: "Nesimularea fricii în situații în care viața personajului tău este pusă în pericol direct.",
+        title: "9. Nu faceti NO-FEAR [NF]",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când nu simulezi frica în situații în care ar trebui să îți fie teamă de moarte sau vătămare.",
-          "EXEMPLU: Un jucător îndreaptă arma direct spre tine de la un metru, iar tu în loc să te supui începi să dai cu pumnii în el sau să fugi."
+          "DEF: Este atunci cand nu simulezi frica in situatii in care ar trebui sa iti fie.",
+          "EX: Un player indreapta arma spre tine iar tu incepi sa dai cu pumnii in el."
         ]
       },
       {
-        title: "10. Cop-Fear [CF]",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT] între 1 și 3 zile",
-        description: "Nesimularea fricii sau a respectului minim față de forțele de ordine (Polițiști).",
+        title: "10. Nu faceti COP-FEAR [CF]",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Reprezintă momentul în care nu simulezi frica normală și respectul față de polițiști.",
-          "EXEMPLU / COP-BAITING: Începi să iei la mișto polițiștii pentru că te plictisești, îi înjuri fără motiv sau accelerezi în fața secției ca să te urmărească (se consideră Cop-Bait)."
+          "DEF: Reprezinta momentul in care nu simulezi frica fata de politisti.",
+          "EX: Incepi sa iei la misto politistii ca te plictisesti, sau ii atragi sa te urmareasca unde se considera cop-bait."
         ]
       },
       {
-        title: "11. Rob and Kill [RK]",
-        pedeapsa: "BAN [CU DREPT] 1 zi",
-        description: "Jefuirea unui alt jucător urmată imediat de uciderea acestuia fără un motiv RP adițional.",
+        title: "11. Nu faceti ROB AND KILL [RK]",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când jefuiești un jucător și apoi alegi să îl omori fără un motiv suplimentar de roleplay major.",
-          "ATENȚIE: Stația și telefonul luate de la victimă nu se iau în considerare pentru a evita sancțiunea!"
+          "DEF: Este atunci cand jefuiesti un player si apoi il omori. ATENTIE! Statia si telefonul nu se iau in considerare!"
         ]
       },
       {
-        title: "12. Drop and Kill [DK]",
-        pedeapsa: "BAN [CU DREPT] 1 zi",
-        description: "Forțarea unui jucător să își arunce bunurile pe jos, urmată de uciderea acestuia.",
+        title: "12. Nu faceti DROP AND KILL [DK]",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când pui un jucător să arunce iteme pe jos din inventar și apoi îl omori.",
-          "ATENȚIE: Stația și telefonul luate sau aruncate nu se iau în considerare pentru a anula regula!"
+          "DEF: Este atunci cand pui un player sa arunce iteme si apoi il omori. ATENTIE! Statia si telefonul nu se iau in considerare!"
         ]
       },
       {
-        title: "13. Comportament de Bombardier",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT / FARA DREPT] 1 zi",
-        description: "Înjosirea sau comportamentul agresiv OOC ascuns sub pretextul jocului, jignirea pe străzi fără motiv.",
+        title: "13. Nu fiti Bombardieri",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când te comporți neadecvat, înjosind diverși jucători fără niciun motiv de roleplay.",
-          "- Atunci când înjuri oameni pe stradă fără motiv sau context.",
-          "- Atunci când te comporți urât cu un jucător doar pentru că are o mașină mai ieftină sau este nou pe server."
+          "DEF: Este atunci cand te comporti neadecvat, injosind diversi playeri fara motiv.",
+          "- Atunci cand injuri oameni pe strada fara motiv.",
+          "- Atunci cand te comporti urat cu un player doar pentru ca are o masina mai ieftina ca a ta."
         ]
       },
       {
-        title: "14. Reguli privind Joburile și Departamentele",
-        pedeapsa: "Joburi --> WARN | Departamente --> În funcție de gravitate BAN [CU DREPT / FARA DREPT] între 3 și 7 zile",
-        description: "Obligațiile generale ale angajaților de la joburile legale și regulile stricte de non-corupție pentru Poliție/SMURD.",
+        title: "14. Reguli privind Joburile si Departamentele",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este INTERZIS să practici un job legal fără uniforma respectivă (dacă jobul deține una).",
-          "- Este INTERZIS să practici un job fără mașina destinata acestuia.",
-          "- Este INTERZIS să faci ilegalități în timp ce ești echipat sau practici un job legal.",
-          "- Ești OBLIGAT să ai un comportament civilizat și decent la orice job legal.",
-          "- Este INTERZIS să faci acțiuni ilegale ca și medic sau polițist, atât ON-DUTY cât și OFF-DUTY (se consideră CORUPȚIE severă și se sancționează drastic).",
-          "- Este INTERZIS să te pui ON-DUTY în joc fără să pornești pontajul pe serverul de Discord.",
-          "- Este INTERZIS să fentezi pontajul sau să stai AFK în timp ce ești ON-DUTY.",
-          "- Este INTERZIS să te pui ON-DUTY doar pentru a farma salariul pasiv.",
-          "- Ești OBLIGAT ca atunci când te pui OFF-DUTY să arunci tot echipamentul de stat (Arme, Veste, Truse, etc.) și să te asiguri că pontajul este oprit complet."
+          "- Este INTERZIS sa practici un job fara uniforma respectiva (daca are).",
+          "- Este INTERZIS sa practici un job fara masina destinata acestuia (daca are).",
+          "- Este INTERZIS sa faci ilegalitati la un job legal.",
+          "- Esti OBLIGAT sa ai un comportament decent la orice job legal.",
+          "- Este INTERZIS sa faci actiuni ilegale ca si medic/politist atat ON-DUTY cat si OFF-DUTY, considerandu-se CORUPTIE.",
+          "- Este INTERZIS sa te pui ON-DUTY in-game fara sa ai pontajul pornit si pe discord, considerandu-se CORUPTIE.",
+          "- Este INTERZIS sa fentezi pontajul, considerandu-se CORUPTIE.",
+          "- Este INTERZIS sa te pui ON-DUTY pentru salariu, considerandu-se CORUPTIE.",
+          "- Esti OBLIGAT ca atunci cand te pui OFF-DUTY sa arunci tot echipamentul (Arme,Veste,Truse,Etc.) si sa te asiguri ca pontajul este oprit atat pe discord cat si in-game, in caz contrat considerandu-se CORUPTIE."
         ]
       },
       {
         title: "15. Despre CONDUS NON-ROLEPLAY",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT] între 1 și 3 zile",
-        description: "Reguli stricte de viteză pe teren offroad, utilizarea manevrelor de pitstop și deplasarea prin canale.",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este INTERZIS să mergi pe un drum offroad (pământ, iarbă) cu mai mult de 60km/h (Excepție: în urmăriri limita maximă este de 100km/h).",
-          "- Este INTERZIS să mergi pe un drum extreme-offroad (munte, stânci) cu mai mult de 60km/h indiferent de situație sau urmărire.",
-          "- Este INTERZIS să conduci offroad sau extreme offroad cu un vehicul care nu este conceput pentru asta (ex: mașini sport, supercars).",
-          "- Este INTERZIS să intri intenționat în alte mașini fără un motiv de Roleplay.",
-          "- Este INTERZIS să efectuezi manevra de pitstop la o viteză mai mare de 150km/h.",
-          "- Este INTERZIS să faci pitstop în interiorul orașului Los Santos (datorită riscului ridicat de a lovi civili/clădiri).",
-          "- Este PERMIS să faci pitstop doar cu anumite clase de vehicule (CLASA B, C, LOWRIDER, MAFIE, POLITIE).",
-          "- Este PERMIS să faci pitstop în oraș doar în intervalul orar 00:00 - 06:00 (când străzile sunt goale).",
-          "DEFINIȚIE PITSTOP: Intrarea în spatele sau lateralul unei mașini pentru a o opri sau dezechilibra.",
-          "- Este INTERZIS să aterizezi elicoptere în alte locuri decât Helipads (excepție fac elicopterele SMURD/Poliție în misiuni).",
-          "- Este INTERZIS să aterizezi avioane în afara aeroporturilor existente pe hartă.",
-          "- Este INTERZIS să mergi pe nisip (plajă) cu orice alt vehicul în afară de ATV.",
-          "- Este PERMIS să faci blocaje rutiere doar cu mașini valide de pitstop, având obligația de a lăsa o cale de scăpare (nu blocați tot drumul).",
-          "- Este INTERZIS ca civilii sau mafioții să facă blocaje pe autostradă.",
-          "- Este PERMIS să mergi prin canale/tunele doar cu un vehicul din categoria extreme offroad (ex: SUV-uri mari, 4x4)."
+          "- Este INTERZIS sa mergi pe un drum offroad cu mai mult de 60km/h (Exceptie fiind atunci cand esti urmarit unde limita este de 100).",
+          "- Este INTERZIS sa mergi pe un drum extreme-offroad cu mai mult de 60km/h indiferent de situatie.",
+          "- Este INTERZIS sa mergi pe un drum offroad/extreme offroad fara un vehicul care sa permita acest lucru.",
+          "- Este INTERZIS sa intrii in alte masini fara motiv.",
+          "- Este INTERZIS sa faci pitstop la o viteza mai mare de 150km/h.",
+          "- Este INTERZIS sa faci pitstop in Los Santos (se presupune ca sunt multe persoane si pot sa fie lovite in urma acestei manevre)",
+          "- Este PERMIS sa faci pitstop doar cu anumite clase de masini (CLASA B,C,LOWRIDER,MAFIE,POLITIE).",
+          "- Este PERMIS sa faci pitstop in oras doar in intervalul 00:00-6:00 (in acest interval nu exista mai nimeni pe strazi care sa fie ranit).",
+          "PITSTOP: ESTE ATUNCI CAND INTRII IN SPATELE / LATERALUL UNEI MASINII PENTRU A O OPRII",
+          "- Este INTERZIS sa aterizezi elicoptere altundeva inafara de Helipads (exceptie se face la elicopterele de medici/politie).",
+          "- Este INTERZIS sa aterizezi avioane altundeva inafara de aeroporturile existente pe joc.",
+          "- Este INTERZIS sa mergeti pe nisip cu orice vehicul inafara de ATV.",
+          "- Este PERMIS sa faceti blocaje doar cu un vehicul valid pentru pitstop avand obligatia de a NU bloca tot drumul.",
+          "- Este INTERZIS sa faceti blocaje pe autostrada ca civili / mafioti.",
+          "- Este PERMIS sa mergeti prin canale/tunele doar cu un vehicul extreme offroad."
         ]
       },
       {
-        title: "16. Acțiuni ce implică Vehicule",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT] 1 zi",
-        description: "Norme privind interacțiunile cu vehiculele pe timp de roleplay.",
+        title: "16. Actiuni ce implica Vehicule",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este INTERZIS să te arunci cu mașina intenționat în apă.",
-          "- Este INTERZIS să te arunci cu motorul în apă fără a avea echipat costum de scafandru.",
-          "- Este INTERZIS să furi mașini aparținând medicilor (SMURD) sau poliției fără un motiv extrem de bine întemeiat de Roleplay.",
-          "- Este INTERZIS să îți parchezi mașina sau să scoți un alt vehicul din garaj în timpul unei urmăriri active.",
-          "- Este INTERZIS să te urci în mașina unui alt jucător fără permisiunea sau aprobarea acestuia.",
-          "- Este INTERZIS să obligi un jucător să te piloteze sau să te conducă spre insula Cayo Perico."
+          "- Este INTERZIS sa te arunci cu masina in apa.",
+          "- Este INTERZIS sa te arunci cu motorul in apa fara a avea costum de scafandru si set.",
+          "- Este INTERZIS sa furi masini de medici/politie fara un motiv foarte bine intemeiat.",
+          "- Este INTERZIS sa iti parchezi masina sau sa scoti alta in timpul unei urmariri.",
+          "- Este INTERZIS sa te urci in masina unui player fara aprobarea acestuia.",
+          "- Este INTERZIS sa obligi pe cineva sa piloteze / conduca spre cayo."
         ]
       },
       {
         title: "17. Roleplay-ul de Jefuit",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT / FARA DREPT] între 1 și 3 zile",
-        description: "Limite de ore, programul oficial pentru jafuri în Los Santos și Cayo Perico, precum și zonele permise.",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Limita de ore: Este PERMIS să jefuiești indiferent de numărul de ore.",
-          "- Interval Oraș (Los Santos): Este PERMIS să jefuiești DOAR în intervalul orar 20:00 - 08:00.",
-          "- Interval Cayo Perico: Este PERMIS să jefuiești DOAR în intervalul orar 18:00 - 12:00.",
-          "- Zone permise: Este OBLIGATORIU să jefuiești DOAR în zone roșii și rău famate (excepție fac jafurile de afaceri și bancomate).",
-          "- Medici & Polițiști: Este STRICT INTERZIS să jefuiești medici sau polițiști ON-DUTY.",
-          "- Joburi legale: Este STRICT INTERZIS să jefuiești persoane care efectuează un job legal active în acele momente.",
-          "- Bunuri jefuibile: Este PERMIS să jefuiești doar ceea ce victima are fizic în inventar asupra ei la acel moment.",
-          "- Bunuri exceptate: Este INTERZIS să jefuiești bunuri care provin din practicarea unui job legal sau echipamente oficiale ale mafiilor dacă nu aveți grad de mafie (le puteți cere să le arunce pe jos în schimb).",
-          "- Abuzuri interzise: Este STRICT INTERZIS să obligi victima să își scoată alte mașini din garaj, să scoată bani de la bancă sau iteme din depozite/seifuri private.",
-          "INFORMAȚIE ZONE: Toate zonele nemarcate pe hartă în Los Santos sunt considerate ZONE VERZI (sigure), iar toate zonele nemarcate din afara Los Santos-ului sunt considerate ZONE ROȘII!",
-          "ATENȚIE: Acordați o atenție deosebită limitelor. Dacă jefuiți fix la granița unei zone roșii, acțiunea poate fi anulată complet în urma unui Ticket dacă un membru Staff consideră că s-a făcut abuz."
+          "- Este PERMIS sa jefuiesti indiferent de numarul de ore (fiind server-ul la inceput, dam timp tuturor sa se stabileasca pe server, urmand ca minimul sa fie de 50 de ore).",
+          "- Este PERMIS sa jefuiesti DOAR in intervalul 20:00-8:00 in Oras.",
+          "- Este PERMIS sa jefuiesti DOAR in intervalul 18:00-12:00 pe Cayo.",
+          "- Este OBLIGATORIU sa jefuiesti DOAR in zone rosii si raufamate cu exceptia afacerilor si bancomatelor",
+          "- Este INTERZIS sa jefuiesti medici/politisti ON-DUTY.",
+          "- Este INTERZIS sa jefuiesti persoane ce fac job legal.",
+          "- Este PERMIS sa jefuiesti DOAR ceea ce persoana detine pe ea.",
+          "- Este PERMIS sa jefuiesti orice tip de item INAFARA de cele care provin dintr-un JOB Legal.",
+          "- Este INTERZIS sa jefuiesti bunuri care apartin echipamentului mafiilor oficiale daca nu aveti grad de mafie. Puteti pune persoana sa le arunce in schimb.",
+          "- Este INTERZIS sa obligi persoana sa isi scoata alte masini / banii din banca / iteme dintr-un depozit.",
+          "ATENTIE! Toate zonele nemarcare cu nicio culoare in LS sunt zone VERZI, iar zonele nemarcate cu nicio culoare inafara LS-ului sunt zone ROSII!",
+          "Acordati atentie zonei in care jefuiti, intrucat daca jefuiti fix la limita unei zone rosii Roleplay-ul poate fi anulat in cazul in care se face Ticket, iar membrul staff considera ca asta este alegerea corespunzatoare"
         ]
       },
       {
-        title: "18. Despre SCAM (Înșelăciuni)",
-        pedeapsa: "În funcție de gravitate BAN [CU DREPT / FARA DREPT] între 1 și 7 zile",
-        description: "Limitele maxime ale înșelăciunilor în bani sau bunuri și regulile tranzacțiilor private.",
+        title: "18. Despre SCAM",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Suma maximă: Este STRICT INTERZIS să dai scam la o sumă mai mare de 7.500$ în bunuri sau bani.",
-          "- Muncă neplătită: Este STRICT INTERZIS să pui o persoană să lucreze pentru tine (ex: farmat) și la final să nu îi plătești suma promisă.",
-          "- Contracte legale: Este STRICT INTERZIS să dai scam în baza unui contract de cumpărare, schimb între vehicule, iteme legale sau locuințe.",
-          "- Înțelegeri verbale: Este PERMIS să dai scam dacă cealaltă persoană acceptă să îți dea banii separat, fără utilizarea unui contract securizat din joc.",
-          "- Servicii neplătite: Este STRICT INTERZIS să beneficiezi de servicii oferite contra cost de alți jucători și apoi să refuzi plata."
+          "- Este INTERZIS sa dai scam la o suma mai mare de 5000$ in bunuri sau bani (indiferent daca intelegerea este de iteme ilegale).",
+          "- Este INTERZIS sa pui o persoana sa lucreze pentru tine iar la final sa nu ii oferi ceea ce i-ai promis.",
+          "- Este INTERZIS sa dai scam pe baza unui contract de cumparare / schimb intre masini / iteme legale / locuinte.",
+          "- Este PERMIS sa dai scam daca persoana accepta sa dea banii separat fara un contract pentru masina.",
+          "- Este INTERZIS sa nu platiti pentru serviciile ce vi se ofera contra cost."
         ]
       },
       {
-        title: "19. Acțiuni Ilegale Neconforme",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT / FARA DREPT] între 1 și 7 zile",
-        description: "Norme privind utilizarea armelor în public și răpirile de cetățeni.",
+        title: "19. ACTIUNI ILEGALE",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este STRICT INTERZIS să tragi cu arma într-o zonă publică aglomerată.",
-          "- Este INTERZIS să răpești persoane dintr-o zonă publică.",
-          "- Este INTERZIS să răpești pe cineva dacă nu sunteți cel puțin 2 membri în vehiculul atacatorilor.",
-          "- Este PERMIS să tragi pe autostradă doar dacă acțiunea RP de urmărire/conflict a început într-o zonă roșie.",
-          "- Este STRICT INTERZIS să furi mașini în zone foarte populate."
+          "- Este INTERZIS sa tragi intr-o zona publica.",
+          "- Este INTERZIS sa rapiti persoane din zona publica (exceptie se face doar daca sunteti deja in vehicul si amenintati persoana cu o arma).",
+          "- Este INTERZIS sa rapiti persoane fara sa fiti cel putin 2 in masina.",
+          "- Este PERMIS sa trageti pe autostrada doar daca actiunea a inceput dintr-o zona rosie.",
+          "- Este INTERZIS sa furi masini in zone populate."
         ]
       },
       {
-        title: "20. Luarea de Oostatici (Ostatec)",
-        pedeapsa: "În funcție de gravitate BAN [CU DREPT / FARA DREPT] între 1 și 3 zile",
-        description: "Motivele valide pentru a lua un ostatec, limita de timp și sumele maxime permise.",
+        title: "20. OSTATIC",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Motiv valid: Este STRICT INTERZIS să luați un ostatec fără ca aceasta să fie ultima voastră cale de scăpare dintr-o situație RP majoră.",
-          "- Limită de timp: Este INTERZIS să țineți o persoană ostatică mai mult de 1 oră fără să solicitați răscumpărarea ei.",
-          "- Răscumpărare maximă: Este INTERZIS să cereți mai mult de 300.000$ pe un ostatic (în bunuri sau bani). ATENȚIE! Este strict interzis să cereți bani direct de la Departamentul de Poliție.",
-          "- Cerințe nerealiste: Este INTERZIS să cereți lucruri imposibile, absurde sau exagerate OOC din partea poliției sau negociatorului.",
-          "- Respectarea înțelegerii: Este OBLIGATORIU ca ambele părți să își respecte cuvântul dat în urma negocierilor.",
-          "- Dreptul de a ucide ostatecul: Dacă cerințele negociate sunt refuzate în mod repetat și nejustificat, aveți dreptul de a ucide ostatecul."
+          "- Este INTERZIS sa luati ostatic fara sa fie ultima cale de scapare.",
+          "- Este INTERZIS sa tineti pe cineva ostatic fara sa cereti ceva pe el mai mult de 1 ora.",
+          "- Este INTERZIS sa cereti mai mult de 300.000$ pe un ostatic in bunuri sau bani. ATENTIE! Nu aveti voie sa cereti o suma de bani la politie.",
+          "- Este INTERZIS sa cereti lucruri care sunt imposibile / exagerate.",
+          "- Este OBLIGATORIU ca dupa o intelegere pe baza ostaticului sa va tineti de cuvant si sa nu fie o inselaciune la mijloc. Este valabil de ambele parti implicate.",
+          "- Daca cerintele sunt refuzate in repetate randuri aveti dreptul de a ucide ostaticul. Daca respectivul are grad in mafie i se va acorda CK, iar daca este civil sau membrul unui departament PK."
         ]
       },
       {
-        title: "21. Revenge-Kill [RK]",
-        pedeapsa: "BAN [CU DREPT] 1 zi",
-        description: "Uciderea sau atacarea persoanei care te-a omorât anterior, încălcând starea de PK.",
+        title: "21. REVENGE-KILL",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Reprezintă momentul în care tu nu rolezi corespunzător PK-ul primit, ducându-te imediat după respawn din spital să cauți și să omori persoana care te-a ucis anterior pentru a te răzbuna."
+          "- Reprezinta momentul in care tu nu rolezi PK-ul, ducandu-te imediat dupa respawn sa omori pesoana care te-a ucis anterior pentru a te razbuna pe aceasta."
         ]
       },
       {
-        title: "22. Roleplay Scârbos",
-        pedeapsa: "BAN [CU DREPT / FARA DREPT] 7 zile",
-        description: "Restricții severe privind comportamentele dezgustătoare, sexuale sau violente.",
+        title: "22. ROLEPLAY-SCARBOS",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Abuzul sexual (violul, hărțuirea sexuală gravă, canibalismul, necrofilia, pedofilia) și alte tipuri de Roleplay extrem de dezgustător sau deranjant sunt permise pe server DOAR cu acordul OOC explicit al tuturor părților implicate înainte de începerea acțiunii!"
-        ]
-      },
-      {
-        title: "23. Reguli Civili / Mafii Direct",
-        pedeapsa: "BAN [FARA DREPT] între 1 zi și 3 zile",
-        description: "Interdicția de sprijin reciproc între tabere diferite în confruntările cu Poliția.",
-        details: [
-          "- Este STRICT INTERZIS ca membrii de mafii să intervină în ajutorul civililor sau invers, civilii să intervină în ajutorul mafioților, în timpul conflictelor sau urmăririlor cu poliția.",
-          "- EXCEPȚIE: Singurele excepții permise sunt în timpul Jafurilor majore organizate de comun acord și pe insula Cayo Perico."
+          "- Abuzul sexual (violul, canibalismul, necrofilia, pedofilia) si alte tipuri de Roleplay dezgustator sunt permise pe server doar cu acordul OOC al ambelor parti implicate in actiune"
         ]
       }
     ]
@@ -327,178 +314,193 @@ const regulamenteData: RuleCategory[] = [
     description: "Normele Out-Of-Character privind comportamentul comunitar, regulile tehnice, utilizarea bug-urilor și acumularea de sancțiuni.",
     rules: [
       {
-        title: "1. Suferințe OOC",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT / FARA DREPT] 1 zi",
-        description: "Interzicerea persiflărilor, batjocurii OOC sau ironiilor aduse altor jucători.",
+        title: "23. REGULI CARE IMPLICA CIVILII / MAFIILE DIRECT",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este STRICT INTERZIS să faceți orice fel de suferințe pe chat-ul jocului, pe Discord sau stații.",
-          "EXEMPLE INTERZISE: Mesaje de tipul 'Sunteți prea slabi', 'Când o să ajungeți voi la nivelul nostru?', sau spamarea numărătorilor pe chat după ce ați ucis pe cineva."
+          "- Este INTERZIS ca mafiotii sa se implice pentru civili sau civilii pentru mafioti in conflictele / urmaririle cu politia. Exceptie este la Jaf si pe Cayo Perico.",
+          "EXPLICATIE: PENTRU A SE EVITA SUPERIORITATEA NUMERICA DIN PARTEA MAFIOTILOR SI CIVILILOR."
         ]
       },
       {
-        title: "2. Post-Hunt",
-        pedeapsa: "În funcție de gravitate BAN [CU DREPT / FARA DREPT] între 1 și 7 zile",
-        description: "Vânătoarea de greșeli minore pentru a depune plângeri.",
+        title: "24. SUFERINTE",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este STRICT INTERZIS să 'vânați' alți jucători pentru a le face tichet la fiecare greșeală minoră de roleplay.",
-          "- Drept de reclamație: Este PERMIS să faci tichet unui jucător doar dacă ai fost participant direct în acel Roleplay.",
-          "- Limită de timp: Reclamațiile trebuie depuse în maxim 24 de ore de la producerea incidentului."
+          "- Este INTERZIS sa faceti orice fel de suferinte precum 'Sunteti prea slabi', 'Cand vreodata sa ajungeti voi aici?', 'Picat 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30'."
         ]
       },
       {
-        title: "3. Acumulare Ban-uri / Warn-uri",
-        pedeapsa: "3 Warns = Ban 7 zile | 5 Bans = Ban Permanent",
-        description: "Efectele cumulării sancțiunilor pe termen lung pe server.",
+        title: "25. POST-HUNT",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Warn-uri: La acumularea a 3 warn-uri (avertismente), contul va fi sancționat automat cu BAN temporar de 7 zile.",
-          "- Ban-uri temporare: La acumularea a 5 ban-uri temporare, contul primește BAN PERMANENT."
+          "- Este INTERZIS sa 'vanati' playerii pentru a le face ticket la orice mica greseala.",
+          "- Este PERMIS sa faci ticket unui player DOAR daca ai facut parte la roleplay-ul respectiv sau ai sesizat niste incalcari ale regulamentului considerabile.",
+          "- Daca doriti sa faceti o reclamatie aveti maxim 24 de ore pentru a o depune."
         ]
       },
       {
-        title: "4. Injurii / Jigniri OOC",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT / FARA DREPT] 1 zi",
-        description: "Interzicerea totală a limbajului vulgar în mediul Out-Of-Character.",
+        title: "26. ACUMULARE BAN-URI/WARN-URI",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este STRICT INTERZIS să înjurați, jigniți sau să aveți un comportament vulgar OOC la adresa unui alt membru al comunității.",
-          "- Mediul IC: Este PERMIS să folosiți injurii ușoare sau medii în joc (IC) DOAR dacă acestea sunt justificate de un conflict de roleplay bine stabilit."
+          "- La suma de 3 warn-uri se acorda ban 7 zile.",
+          "- La suma de 5 ban-uri temporare se acorda BAN PERMANENT.",
+          "- La suma de 10 ban-uri temporare se acorda BAN PERMANENT FARA DREPT DE PLATA."
         ]
       },
       {
-        title: "5. Hack / Software Terț",
-        pedeapsa: "BAN PERMANENT [CU DREPT / FARA DREPT]",
-        description: "Utilizarea programelor de tip cheats, aimbot, wallhack sau exploit-uri externe.",
+        title: "27. INJURII/JIGNIRI",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este STRICT INTERZIS să folosiți orice formă de HACK, script dăunător sau program terț care vă oferă avantaje nedrepte pe server."
+          "- Este INTERZIS sa injurati/jigniti OOC o persoana pe comunitate.",
+          "- Este PERMIS sa injurati o persoana IC cu un motiv stabilit tot IC."
         ]
       },
       {
-        title: "6. Folosire '/cara' Abuziv",
-        pedeapsa: "În funcție de gravitate BAN [CU DREPT / FARA DREPT] între 1 și 7 zile",
-        description: "Preluarea fizică a altor caractere fără nicio interacțiune verbală prealabilă.",
+        title: "28. HACK",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este STRICT INTERZIS să luați persoane pe sus folosind comanda `/cara` fără a fi avut o interacțiune de roleplay consistentă."
+          "- Este INTERZIS sa folositi orice forma de HACK pe server."
         ]
       },
       {
-        title: "7. Amenințări",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT / FARA DREPT] 1 zi",
-        description: "Pretinderea de funcții administrative sau amenințarea jucătorilor cu acțiuni ale echipei Staff.",
+        title: "29. FOLOSIRE '/cara' ABUZIV",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este STRICT INTERZIS să pretindeți că dețineți funcții în staff, că aveți relații speciale cu fondatorii.",
-          "- Amenințarea altor jucători cu mesaje de tipul 'Îți iei ban în 5 minute' este total interzisă!"
+          "- Este STRICT INTERZIS sa luati persoane pe sus cu ajutoru comenzii '/cara' sau orice alta comanda ce va permite acest lucru, fara ca tu sa fi avut orice interactiune cu persona respectiva."
         ]
       },
       {
-        title: "8. Acțiune Teroristă Neconformă",
-        pedeapsa: "BAN PERMANENT [CU DREPT / FARA DREPT]",
-        description: "Reguli stricte privind planificarea actelor de terorism în oraș.",
+        title: "30. AMENINTARI",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este STRICT INTERZIS să organizați acțiuni cu caracter terorist fără permisiunea scrisă a unui Head of Staff sau Management."
+          "- Pretinderea ca detineti functii, ca aveti relatii cu membrii din staff-ul server-ului sau amenintari cu interventia membrilor staff-ului sunt strict interzise!"
         ]
       },
       {
-        title: "9. Ban-Evade",
-        pedeapsa: "BAN PERMANENT [FARA DREPT]",
-        description: "Ocolirea sancțiunilor active prin crearea sau logarea de pe alte conturi.",
+        title: "31. ACTIUNI TERORISTE",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când un membru staff ți-a oferit o sancțiune pe comunitate (ban), iar tu încerci să intri cu alt cont pentru a ocoli pedeapsa."
+          "- Este INTERZIS sa faceti acest tip de Roleplay fara permisiunea unui Head Of Staff +.",
+          "- Este responsabilitatea membrului Staff care a aprobat actiunea sa se asigure ca totul decurge fara incalcari ale regulamentului."
         ]
       },
       {
-        title: "10. Troll",
-        pedeapsa: "În funcție de gravitate BAN [CU DREPT / FARA DREPT] între 3 și 30 zile",
-        description: "Intrarea pe server cu unicul scop de a strica jocul altora, fără intenție de roleplay.",
+        title: "32. BAN-EVADE",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când nu dorești să faci un roleplay serios, iar pe server ai unicul scop de a-ți bate joc de reguli și de a deranja jucătorii."
+          "DEF: Este atunci cand un membru staff ti-a oferit o sanctiune pe comunitate iar tu intrii cu alt cont pentru a scapa de aceasta.",
+          "- Este INTERZIS sa faceti orice forma de BAN-EVADE."
         ]
       },
       {
-        title: "11. Reclama IC / OOC",
-        pedeapsa: "BAN PERMANENT [FARA DREPT]",
-        description: "Promovarea directă sau indirectă a altor comunități sau servicii concurente.",
+        title: "33. TROLL",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este STRICT INTERZIS să faceți orice formă de reclamă adusă altor servere de FiveM, comunități de Discord sau servicii neafiliate FLOW."
+          "- Este INTERZIS sa faceti orice forma de troll.",
+          "DEF: Este atunci cand nu doresti sa faci un roleplay sau nu esti capabil sa faci unul iar pe server ai scopul de a-ti bate joc de server/playeri si de a cauta atentie."
         ]
       },
       {
-        title: "12. Bug-Abuse",
-        pedeapsa: "BAN PERMANENT [CU DREPT / FARA DREPT] + CK (dacă este cazul)",
-        description: "Exploatarea problemelor tehnice sau a erorilor de script pentru avantaje personale.",
+        title: "34. RECLAMA IC / OOC",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este STRICT INTERZIS să abuzați de bug-urile sau erorile pe care le descoperiți pe server.",
-          "- Ești OBLIGAT să raportezi imediat orice bug descoperit prin deschiderea unui tichet pe serverul oficial de Discord."
+          "- Este INTERZIS sa faceti orice forma de reclama indiferent daca este pe chat-ul in-game, nume, etc."
         ]
       },
       {
-        title: "13. Tranzacții OOC",
-        pedeapsa: "BAN PERMANENT [CU DREPT / FARA DREPT] + CK",
-        description: "Vânzarea sau cumpărarea de bunuri din joc în schimbul banilor reali.",
+        title: "35. BUG-ABUSE",
+        pedeapsa: "",
+        description: "",
         details: [
-          "DEFINIȚIE: Este atunci când oferi bunuri IC în schimbul unor beneficii OOC (bani reali, conturi, paysafe, etc.)."
+          "- Este INTERZIS sa abuzati de un bug pe care l-ati gasit pe server pentru a va aduce avantaje indiferent daca este legat de joburi, arme, etc.",
+          "- Sunteti OBLIGATI sa raportati bug-ul intr-un ticket pe discord.",
+          "ATENTIE: se poate sanctiona cu CK daca in urma exploatarii acestuia s-au produs cresteri materiale anormale!"
         ]
       },
       {
-        title: "14. Disconnect in Roleplay",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT] 3 zile",
-        description: "Ieșirea voluntară de pe server în timpul unui roleplay activ sau urmăriri.",
+        title: "36. TRANZACTII OOC",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este STRICT INTERZIS să vă deconectați de pe server în timp ce sunteți implicați într-o acțiune activă de Roleplay."
+          "- Este INTERZIS sa faceti tranzactii OOC.",
+          "DEF: Este atunci cand oferi bunuri IC precum case, masini, bani, arme, etc. pe alte beneficii OOC precum bani reali si alte lucruri."
         ]
       },
       {
-        title: "15. Nerespectare reguli în timpul folosirii armelor de foc",
-        pedeapsa: "BAN [CU DREPT / FARA DREPT] 14 zile",
-        description: "Obligația absolută de a înregistra video acțiunile în care sunt implicate arme.",
+        title: "37. DISCONNECT IN ROLEPLAY",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Ești OBLIGAT să deții o înregistrare video clară în timp ce POSEZI sau FOLOSEȘTI orice armă de foc pe server."
+          "- Este INTERZIS sa va deconectati de pe server in timp ce sunteti implicati intr-o actiune Roleplay."
         ]
       },
       {
-        title: "16. Ascundere Dovezi",
-        pedeapsa: "BAN PERMANENT [CU DREPT / FARA DREPT]",
-        description: "Refuzul intenționat de a prezenta filmările cerute de echipa de administrare.",
+        title: "38. Reguli in timpul folosirii armelor de foc",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Reprezintă momentul în care un jucător refuză în mod intenționat să prezinte dovezile solicitate de un membru Staff."
+          "- Sunteti OBLIGATI sa aveti o filmare in timp ce POSEDATI orice arma de foc, pentru confirmarea integritatii corectitudinii a actiunii. TREBUIE PREZENTATA DE CATE ORI VI SE CERE!",
+          "- Dovezile trebuie pastrate minim 24 de ore dupa incheierea interactiunii Roleplay."
         ]
       },
       {
-        title: "17. Account Sharing",
-        pedeapsa: "BAN PERMANENT [CU DREPT / FARA DREPT] + CK",
-        description: "Împărțirea sau logarea pe contul tău de joc de către o altă persoană fizică.",
+        title: "39. ASCUNDERE DOVEZI",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Partajarea conturilor este total interzisă în orice scop administrativ sau personal."
+          "- Aceasta regula reprezinta momentul in care un jucator refuza sa prezinte dovezile solicitate pentru a confirma faptul ca acesta nu a incalcat regulamentul serverului."
         ]
       },
       {
-        title: "18. Comportament cu Fetele",
-        pedeapsa: "BAN PERMANENT [CU DREPT / FARA DREPT]",
-        description: "Reguli stricte privind respectul față de jucătoarele comunității.",
+        title: "40. ACCOUNT SHARING",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Comportamentul cu fetele trebuie să fie unul exemplar și respectuos. Este strict interzis să hărțuiți fetele pe server."
+          "- Reprezinta momentul in care orice jucator intra cu alt cont decat cel cu care s-a jucat pana acum pe server, ceea ce este total interzis in orice scop."
         ]
       },
       {
-        title: "19. AFK / Refuz Roleplay",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT] 1 zi",
-        description: "Statul intenționat AFK sau ignorarea acțiunilor de joc desfășurate în jurul tău.",
+        title: "41. COMPORTAMENT CU FETELE",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Este INTERZIS să stați AFK în zonele active sau în timpul unei acțiuni RP."
+          "- Comportamentul cu fetele trebuie sa fie unul adecvat mai exact nu aveti voie sa hartuiti fetele pe server.",
+          "- Exista totusi situatii in care va este permis acest lucru intr-o oarecare masura, respectiv va stiti cu fata de mult timp sau va provoaca prima."
         ]
       },
       {
-        title: "20. Despre Bunele Maniere",
-        pedeapsa: "În funcție de gravitate WARN sau BAN [CU DREPT] 1 zi",
-        description: "Păstrarea ordinii și respectarea rândurilor în zonele administrative din joc.",
+        title: "42. AFK / REFUZ ROLEPLAY",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Atunci când se formează cozi la diverse puncte din joc, aveți obligația de a le respecta civilizat."
+          "- Aceasta regula reprezinta momentul in care cineva sta AFK pe joc si atunci cand cineva refuza sa intretina actiuni Roleplay cu un alt jucator, mai pe intelesul tuturor se preface ca nu aude si nu vede nimic."
         ]
       },
       {
-        title: "21. Multiple Accounts",
-        pedeapsa: "BAN PERMANENT [FARA DREPT] pe toate conturile",
-        description: "Deținerea și utilizarea mai multor conturi de joc active pe serverul FLOW.",
+        title: "43. DESPRE BUNELE MANIERE",
+        pedeapsa: "",
+        description: "",
         details: [
-          "- Reprezintă momentul în care un jucător posedă și utilizează mai mult de un singur cont înregistrat pe serverul FLOW."
+          "- Atunci cand se formeaza cozi in diverse locuri, din varii motive, acestea trebuiesc respectate fara a creea haos."
+        ]
+      },
+      {
+        title: "44. MULTIPLE ACCOUNTS",
+        pedeapsa: "",
+        description: "",
+        details: [
+          "- Reprezinta momentul in care orice jucator poseda mai mult de un cont pe server-ul Flow, ceea ce este STRICT INTERZIS."
         ]
       }
     ]
@@ -1005,16 +1007,12 @@ function RegulamentPage() {
                           {/* Accordion Expandable Panel */}
                           {isExpanded && (
                             <div className="px-6 pb-6 pt-2 border-t border-white/5 space-y-4 animate-fade-in">
-                              {/* Penalty badge */}
-                              <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-rose-500/10 border border-rose-500/20 text-[10px] font-bold text-rose-400 tracking-widest uppercase font-mono">
-                                Sancțiune standard / maximă: {rule.pedeapsa}
-                              </div>
+                              
 
                               {/* Rule details list */}
                               <div className="space-y-3 pt-2">
                                 {rule.details.map((detail, dIdx) => (
                                   <div key={dIdx} className="flex items-start gap-3">
-                                    <span className="text-silver text-xs mt-1 shrink-0">•</span>
                                     <p className="text-xs md:text-sm text-foreground/80 leading-relaxed font-light whitespace-pre-line font-sans">
                                       {detail}
                                     </p>
