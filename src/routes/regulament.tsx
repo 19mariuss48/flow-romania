@@ -304,8 +304,8 @@ const regulamenteData: RuleCategory[] = [
         details: [
           "- Abuzul sexual (violul, canibalismul, necrofilia, pedofilia) si alte tipuri de Roleplay dezgustator sunt permise pe server doar cu acordul OOC al ambelor parti implicate in actiune"
         ]
-      }
-    {
+      },
+      {
         title: "23. REGULI CARE IMPLICA CIVILII / MAFIILE DIRECT",
         pedeapsa: "",
         description: "",
