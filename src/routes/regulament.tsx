@@ -305,15 +305,7 @@ const regulamenteData: RuleCategory[] = [
           "- Abuzul sexual (violul, canibalismul, necrofilia, pedofilia) si alte tipuri de Roleplay dezgustator sunt permise pe server doar cu acordul OOC al ambelor parti implicate in actiune"
         ]
       }
-    ]
-  },
-  {
-    id: "ooc",
-    name: "Reguli OOC (Cap. 2)",
-    icon: ShieldAlert,
-    description: "Normele Out-Of-Character privind comportamentul comunitar, regulile tehnice, utilizarea bug-urilor și acumularea de sancțiuni.",
-    rules: [
-      {
+    {
         title: "23. REGULI CARE IMPLICA CIVILII / MAFIILE DIRECT",
         pedeapsa: "",
         description: "",
@@ -322,6 +314,15 @@ const regulamenteData: RuleCategory[] = [
           "EXPLICATIE: PENTRU A SE EVITA SUPERIORITATEA NUMERICA DIN PARTEA MAFIOTILOR SI CIVILILOR."
         ]
       },
+    ]
+  },
+  {
+    id: "ooc",
+    name: "Reguli OOC (Cap. 2)",
+    icon: ShieldAlert,
+    description: "Normele Out-Of-Character privind comportamentul comunitar, regulile tehnice, utilizarea bug-urilor și acumularea de sancțiuni.",
+    rules: [
+      
       {
         title: "24. SUFERINTE",
         pedeapsa: "",
@@ -1011,13 +1012,39 @@ function RegulamentPage() {
 
                               {/* Rule details list */}
                               <div className="space-y-3 pt-2">
-                                {rule.details.map((detail, dIdx) => (
-                                  <div key={dIdx} className="flex items-start gap-3">
-                                    <p className="text-xs md:text-sm text-foreground/80 leading-relaxed font-light whitespace-pre-line font-sans">
-                                      {detail}
-                                    </p>
-                                  </div>
-                                ))}
+                                {rule.details.map((detail, dIdx) => {
+                                  if (detail.startsWith("ATENTIE!")) {
+                                    return (
+                                      <div key={dIdx} className="flex flex-col gap-4 mt-6 glass border-amber-500/20 bg-amber-500/5 rounded-xl p-5 shadow-lg">
+                                        <div className="flex items-start gap-3">
+                                          <p className="text-xs md:text-sm text-amber-400 leading-relaxed font-bold whitespace-pre-line font-sans">
+                                            ⚠️ {detail}
+                                          </p>
+                                        </div>
+                                        <div className="relative rounded-lg overflow-hidden border border-white/10 mt-4">
+                                          <img src="https://i.imgur.com/1fMO61C.png" alt="Harta Zone Jaf" className="w-full h-auto object-cover" />
+                                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
+                                        </div>
+                                      </div>
+                                    );
+                                  }
+                                  if (detail.startsWith("Acordati atentie")) {
+                                    return (
+                                      <div key={dIdx} className="flex items-start gap-3 glass border-rose-500/20 bg-rose-500/5 rounded-xl p-5 mt-2 shadow-lg">
+                                        <p className="text-xs md:text-sm text-rose-300 leading-relaxed font-semibold whitespace-pre-line font-sans">
+                                          🚨 {detail}
+                                        </p>
+                                      </div>
+                                    );
+                                  }
+                                  return (
+                                    <div key={dIdx} className="flex items-start gap-3">
+                                      <p className="text-xs md:text-sm text-foreground/80 leading-relaxed font-light whitespace-pre-line font-sans">
+                                        {detail}
+                                      </p>
+                                    </div>
+                                  );
+                                })}
                               </div>
                             </div>
                           )}
