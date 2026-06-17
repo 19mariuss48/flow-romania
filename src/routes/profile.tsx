@@ -1183,7 +1183,7 @@ function ProfilePage() {
                 </div>
 
                 {/* Character detailed section */}
-                {(profile?.faction === 'Fondator' || profile?.faction === 'Moderator') && connectedChars.length > 0 && (
+                {connectedChars.length > 0 && (
                   <div className="space-y-6">
                     {connectedChars.map((char: any, idx: number) => (
                       <div key={idx} className="glass rounded-2xl p-6 border-white/10 relative">
