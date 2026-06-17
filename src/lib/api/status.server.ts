@@ -10,6 +10,8 @@ export const getServerStatus = createServerFn({ method: "GET" }).handler(async (
     maxPlayers: 300,
     discord: "14.2k",
     launchDate: launchDateStr || "2026-06-30T18:00:00Z", // Data default
+    queue: 12,
+    whitelist: false,
   };
 
   try {

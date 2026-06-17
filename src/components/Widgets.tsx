@@ -75,6 +75,42 @@ export function Widgets() {
   // Test states for restart simulation
   const [restartPhase, setRestartPhase] = useState<'countdown' | 'restarting' | 'online' | 'offline'>('countdown');
   const [restartTime, setRestartTime] = useState(120); // 2 minutes in seconds
+  const [lastRestartTime, setLastRestartTime] = useState<string>('--:--');
+
+  // Test states for DV
+  const [dvPhase, setDvPhase] = useState<'countdown' | 'idle'>('countdown');
+  const [dvTime, setDvTime] = useState(300); // 5 min
+  const [lastDvTime, setLastDvTime] = useState<string>('--:--');
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (dvPhase === 'countdown') {
+      timer = setInterval(() => {
+        setDvTime((prev) => {
+          if (prev <= 1) {
+            setDvPhase('idle');
+            const now = new Date();
+            setLastDvTime(`${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`);
+            setDvTime(300);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else if (dvPhase === 'idle') {
+      timer = setInterval(() => {
+        setDvTime((prev) => {
+          if (prev <= 1) {
+            setDvPhase('countdown');
+            setDvTime(300);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [dvPhase]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -96,6 +132,8 @@ export function Widgets() {
           if (prev <= 1) {
             setRestartPhase('online');
             setRestartTime(60); // 1 minute for online phase
+            const now = new Date();
+            setLastRestartTime(`${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`);
             return 0;
           }
           return prev - 1;
@@ -216,51 +254,74 @@ export function Widgets() {
               />
             </div>
 
-              <div className="grid grid-cols-2 gap-4 pt-2">
+              <div className="grid grid-cols-3 gap-4 pt-2">
                 <div>
-                  <div className="text-2xl font-light text-silver-gradient">99.8%</div>
+                  <div className="text-xl font-light text-silver-gradient">99.8%</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">UPTIME</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-light text-silver-gradient">28ms</div>
+                  <div className="text-xl font-light text-silver-gradient">28ms</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">LATENȚĂ</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-light text-silver-gradient">{serverStatus?.discord || "0"}</div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.discord || "0"}</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">DISCORD</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-light text-silver-gradient">v2.00</div>
+                  <div className="text-xl font-light text-silver-gradient">v2.00</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">VERSIUNE</div>
                 </div>
                 <div>
                   {restartPhase === 'countdown' ? (
                     <>
-                      <div className="text-2xl font-light text-rose-400">
+                      <div className="text-xl font-light text-rose-400">
                         {Math.floor(restartTime / 60).toString().padStart(2, '0')}:{(restartTime % 60).toString().padStart(2, '0')}
                       </div>
                       <div className="text-[10px] tracking-widest text-rose-400/80 mt-1 animate-pulse">RESTART ÎN</div>
                     </>
                   ) : restartPhase === 'restarting' ? (
                     <>
-                      <div className="text-xl font-light text-amber-400 mt-1 animate-pulse">RESTARTING</div>
+                      <div className="text-lg font-light text-amber-400 mt-1 animate-pulse">RESTARTING</div>
                       <div className="text-[10px] tracking-widest text-muted-foreground mt-1">STARE</div>
                     </>
                   ) : restartPhase === 'offline' ? (
                     <>
-                      <div className="text-2xl font-light text-red-500">OFFLINE</div>
+                      <div className="text-xl font-light text-red-500">OFFLINE</div>
                       <div className="text-[10px] tracking-widest text-muted-foreground mt-1">STARE</div>
                     </>
                   ) : (
                     <>
-                      <div className="text-2xl font-light text-emerald-400">ONLINE</div>
+                      <div className="text-xl font-light text-emerald-400">ONLINE</div>
                       <div className="text-[10px] tracking-widest text-muted-foreground mt-1">STARE</div>
                     </>
                   )}
                 </div>
                 <div>
-                  <div className="text-2xl font-light text-silver-gradient">60Hz</div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">TICKRATE</div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.queue || "12"}</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">QUEUE</div>
+                </div>
+                <div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.whitelist ? 'ON' : 'OFF'}</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">WHITELIST</div>
+                </div>
+                <div>
+                  {dvPhase === 'countdown' ? (
+                    <>
+                      <div className="text-xl font-light text-amber-400">
+                        {Math.floor(dvTime / 60).toString().padStart(2, '0')}:{(dvTime % 60).toString().padStart(2, '0')}
+                      </div>
+                      <div className="text-[10px] tracking-widest text-amber-400/80 mt-1">DV ÎN</div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-xl font-light text-silver-gradient">{lastDvTime}</div>
+                      <div className="text-[10px] tracking-widest text-muted-foreground mt-1">ULTIMUL DV</div>
+                    </>
+                  )}
+                </div>
+                <div>
+                  <div className="text-xl font-light text-silver-gradient">{lastRestartTime}</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">ULTIMUL RESTART</div>
                 </div>
               </div>
 
