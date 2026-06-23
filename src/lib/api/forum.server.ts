@@ -3,9 +3,20 @@ import { z } from "zod";
 import { db } from "@/db";
 import { forumCategories, forums, forumThreads, forumPosts, profiles, applications, forumLikes } from "@/db/schema";
 import { eq, desc, inArray } from "drizzle-orm";
+import { getCache, setCache, clearCacheByPrefix } from "./cache.server";
+
+function invalidateForumCache() {
+  clearCacheByPrefix("forum_");
+  clearCacheByPrefix("thread_");
+}
+
 
 export const getForumStructure = createServerFn({ method: "GET" })
   .handler(async () => {
+    const cacheKey = "forum_structure";
+    const cached = getCache(cacheKey);
+    if (cached) return cached;
+
     let cats = await db.query.forumCategories.findMany({
       orderBy: (cats, { asc }) => [asc(cats.order_index)]
     });
@@ -39,21 +50,31 @@ export const getForumStructure = createServerFn({ method: "GET" })
         }))
       };
     });
+    setCache(cacheKey, structured, 60);
     return structured;
   });
 
 export const getForumDetails = createServerFn({ method: "POST" })
   .inputValidator(z.object({ slug: z.string() }))
   .handler(async ({ data }) => {
+    const cacheKey = `forum_details_${data.slug}`;
+    const cached = getCache(cacheKey);
+    if (cached) return cached;
+
     const forum = await db.query.forums.findFirst({
       where: eq(forums.slug, data.slug)
     });
+    setCache(cacheKey, forum || null, 60);
     return forum || null;
   });
 
 export const getForumThreads = createServerFn({ method: "POST" })
   .inputValidator(z.object({ forumId: z.string() }))
   .handler(async ({ data }) => {
+    const cacheKey = `forum_threads_${data.forumId}`;
+    const cached = getCache(cacheKey);
+    if (cached) return cached;
+
     const threads = await db.query.forumThreads.findMany({
       where: eq(forumThreads.forum_id, data.forumId),
       orderBy: (threads, { desc }) => [desc(threads.is_pinned), desc(threads.created_at)]
@@ -66,7 +87,7 @@ export const getForumThreads = createServerFn({ method: "POST" })
       where: inArray(profiles.id, userIds)
     });
 
-    return threads.map(t => {
+    const result = threads.map(t => {
       const user = users.find(u => u.id === t.user_id);
       return {
         ...t,
@@ -74,11 +95,27 @@ export const getForumThreads = createServerFn({ method: "POST" })
         avatar_url: user?.avatar_url || ""
       };
     });
+
+    setCache(cacheKey, result, 60);
+    return result;
   });
 
 export const getThreadDetails = createServerFn({ method: "POST" })
   .inputValidator(z.object({ threadId: z.string() }))
   .handler(async ({ data }) => {
+    const cacheKey = `thread_details_${data.threadId}`;
+    const cached = getCache<any>(cacheKey);
+
+    if (cached) {
+      // Async increment views in background
+      db.query.forumThreads.findFirst({ where: eq(forumThreads.id, data.threadId) }).then(t => {
+        if (t) {
+          db.update(forumThreads).set({ views_count: t.views_count + 1 }).where(eq(forumThreads.id, data.threadId)).execute();
+        }
+      });
+      return cached;
+    }
+
     const thread = await db.query.forumThreads.findFirst({
       where: eq(forumThreads.id, data.threadId)
     });
@@ -101,7 +138,7 @@ export const getThreadDetails = createServerFn({ method: "POST" })
       .set({ views_count: thread.views_count + 1 })
       .where(eq(forumThreads.id, thread.id));
 
-    return {
+    const result = {
       thread: {
         ...thread,
         views_count: thread.views_count + 1,
@@ -118,6 +155,9 @@ export const getThreadDetails = createServerFn({ method: "POST" })
         };
       })
     };
+
+    setCache(cacheKey, result, 60);
+    return result;
   });
 
 export const createThread = createServerFn({ method: "POST" })
@@ -184,6 +224,7 @@ export const createThread = createServerFn({ method: "POST" })
       }
     }
 
+    invalidateForumCache();
     return { success: true, threadId };
   });
 
@@ -220,6 +261,7 @@ export const createPost = createServerFn({ method: "POST" })
       .set({ replies_count: thread.replies_count + 1 })
       .where(eq(forumThreads.id, data.threadId));
 
+    invalidateForumCache();
     return { success: true, postId };
   });
 
@@ -240,6 +282,7 @@ export const deletePost = createServerFn({ method: "POST" })
           .where(eq(forumThreads.id, post.thread_id));
       }
     }
+    invalidateForumCache();
     return { success: true };
   });
 
@@ -247,6 +290,7 @@ export const deleteThread = createServerFn({ method: "POST" })
   .inputValidator(z.object({ threadId: z.string() }))
   .handler(async ({ data }) => {
     await db.delete(forumThreads).where(eq(forumThreads.id, data.threadId));
+    invalidateForumCache();
     return { success: true };
   });
 
@@ -258,6 +302,7 @@ export const toggleThreadLock = createServerFn({ method: "POST" })
     });
     if (thread) {
       await db.update(forumThreads).set({ is_locked: !thread.is_locked }).where(eq(forumThreads.id, data.threadId));
+      invalidateForumCache();
       return { success: true, is_locked: !thread.is_locked };
     }
     return { success: false };
@@ -271,6 +316,7 @@ export const toggleThreadPin = createServerFn({ method: "POST" })
     });
     if (thread) {
       await db.update(forumThreads).set({ is_pinned: !thread.is_pinned }).where(eq(forumThreads.id, data.threadId));
+      invalidateForumCache();
       return { success: true, is_pinned: !thread.is_pinned };
     }
     return { success: false };
@@ -289,6 +335,7 @@ export const toggleLike = createServerFn({ method: "POST" })
 
     if (existingLike) {
       await db.delete(forumLikes).where(eq(forumLikes.id, existingLike.id));
+      invalidateForumCache();
       return { success: true, liked: false };
     } else {
       await db.insert(forumLikes).values({
@@ -296,6 +343,7 @@ export const toggleLike = createServerFn({ method: "POST" })
         user_id: data.userId,
         post_id: data.postId
       });
+      invalidateForumCache();
       return { success: true, liked: true };
     }
   });
