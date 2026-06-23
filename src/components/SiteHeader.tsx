@@ -145,7 +145,7 @@ export function SiteHeader() {
   return (
     <header className={`fixed top-0 inset-x-0 z-50 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 mt-2 sm:mt-4">
-        <div className="glass rounded-2xl flex flex-col lg:flex-row items-center justify-between px-4 py-3 relative gap-3 lg:gap-0">
+        <div className="glass rounded-2xl flex flex-col lg:flex-row items-center justify-between px-4 py-3 lg:min-h-[76px] relative gap-3 lg:gap-0">
           
           {/* Top Row for Mobile (Logo + Auth) / Left section for Desktop */}
           <div className="w-full lg:w-auto flex items-center justify-between lg:justify-start lg:flex-1">
@@ -163,7 +163,7 @@ export function SiteHeader() {
           </div>
 
           {/* Navigation Items - flex-wrap on mobile, original layout on PC */}
-          <div className="flex w-full lg:absolute lg:left-1/2 lg:-translate-x-1/2 justify-center mt-3 lg:mt-0 lg:w-auto">
+          <div className="flex w-full lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2 justify-center mt-3 lg:mt-0 lg:w-auto">
             <nav className="grid grid-cols-3 sm:flex sm:flex-wrap lg:flex-nowrap items-start justify-center gap-y-3 gap-x-2 sm:gap-2 w-full sm:w-auto">
               {nav.map((n) => {
                 const Icon = n.icon;
