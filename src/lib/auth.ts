@@ -143,10 +143,6 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 2, // 2 zile
     updateAge: 60 * 60 * 12, // reînnoiește dacă e mai veche de 12 ore
   },
-  rateLimit: {
-    window: 10, // 10 secunde in loc de un minut pentru teste
-    max: 100, // 100 de requesturi
-  },
   databaseHooks: {
     user: {
       create: {
