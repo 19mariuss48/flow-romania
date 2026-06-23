@@ -1,0 +1,1 @@
+ALTER TABLE `profiles` ADD `is_banned` boolean DEFAULT false NOT NULL;

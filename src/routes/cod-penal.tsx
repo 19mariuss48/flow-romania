@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import { getSiteContent, updateSiteContent } from "@/lib/api/content.server";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { Search, Gavel, Scale, AlertTriangle, ShieldCheck, Car, EyeOff, ShieldAlert } from "lucide-react";
+import { Search, Gavel, Scale, AlertTriangle, ShieldCheck, Car, EyeOff, ShieldAlert, Eye } from "lucide-react";
+import { getPageViews, incrementPageViews } from "@/lib/api/metrics.server";
 
 export const Route = createFileRoute("/cod-penal")({
   head: () => ({
@@ -25,6 +26,7 @@ function CodPenalPage() {
   
   const [contentData, setContentData] = useState<{ articlesData: any[] } | null>(null);
   const [loadingContent, setLoadingContent] = useState(true);
+  const [viewsCount, setViewsCount] = useState<number>(0);
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -44,7 +46,18 @@ function CodPenalPage() {
         setLoadingContent(false);
       }
     };
+
+    const handleViews = async () => {
+      try {
+        const count = await incrementPageViews({ data: { pageId: "cod-penal" } });
+        if (count) setViewsCount(count);
+      } catch (err) {
+        console.error("Failed to increment views:", err);
+      }
+    };
+
     fetchContent();
+    handleViews();
   }, []);
 
   const activeArticlesData = contentData?.articlesData || [];
@@ -101,8 +114,9 @@ function CodPenalPage() {
           {[
             { label: "CATEGORII GENERALE", value: "9", icon: Scale },
             { label: "ARTICOLE DE LEGE", value: activeArticlesData.length.toString(), icon: Gavel },
-            { label: "AMENDA MAXIMA", value: "75.000 $", icon: AlertTriangle },
-            { label: "PEDEAPSA MAXIMA", value: "500 MINUTE", icon: ShieldCheck },
+            { label: "AMENDĂ MAXIMĂ", value: "75.000 $", icon: AlertTriangle },
+            { label: "PEDEAPSĂ MAXIMĂ", value: "500 MINUTE", icon: ShieldCheck },
+            { label: "VIZUALIZĂRI", value: viewsCount.toString(), icon: Eye },
           ].map((stat, i) => {
             const Icon = stat.icon;
             return (

@@ -20,6 +20,7 @@ export const profiles = mysqlTable("profiles", {
   fivem_playtime: int("fivem_playtime").default(0),
   fivem_character_data: json("fivem_character_data"),
   fivem_synced_at: datetime("fivem_synced_at"),
+  is_banned: boolean("is_banned").default(false).notNull(),
   created_at: datetime("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
   updated_at: datetime("updated_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
 });

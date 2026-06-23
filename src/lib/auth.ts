@@ -84,9 +84,6 @@ export const auth = betterAuth({
       );
     }
   },
-  advanced: {
-    generateId: false // Because we're using varchar(36) UUIDs
-  },
 
   session: {
     expiresIn: 60 * 60 * 24 * 2, // 2 zile

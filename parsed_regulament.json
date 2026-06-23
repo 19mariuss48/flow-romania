@@ -1,0 +1,15 @@
+{
+  "regulamenteData": [
+    {
+      "id": "gameplay",
+      "name": "Reguli Oficiale",
+      "icon": "ShieldAlert",
+      "description": "Regulamentul oficial al comunitatii.",
+      "rules": []
+    }
+  ],
+  "termeniData": [],
+  "jafuriData": {
+    "content": "<HTML>\n<HEAD>\n<TITLE>Temporary Redirect</TITLE>\n</HEAD>\n<BODY BGCOLOR=#FFFFFF TEXT=#000000>\n<!-- GSE Default Error -->\n<H1>Temporary Redirect</H1>\nThe document has moved <A HREF=https://doc-0g-ao-sheets.googleusercontent.com/export/54bogvaave6cua4cdnls17ksc4/khlt122mlg4puqkritvoof6r5o/1782221265000/108394892643043457148/*/1OV9rJMxKZbCJ2x3_wH91wIbJmrOhqVRknSvcuIAozkE?format=csv&amp;gid=128981093>here</A>.\n</BODY>\n</HTML>"
+  }
+}

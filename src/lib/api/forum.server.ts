@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { db } from "@/db";
-import { forumCategories, forums, forumThreads, forumPosts, profiles, applications } from "@/db/schema";
+import { forumCategories, forums, forumThreads, forumPosts, profiles, applications, forumLikes } from "@/db/schema";
 import { eq, desc, inArray } from "drizzle-orm";
 
 export const getForumStructure = createServerFn({ method: "GET" })
@@ -213,6 +213,83 @@ export const createPost = createServerFn({ method: "POST" })
     }
 
     return { success: true, postId };
+  });
+
+export const deletePost = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ postId: z.string() }))
+  .handler(async ({ data }) => {
+    const post = await db.query.forumPosts.findFirst({
+      where: eq(forumPosts.id, data.postId)
+    });
+    if (post) {
+      await db.delete(forumPosts).where(eq(forumPosts.id, data.postId));
+      const thread = await db.query.forumThreads.findFirst({
+        where: eq(forumThreads.id, post.thread_id)
+      });
+      if (thread && thread.replies_count > 0) {
+        await db.update(forumThreads)
+          .set({ replies_count: thread.replies_count - 1 })
+          .where(eq(forumThreads.id, post.thread_id));
+      }
+    }
+    return { success: true };
+  });
+
+export const deleteThread = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ threadId: z.string() }))
+  .handler(async ({ data }) => {
+    await db.delete(forumThreads).where(eq(forumThreads.id, data.threadId));
+    return { success: true };
+  });
+
+export const toggleThreadLock = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ threadId: z.string() }))
+  .handler(async ({ data }) => {
+    const thread = await db.query.forumThreads.findFirst({
+      where: eq(forumThreads.id, data.threadId)
+    });
+    if (thread) {
+      await db.update(forumThreads).set({ is_locked: !thread.is_locked }).where(eq(forumThreads.id, data.threadId));
+      return { success: true, is_locked: !thread.is_locked };
+    }
+    return { success: false };
+  });
+
+export const toggleThreadPin = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ threadId: z.string() }))
+  .handler(async ({ data }) => {
+    const thread = await db.query.forumThreads.findFirst({
+      where: eq(forumThreads.id, data.threadId)
+    });
+    if (thread) {
+      await db.update(forumThreads).set({ is_pinned: !thread.is_pinned }).where(eq(forumThreads.id, data.threadId));
+      return { success: true, is_pinned: !thread.is_pinned };
+    }
+    return { success: false };
+  });
+
+export const toggleLike = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ postId: z.string(), userId: z.string() }))
+  .handler(async ({ data }) => {
+    // Check if like exists
+    const existingLike = await db.query.forumLikes.findFirst({
+      where: (likes, { and, eq }) => and(
+        eq(likes.user_id, data.userId),
+        eq(likes.post_id, data.postId)
+      )
+    });
+
+    if (existingLike) {
+      await db.delete(forumLikes).where(eq(forumLikes.id, existingLike.id));
+      return { success: true, liked: false };
+    } else {
+      await db.insert(forumLikes).values({
+        id: crypto.randomUUID(),
+        user_id: data.userId,
+        post_id: data.postId
+      });
+      return { success: true, liked: true };
+    }
   });
 
 async function autoSeedForumStructure() {

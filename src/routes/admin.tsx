@@ -143,19 +143,7 @@ function AdminPage() {
       setLoadingProfiles(true);
       try {
         const data = await getAllProfiles();
-        
-        // Combine DB profiles with LocalStorage mock edits & bans
-        const localEdits = JSON.parse(localStorage.getItem("flowro_mock_profiles") || "{}");
-        const bannedList = JSON.parse(localStorage.getItem("flowro_banned_users") || "[]");
-
-        const mergedProfiles = (data || []).map((p: any) => ({
-          ...p,
-          faction: localEdits[p.id]?.faction || p.faction,
-          bio: localEdits[p.id]?.bio || p.bio,
-          is_banned: bannedList.includes(p.id)
-        }));
-
-        setProfiles(mergedProfiles);
+        setProfiles(data || []);
       } catch (err: any) {
         console.error("Fetch profiles error:", err);
         toast.error("Eroare la preluarea utilizatorilor: " + (err.message || "Eroare necunoscută"));
@@ -209,17 +197,10 @@ function AdminPage() {
       });
       toast.success("Profilul a fost actualizat cu succes în baza de date!");
 
-
       setEditingProfile(null);
       fetchProfiles();
     } catch (err: any) {
-      // Ultimate fallback for absolute failures
-      const localEdits = JSON.parse(localStorage.getItem("flowro_mock_profiles") || "{}");
-      localEdits[editingProfile.id] = { faction: editFaction, bio: editBio };
-      localStorage.setItem("flowro_mock_profiles", JSON.stringify(localEdits));
-      toast.success("Profilul a fost actualizat (Simulare Locală)!");
-      setEditingProfile(null);
-      fetchProfiles();
+      toast.error("Eroare la salvare: " + (err.message || "Eroare necunoscută"));
     } finally {
       setSaving(false);
     }
@@ -246,19 +227,17 @@ function AdminPage() {
     if (!window.confirm(confirmMsg)) return;
 
     try {
-      // Since there's no is_banned in Drizzle yet, simulate it using localStorage
-      throw new Error("Local Ban Fallback");
+      await adminUpdateProfile({
+        data: {
+          userId: profile.id,
+          updates: {
+            is_banned: newBanStatus
+          }
+        }
+      });
+      toast.success(`Jucătorul a fost ${newBanStatus ? "banat" : "debanat"} în baza de date!`);
     } catch (err: any) {
-      // Local fallback for bans
-      console.warn("RPC ban failed, using local fallback", err);
-      let bannedList = JSON.parse(localStorage.getItem("flowro_banned_users") || "[]");
-      if (newBanStatus) {
-        if (!bannedList.includes(profile.id)) bannedList.push(profile.id);
-      } else {
-        bannedList = bannedList.filter((id: string) => id !== profile.id);
-      }
-      localStorage.setItem("flowro_banned_users", JSON.stringify(bannedList));
-      toast.success(`Jucătorul a fost ${newBanStatus ? "banat" : "debanat"} (Simulare Locală)!`);
+      toast.error("Eroare la acțiunea de ban: " + (err.message || "Eroare necunoscută"));
     } finally {
       fetchProfiles();
     }

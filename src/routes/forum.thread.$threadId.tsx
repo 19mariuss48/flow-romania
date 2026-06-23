@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { getUserProfile } from "@/lib/api/profile.server";
-import { getThreadDetails, createPost } from "@/lib/api/forum.server";
+import { getThreadDetails, createPost, toggleLike, deletePost, deleteThread, toggleThreadLock, toggleThreadPin } from "@/lib/api/forum.server";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
@@ -113,45 +113,6 @@ function ThreadDetailPage() {
     setSubmittingReply(true);
 
     // Check if local thread
-    if (String(threadDetails?.id).startsWith("local-t-")) {
-      try {
-        const userDisplayName = currentUserProfile?.display_name || currentUserProfile?.username || user.email?.split("@")[0] || "Jucător";
-        const newMockReply = {
-          id: `local-p-${Date.now()}`,
-          thread_id: threadDetails.id,
-          user_name: userDisplayName,
-          avatar_url: currentUserProfile?.avatar_url || "",
-          rank: currentUserProfile?.faction || "Jucător",
-          content: replyContent,
-          created_at: new Date().toISOString(),
-          likes: 0,
-          liked: false
-        };
-        
-        const localPosts = JSON.parse(localStorage.getItem("flowro_local_posts") || "[]");
-        localPosts.push(newMockReply);
-        localStorage.setItem("flowro_local_posts", JSON.stringify(localPosts));
-
-        const localThreads = JSON.parse(localStorage.getItem("flowro_local_threads") || "[]");
-        const idx = localThreads.findIndex((t: any) => t.id === threadDetails.id);
-        if (idx !== -1) {
-          localThreads[idx].replies_count = (localThreads[idx].replies_count || 0) + 1;
-          localStorage.setItem("flowro_local_threads", JSON.stringify(localThreads));
-        }
-
-        // Set cooldown timestamp
-        localStorage.setItem("flowro_last_action_timestamp", Date.now().toString());
-
-        toast.success("Răspunsul tău a fost adăugat!");
-        setReplyContent("");
-        loadThreadData();
-      } catch (err) {
-        console.error("Failed to post local reply:", err);
-      } finally {
-        setSubmittingReply(false);
-      }
-      return;
-    }
 
     try {
       const result = await createPost({
@@ -171,30 +132,7 @@ function ThreadDetailPage() {
       setReplyContent("");
       loadThreadData();
     } catch (err: any) {
-      // Fallback local simulation if Supabase fails (mock mode)
-      const userDisplayName = currentUserProfile?.display_name || currentUserProfile?.username || user.email?.split("@")[0] || "Jucător";
-      const newMockReply = {
-        id: `local-p-${Date.now()}`,
-        thread_id: threadDetails.id,
-        user_name: userDisplayName,
-        avatar_url: currentUserProfile?.avatar_url || "",
-        rank: currentUserProfile?.faction || "Jucător",
-        content: replyContent,
-        created_at: new Date().toISOString(),
-        likes: 0,
-        liked: false
-      };
-      
-      const localPosts = JSON.parse(localStorage.getItem("flowro_local_posts") || "[]");
-      localPosts.push(newMockReply);
-      localStorage.setItem("flowro_local_posts", JSON.stringify(localPosts));
-
-      // Set cooldown timestamp
-      localStorage.setItem("flowro_last_action_timestamp", Date.now().toString());
-
-      toast.success("Răspunsul tău a fost adăugat (Simulare locală)!");
-      setReplyContent("");
-      loadThreadData();
+      toast.error("Eroare la adăugarea răspunsului: " + (err.message || "Eroare necunoscută"));
     } finally {
       setSubmittingReply(false);
     }
@@ -221,32 +159,24 @@ function ThreadDetailPage() {
       return p;
     }));
 
-    if (String(postId).startsWith("local-p-")) {
-      const localPosts = JSON.parse(localStorage.getItem("flowro_local_posts") || "[]");
-      const idx = localPosts.findIndex((p: any) => p.id === postId);
-      if (idx !== -1) {
-        localPosts[idx].likes = newLikesCount;
-        localStorage.setItem("flowro_local_posts", JSON.stringify(localPosts));
-      }
-    }
+    toggleLike({ data: { postId, userId: user.id } }).catch(err => {
+      console.error("Eroare la toggle like", err);
+    });
 
     toast.success(targetPost.liked ? "Apreciere ștearsă!" : "Ai apreciat postarea!");
   };
 
-  // Staff Moderation Actions
   const handleTogglePin = async () => {
     if (!threadDetails) return;
     setModifyingThread(true);
-    const nextPinState = !threadDetails.is_pinned;
     try {
-      // Moderation features temporarily disabled locally pending Drizzle RPC update
-      throw new Error("Local Moderation Fallback");
-      setThreadDetails({ ...threadDetails, is_pinned: nextPinState });
-      toast.success(nextPinState ? "Subiectul a fost FIXAT pe prima pagină!" : "Subiectul a fost DEZFIXAT!");
+      const res = await toggleThreadPin({ data: { threadId: threadDetails.id } });
+      if (res.success) {
+        setThreadDetails({ ...threadDetails, is_pinned: res.is_pinned });
+        toast.success(res.is_pinned ? "Subiectul a fost FIXAT pe prima pagină!" : "Subiectul a fost DEZFIXAT!");
+      }
     } catch (err) {
-      // Simulated fallback
-      setThreadDetails({ ...threadDetails, is_pinned: nextPinState });
-      toast.success(nextPinState ? "Subiectul a fost FIXAT (Simulare locală)!" : "Subiectul a fost DEZFIXAT!");
+      toast.error("Eroare la modificarea statusului de fixare!");
     } finally {
       setModifyingThread(false);
     }
@@ -256,13 +186,13 @@ function ThreadDetailPage() {
     if (!threadDetails) return;
     setModifyingThread(true);
     try {
-      // Moderation features temporarily disabled locally pending Drizzle RPC update
-      throw new Error("Local Moderation Fallback");
+      const res = await toggleThreadLock({ data: { threadId: threadDetails.id } });
+      if (res.success) {
+        setThreadDetails({ ...threadDetails, is_locked: res.is_locked });
+        toast.success(res.is_locked ? "Subiectul a fost ÎNCHIS!" : "Subiectul a fost DEBLOCAT!");
+      }
     } catch (err) {
-      // Simulated fallback
-      const nextLockState = !threadDetails.is_locked;
-      setThreadDetails({ ...threadDetails, is_locked: nextLockState });
-      toast.success(nextLockState ? "Subiectul a fost ÎNCHIS (Simulare locală)!" : "Subiectul a fost DEBLOCAT!");
+      toast.error("Eroare la modificarea statusului!");
     } finally {
       setModifyingThread(false);
     }
@@ -272,13 +202,11 @@ function ThreadDetailPage() {
     if (!window.confirm("Ești sigur că vrei să ștergi definitiv acest subiect de pe forum? Această acțiune este ireversibilă.")) return;
     setModifyingThread(true);
     try {
-      // Moderation features temporarily disabled locally pending Drizzle RPC update
-      throw new Error("Local Moderation Fallback");
+      await deleteThread({ data: { threadId: threadDetails.id } });
       toast.success("Subiectul a fost șters cu succes!");
       navigate({ to: `/forum/${threadDetails.forum_slug}` });
     } catch (err) {
-      toast.success("Subiectul a fost șters de pe forum (Simulare locală)!");
-      navigate({ to: `/forum/${threadDetails.forum_slug}` });
+      toast.error("Eroare la ștergerea subiectului!");
     } finally {
       setModifyingThread(false);
     }
@@ -287,27 +215,7 @@ function ThreadDetailPage() {
   const handleDeleteReply = async (postId: string) => {
     if (!window.confirm("Ești sigur că vrei să ștergi acest răspuns? Acțiunea este ireversibilă.")) return;
     try {
-      if (String(postId).startsWith("local-p-")) {
-        // Local simulation deletion
-        const localPosts = JSON.parse(localStorage.getItem("flowro_local_posts") || "[]");
-        const newLocalPosts = localPosts.filter((p: any) => p.id !== postId);
-        localStorage.setItem("flowro_local_posts", JSON.stringify(newLocalPosts));
-
-        // Update local threads replies count
-        const localThreads = JSON.parse(localStorage.getItem("flowro_local_threads") || "[]");
-        const idx = localThreads.findIndex((t: any) => t.id === threadDetails?.id);
-        if (idx !== -1 && localThreads[idx].replies_count > 0) {
-          localThreads[idx].replies_count -= 1;
-          localStorage.setItem("flowro_local_threads", JSON.stringify(localThreads));
-        }
-        
-        toast.success("Răspunsul a fost șters!");
-        loadThreadData();
-        return;
-      }
-
-      // Moderation features temporarily disabled locally pending Drizzle RPC update
-      throw new Error("Local Moderation Fallback");
+      await deletePost({ data: { postId } });
       toast.success("Răspunsul a fost șters din baza de date!");
       loadThreadData();
     } catch (err: any) {
