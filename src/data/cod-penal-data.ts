@@ -1,12 +1,4 @@
-export type LawArticle = {
-  id: string;
-  category: string;
-  categoryLabel: string;
-  title: string;
-  description: string;
-  amenda: string;
-  inchisoare: string;
-};
+export type LawArticle = { id: string; category: string; categoryLabel: string; title: string; description: string; amenda: string; inchisoare: string; };
 
 export const articlesData: LawArticle[] = [
   {
@@ -185,7 +177,7 @@ export const articlesData: LawArticle[] = [
     "category": "convietuire-sociala",
     "categoryLabel": "Convietuire Sociala",
     "title": "Instigarea la suicid",
-    "description": "Instigarea la suicid este fapta prin care o persoana determina sau incurajeaza alta persoana sa isi ia viata. Scopul poate fi controlarea, manipularea sau provocarea victimei.",
+    "description": "Instigarea la suicid este fapta prin care o persoana determina sau incurajeaza alta persoana sa isi ia viata. Scopul poate fi controlarea, manipularea sau provocarea victimei. - Daca ati comis mai multe infractiuni din acest capitol, se va aplica pedeapsa corespunzatoare celei mai grave dintre ele. Totusi, ofiterul responsabil va comunica toate faptele savarsite.",
     "amenda": "2.500$",
     "inchisoare": "60 minute"
   },
@@ -221,7 +213,7 @@ export const articlesData: LawArticle[] = [
     "category": "moralitate-publica",
     "categoryLabel": "Moralitate Publica",
     "title": "Viol",
-    "description": "Violul este fapta prin care o persoana constrange alta persoana sa intretina acte sexuale prin violenta, amenintare sau lipsa de consimtamant",
+    "description": "Violul este fapta prin care o persoana constrange alta persoana sa intrețină acte sexuale prin violență, amenințare sau lipsă de consimțământ",
     "amenda": "25.000$",
     "inchisoare": "100 minute"
   },
@@ -284,7 +276,7 @@ export const articlesData: LawArticle[] = [
     "category": "moralitate-publica",
     "categoryLabel": "Moralitate Publica",
     "title": "Testosteron",
-    "description": "Testosteronul, ca substanta controlata, este considerat ilegal daca este detinut sau folosit fara prescriptie medicala.",
+    "description": "Testosteronul, ca substanta controlata, este considerat ilegal daca este detinut sau folosit fara prescriptie medicala. - Daca ati comis mai multe infractiuni din acest capitol, se va aplica pedeapsa corespunzatoare celei mai grave dintre ele. Totusi, ofiterul responsabil va comunica toate faptele savarsite.",
     "amenda": "4.000$",
     "inchisoare": "30 minute"
   },
@@ -464,7 +456,7 @@ export const articlesData: LawArticle[] = [
     "category": "justitie",
     "categoryLabel": "Impotriva Justitiei",
     "title": "Evadarea din penitenciar",
-    "description": "Evadarea din penitenciar este fapta prin care o persoana iese sau incearca sa iasa dintr-o unitate de detentie fara permisiune. Scopul este evitarea executarii pedepsei sau a controlului legal.",
+    "description": "Evadarea din penitenciar este fapta prin care o persoana iese sau incearca sa iasa dintr-o unitate de detentie fara permisiune. Scopul este evitarea executarii pedepsei sau a controlului legal. - Daca ati comis mai multe infractiuni din acest capitol, se va aplica pedeapsa corespunzatoare celei mai grave dintre ele. Totusi, ofiterul responsabil va comunica toate faptele savarsite.",
     "amenda": "3.000$",
     "inchisoare": "Extinde pedeapsa cu 100 minute"
   },
@@ -1202,7 +1194,7 @@ export const articlesData: LawArticle[] = [
     "category": "contraventii-rutiere",
     "categoryLabel": "Contraventii Rutiere",
     "title": "Nerespectarea indicatoarelor rutiere [Clasa Muscle]",
-    "description": "Identic cu prevederile anterioare pentru clasa specifica.",
+    "description": "Identic cu prevederile anterioare pentru clasa specifica. - Daca ati comis mai multe infractiuni din acest capitol, se va aplica pedeapsa corespunzatoare celei mai grave dintre ele. Totusi, ofiterul responsabil va comunica toate faptele savarsite.",
     "amenda": "5.000$ + Confiscarea permisului de conducere",
     "inchisoare": "-"
   },

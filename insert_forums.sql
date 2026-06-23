@@ -1,24 +1,19 @@
 -- 1. Stergem forumurile "Academie" si "Reclamatii" pe care le-am creat gresit ca forumuri (tu vrei sa fie topice)
 DELETE FROM forums WHERE slug IN ('politia-academie', 'politia-reclamatii', 'spital-aplicatii', 'spital-reclamatii');
-
 SET @admin_id = (SELECT id FROM profiles LIMIT 1);
 SET @cat_ic_id = (SELECT id FROM forum_categories WHERE title LIKE '%ic%' LIMIT 1);
 SET @cat_ooc_id = (SELECT id FROM forum_categories WHERE title LIKE '%ooc%' LIMIT 1);
-
 -- 2. Cream doar forumurile de baza: Politia Romana si Spitalul General in IC
 INSERT IGNORE INTO forums (id, category_id, title, slug, description, icon, threads_count, posts_count, order_index, created_at)
 VALUES 
 (UUID(), @cat_ic_id, 'Poliția Română', 'politia-romana', 'Aplicații, regulamente și anunțuri Poliția Română', '🚓', 2, 0, 1, CURRENT_TIMESTAMP),
 (UUID(), @cat_ic_id, 'Spitalul General', 'spitalul-general', 'Aplicații, regulamente și anunțuri Spitalul General', '🚑', 2, 0, 2, CURRENT_TIMESTAMP);
-
 -- Extragem ID-urile lor
 SET @forum_politie = (SELECT id FROM forums WHERE slug = 'politia-romana' LIMIT 1);
 SET @forum_medici = (SELECT id FROM forums WHERE slug = 'spitalul-general' LIMIT 1);
 SET @forum_staff = (SELECT id FROM forums WHERE title LIKE '%staff%' LIMIT 1);
-
 -- 3. Stergem topicele vechi cu textul gresit (Markdown/HTML)
 DELETE FROM forum_threads WHERE title LIKE '%[Model]%' OR title LIKE '%Biroul de Reclamatii%' OR title LIKE '%Aplicație%';
-
 -- ==========================================
 -- POLITIA ROMANA - THREADURI (Fara **, Fara HTML)
 -- ==========================================
@@ -33,7 +28,6 @@ VALUES (
   'DEPARTAMENTUL DE POLITIE LOS SANTOS\nBIROUL DE RECLAMATII\n\nPoliția Los Santos încurajează cetățenii să raporteze orice nereguli constatate în activitatea organelor de poliție, să transmită sugestii constructive sau să solicite sprijin pentru organizarea de evenimente.\nNe angajăm să menținem o colaborare transparentă și eficientă, în beneficiul siguranței și bunăstării comunității.\n\nCererile de audiență pot fi depuse prin completarea formularului disponibil aici: Formular',
   1, 1, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 );
-
 -- ==========================================
 -- SPITALUL GENERAL - THREADURI (Fara **, Fara HTML)
 -- ==========================================
@@ -48,7 +42,6 @@ VALUES (
   'SPITALUL GENERAL LOS SANTOS\nBIROUL DE RECLAMATII\n\nSpitalul General Los Santos încurajează cetățenii să raporteze orice nereguli constatate în activitatea organelor medicale, să transmită sugestii constructive sau să solicite sprijin pentru organizarea de evenimente.\nNe angajăm să menținem o colaborare transparentă și eficientă, în beneficiul siguranței și sănătății comunității.\n\nCererile de audiență pot fi depuse prin completarea formularului disponibil aici: Formular',
   1, 1, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 );
-
 -- ==========================================
 -- STAFF - MODEL APLICATIE (Fara **, Fara HTML)
 -- ==========================================
@@ -57,4 +50,4 @@ VALUES (
   UUID(), @forum_staff, @admin_id, 'Informații', '[Model] Aplicatie Functie Administrativa (Staff)',
   'Pentru a aplica pentru o funcție în staff, creați un topic nou cu modelul de mai jos:\n\nINFORMATII PERSONALE\n- Nume: \n- Prenume: \n- Descriere (In minim 50 de cuvinte): \n- Cat timp poti acorda acestei functii pe zi in medie?: \n- De ce consideri ca meriti aceasta functie?: \n- Esti de acord ca orice greseala facuta se va functiona ca atare?: \n- Cat de bine cunosti regulamentul?: \n\nINFORMATII ADITIONALE\n- ID: \n- Username Discord: \n- Ore jucate (pe cont): \n- De cat timp te joci FiveM?: \n- De cat timp te joci pe Server?: \n- Avere estimata: ',
   1, 1, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
-);
+);flowro
