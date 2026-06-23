@@ -224,7 +224,12 @@ function RecoveryForm({ onBack }: { onBack: () => void }) {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      const errStr = error.message?.toLowerCase() || error.code?.toLowerCase() || "";
+      if (errStr.includes("too many requests") || error.status === 429) {
+        toast.error("Prea multe încercări! Te rugăm să aștepți câteva momente înainte de a încerca din nou.");
+      } else {
+        toast.error(error.message || "A apărut o eroare la trimiterea emailului.");
+      }
     } else {
       toast.success("Emailul de recuperare a parolei a fost trimis. Verifică-ți căsuța poștală!");
       onBack();
