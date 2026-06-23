@@ -28,8 +28,8 @@ function AuthPage() {
   useEffect(() => {
     if (!loading && user) {
       if (window.location.hash.includes("type=recovery") || window.location.search.includes("type=recovery")) {
-        navigate({ to: "/profile" });
-        toast.info("Te-ai conectat prin link-ul de recuperare a parolei. Te rugăm să îți setezi o nouă parolă mai jos.");
+        navigate({ to: "/" });
+        toast.info("Te-ai conectat prin link-ul de recuperare a parolei.");
       } else {
         navigate({ to: "/" });
       }

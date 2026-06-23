@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegulamentRouteImport } from './routes/regulament'
-import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ForumRouteImport } from './routes/forum'
 import { Route as CodPenalRouteImport } from './routes/cod-penal'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -23,11 +22,6 @@ import { Route as ForumNewTopicForumSlugRouteImport } from './routes/forum.new-t
 const RegulamentRoute = RegulamentRouteImport.update({
   id: '/regulament',
   path: '/regulament',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForumRoute = ForumRouteImport.update({
@@ -77,7 +71,6 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/cod-penal': typeof CodPenalRoute
   '/forum': typeof ForumRouteWithChildren
-  '/profile': typeof ProfileRoute
   '/regulament': typeof RegulamentRoute
   '/forum/$forumSlug': typeof ForumForumSlugRoute
   '/forum/new-topic/$forumSlug': typeof ForumNewTopicForumSlugRoute
@@ -89,7 +82,6 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/cod-penal': typeof CodPenalRoute
   '/forum': typeof ForumRouteWithChildren
-  '/profile': typeof ProfileRoute
   '/regulament': typeof RegulamentRoute
   '/forum/$forumSlug': typeof ForumForumSlugRoute
   '/forum/new-topic/$forumSlug': typeof ForumNewTopicForumSlugRoute
@@ -102,7 +94,6 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/cod-penal': typeof CodPenalRoute
   '/forum': typeof ForumRouteWithChildren
-  '/profile': typeof ProfileRoute
   '/regulament': typeof RegulamentRoute
   '/forum/$forumSlug': typeof ForumForumSlugRoute
   '/forum/new-topic/$forumSlug': typeof ForumNewTopicForumSlugRoute
@@ -116,7 +107,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cod-penal'
     | '/forum'
-    | '/profile'
     | '/regulament'
     | '/forum/$forumSlug'
     | '/forum/new-topic/$forumSlug'
@@ -128,7 +118,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cod-penal'
     | '/forum'
-    | '/profile'
     | '/regulament'
     | '/forum/$forumSlug'
     | '/forum/new-topic/$forumSlug'
@@ -140,7 +129,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cod-penal'
     | '/forum'
-    | '/profile'
     | '/regulament'
     | '/forum/$forumSlug'
     | '/forum/new-topic/$forumSlug'
@@ -153,7 +141,6 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CodPenalRoute: typeof CodPenalRoute
   ForumRoute: typeof ForumRouteWithChildren
-  ProfileRoute: typeof ProfileRoute
   RegulamentRoute: typeof RegulamentRoute
 }
 
@@ -164,13 +151,6 @@ declare module '@tanstack/react-router' {
       path: '/regulament'
       fullPath: '/regulament'
       preLoaderRoute: typeof RegulamentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forum': {
@@ -252,7 +232,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CodPenalRoute: CodPenalRoute,
   ForumRoute: ForumRouteWithChildren,
-  ProfileRoute: ProfileRoute,
   RegulamentRoute: RegulamentRoute,
 }
 export const routeTree = rootRouteImport

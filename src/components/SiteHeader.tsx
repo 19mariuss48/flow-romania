@@ -137,11 +137,7 @@ export function SiteHeader() {
             </Link>
           </DropdownMenuItem>
         )}
-        <DropdownMenuItem asChild>
-          <Link to="/profile" className="cursor-pointer w-full text-left">
-            Profil & Sincronizare
-          </Link>
-        </DropdownMenuItem>
+
         <DropdownMenuItem
           onClick={() => signOut()}
           className="text-destructive focus:text-destructive cursor-pointer"
