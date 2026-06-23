@@ -53,32 +53,11 @@ export function SiteHeader() {
       if (profile) {
         setAvatarUrl(profile.avatar_url);
         setDisplayName(profile.display_name || profile.username);
-        setIsAdmin(profile.faction === "Fondator" || profile.faction === "Admin" || profile.faction === "Staff");
-        
-        // Update local cache
-        if (typeof window !== "undefined") {
-          if (profile.avatar_url) {
-            localStorage.setItem(`flowro_avatar_${user.id}`, profile.avatar_url);
-          }
-        }
+        setIsAdmin(profile.faction === "Fondator" || profile.faction === "Admin" || profile.faction === "Staff" || profile.faction === "Moderator" || profile.faction?.includes("Poliți") || profile.username === "19mariuss48");
       }
     }).catch(console.error);
 
-    // Quick load from local storage fallback cache if available
-    if (typeof window !== "undefined") {
-      const localSync = localStorage.getItem(`flowro_fivem_sync_${user.id}`);
-      if (localSync) {
-        try {
-          const parsed = JSON.parse(localSync);
-          if (parsed.avatar_url) setAvatarUrl(parsed.avatar_url);
-        } catch (e) {}
-      }
-      
-      const localAvatar = localStorage.getItem(`flowro_avatar_${user.id}`);
-      if (localAvatar) {
-        setAvatarUrl(localAvatar);
-      }
-    }
+
 
 
   }, [user]);

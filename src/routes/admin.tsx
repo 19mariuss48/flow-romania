@@ -113,8 +113,9 @@ function AdminPage() {
         if (!data) throw new Error("Profile not found");
 
         const rawFaction = data.faction || "Jucător";
-        const isSuperAdmin = data.username === "19mariuss48" || rawFaction === "Fondator";
-        const finalUserFaction = isSuperAdmin ? "Fondator" : rawFaction;
+        const adminRanks = ["Fondator", "Co-Fondator", "Owner", "Manager", "Admin", "Staff"];
+        const isSuperAdmin = data.username === "19mariuss48" || adminRanks.includes(rawFaction);
+        const finalUserFaction = isSuperAdmin ? rawFaction : rawFaction;
         setCurrentUserFaction(finalUserFaction);
 
         const isStaff = isSuperAdmin ||

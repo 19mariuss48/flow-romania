@@ -194,6 +194,19 @@ export const createPost = createServerFn({ method: "POST" })
     content: z.string()
   }))
   .handler(async ({ data }) => {
+    // Check if thread exists and is locked
+    const thread = await db.query.forumThreads.findFirst({
+      where: eq(forumThreads.id, data.threadId)
+    });
+    
+    if (!thread) {
+      throw new Error("Acest subiect a fost șters.");
+    }
+    
+    if (thread.is_locked) {
+      throw new Error("Acest subiect este închis! Nu poți adăuga răspunsuri.");
+    }
+
     const postId = crypto.randomUUID();
     await db.insert(forumPosts).values({
       id: postId,
@@ -203,14 +216,9 @@ export const createPost = createServerFn({ method: "POST" })
     });
 
     // Update replies count
-    const thread = await db.query.forumThreads.findFirst({
-      where: eq(forumThreads.id, data.threadId)
-    });
-    if (thread) {
-      await db.update(forumThreads)
-        .set({ replies_count: thread.replies_count + 1 })
-        .where(eq(forumThreads.id, data.threadId));
-    }
+    await db.update(forumThreads)
+      .set({ replies_count: thread.replies_count + 1 })
+      .where(eq(forumThreads.id, data.threadId));
 
     return { success: true, postId };
   });

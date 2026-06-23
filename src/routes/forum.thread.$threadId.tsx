@@ -130,9 +130,10 @@ function ThreadDetailPage() {
 
       toast.success("Răspunsul tău a fost adăugat!");
       setReplyContent("");
-      loadThreadData();
-    } catch (err: any) {
-      toast.error("Eroare la adăugarea răspunsului: " + (err.message || "Eroare necunoscută"));
+      loadThreadData(); // Reload threads immediately
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || "Eroare la postarea răspunsului.");
     } finally {
       setSubmittingReply(false);
     }
@@ -224,10 +225,25 @@ function ThreadDetailPage() {
   };
 
   const initialForumSlug = threadDetails?.forum_slug || "discutii-generale";
-  const userRank = currentUserProfile?.faction || "Jucător";
-  const isSuperAdmin = currentUserProfile?.username === "19mariuss48" || userRank === "Fondator" ;
+  const userRank = currentUserProfile?.faction || "Jucator";
+  const adminRanks = ["Fondator", "Co-Fondator", "Owner", "Manager", "Admin", "Staff"];
+  const isSuperAdmin = currentUserProfile?.username === "19mariuss48" || adminRanks.includes(userRank);
   
-  let isStaff = isSuperAdmin || userRank === "Moderator";
+  let isStaff = isSuperAdmin || userRank === "Moderator" || userRank === "Tester";
+
+  // Police can manage certain forums
+  if (threadDetails?.forum_slug === "aplicatii-politie" || threadDetails?.forum_slug === "rapoarte-politie" || threadDetails?.forum_slug === "reclamatii-politie") {
+    if (userRank === "Comisar Sef" || userRank === "Chestori" || userRank === "Chestor General" || userRank === "Director General" || userRank?.includes("Poliți") || userRank?.includes("Polițist")) {
+      isStaff = true;
+    }
+  }
+  // Smurd
+  if (threadDetails?.forum_slug === "aplicatii-smurd" || threadDetails?.forum_slug === "rapoarte-smurd" || threadDetails?.forum_slug === "reclamatii-smurd") {
+    if (userRank?.includes("Medic") || userRank === "Medic Sef" || userRank === "Medic Primar" || userRank === "Medic Specialist" || userRank === "Asistent") {
+      isStaff = true;
+    }
+  }
+  
   let canReply = true;
   const isAuthor = user && threadDetails?.user_id === user.id;
 
@@ -397,8 +413,9 @@ function ThreadDetailPage() {
                 } : p;
 
                 const isOp = index === 0;
-                const mappedRank = (post.rank === "Administrator" || post.rank?.includes("Admin")) ? "Fondator" : (post.rank || "Jucător");
-                const isAuthorStaff = mappedRank === "Fondator" || mappedRank === "Moderator" || mappedRank?.includes("Poliț");
+                const mappedRank = post.rank || "Jucător";
+                const adminRanks = ["Fondator", "Co-Fondator", "Owner", "Manager", "Admin", "Staff", "Moderator", "Tester"];
+                const isAuthorStaff = adminRanks.includes(mappedRank) || mappedRank?.includes("Poliț") || mappedRank?.includes("Medic");
                 const initialChar = post.user_name ? post.user_name.charAt(0).toUpperCase() : "C";
 
                 return (
