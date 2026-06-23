@@ -145,15 +145,29 @@ export const getThreadDetails = createServerFn({ method: "POST" })
         user_name: threadUser?.display_name || threadUser?.username || "Cetățean",
         avatar_url: threadUser?.avatar_url || ""
       },
-      posts: posts.map(p => {
-        const user = users.find(u => u.id === p.user_id);
-        return {
-          ...p,
-          user_name: user?.display_name || user?.username || "Cetățean",
-          avatar_url: user?.avatar_url || "",
-          rank: user?.faction || "Jucător"
-        };
-      })
+      posts: [
+        {
+          id: thread.id,
+          thread_id: thread.id,
+          user_id: thread.user_id,
+          content: thread.content,
+          created_at: thread.created_at,
+          updated_at: thread.updated_at,
+          likes: 0,
+          liked: false,
+          user_name: threadUser?.display_name || threadUser?.username || "Ceta?ean",
+          avatar_url: threadUser?.avatar_url || "",
+          rank: threadUser?.faction || "Jucator"
+        },
+        ...posts.map(p => {
+          const user = users.find(u => u.id === p.user_id);
+          return {
+            ...p,
+            user_name: user?.display_name || user?.username || "Ceta?ean",
+            avatar_url: user?.avatar_url || "",
+            rank: user?.faction || "Jucator"
+          };
+        })]
     };
 
     setCache(cacheKey, result, 60);
