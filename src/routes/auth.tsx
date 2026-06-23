@@ -26,6 +26,11 @@ function AuthPage() {
   const [view, setView] = useState<"signin" | "signup" | "recovery">("signin");
 
   useEffect(() => {
+    if (window.location.search.includes("verified=true")) {
+      toast.success("Contul tău a fost verificat cu succes! Acum te poți conecta.");
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    
     if (!loading && user) {
       if (window.location.hash.includes("type=recovery") || window.location.search.includes("type=recovery")) {
         navigate({ to: "/" });
@@ -86,8 +91,16 @@ function SignInForm({ onForgotPassword }: { onForgotPassword: () => void }) {
     setLoading(true);
     const { error } = await authClient.signIn.email({ email, password, rememberMe: true });
     setLoading(false);
-    if (error) toast.error(error.message);
-    else toast.success("Bine ai revenit pe FLOW.");
+    if (error) {
+      const errStr = error.message?.toLowerCase() || error.code?.toLowerCase() || "";
+      if (errStr.includes("verif") || errStr.includes("email_not_verified")) {
+        toast.error("Trebuie să îți verifici adresa de email pentru a te conecta! Verifică inbox-ul sau folderul Spam.");
+      } else {
+        toast.error(error.message || "Eroare la conectare.");
+      }
+    } else {
+      toast.success("Bine ai revenit pe FLOW.");
+    }
   };
 
   return (
@@ -149,7 +162,7 @@ function SignUpForm() {
       email,
       password,
       name: username,
-      callbackURL: "https://flow-romania.vercel.app/"
+      callbackURL: `${window.location.origin}/auth?verified=true`
     });
     setLoading(false);
     if (error) {
