@@ -23,12 +23,14 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const [view, setView] = useState<"signin" | "signup" | "recovery">("signin");
+  const [view, setView] = useState<"signin" | "signup" | "recovery" | "resetPassword">("signin");
 
   useEffect(() => {
     if (window.location.search.includes("verified=true")) {
       toast.success("Contul tău a fost verificat cu succes! Acum te poți conecta.");
       window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (window.location.search.includes("token=") && !window.location.search.includes("error=")) {
+      setView("resetPassword");
     }
     
     if (!loading && user) {
@@ -56,6 +58,8 @@ function AuthPage() {
         <div className="glass rounded-2xl p-8">
           {view === "recovery" ? (
             <RecoveryForm onBack={() => setView("signin")} />
+          ) : view === "resetPassword" ? (
+            <ResetPasswordForm onBack={() => setView("signin")} />
           ) : (
             <Tabs value={view} onValueChange={(val) => setView(val as any)} className="w-full">
               <TabsList className="grid grid-cols-2 w-full mb-6 bg-white/5">
@@ -277,6 +281,90 @@ function RecoveryForm({ onBack }: { onBack: () => void }) {
           className="w-full bg-white text-black hover:bg-white/90 tracking-widest mt-2"
         >
           {loading ? "SE TRIMITE EMAILUL…" : "RECUPEREAZĂ PAROLA"}
+        </Button>
+      </form>
+    </div>
+  );
+}
+
+function ResetPasswordForm({ onBack }: { onBack: () => void }) {
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password.length < 8) return toast.error("Parola trebuie să aibă cel puțin 8 caractere.");
+    setLoading(true);
+    
+    // Extragem tokenul din URL
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token") || undefined;
+    
+    const { error } = await authClient.resetPassword({
+      newPassword: password,
+      token: token as string,
+    });
+    setLoading(false);
+    
+    if (error) {
+      toast.error(error.message || "Eroare la schimbarea parolei.");
+    } else {
+      toast.success("Parola a fost schimbată cu succes! Acum te poți conecta.");
+      // Curățăm URL-ul de token
+      window.history.replaceState({}, document.title, window.location.pathname);
+      onBack();
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <button 
+          onClick={onBack} 
+          className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition tracking-wider uppercase font-semibold"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Înapoi la Conectare
+        </button>
+        <h3 className="text-xl font-light tracking-wide text-silver-gradient pt-2">
+          SETARE NOUĂ PAROLĂ
+        </h3>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Te rugăm să introduci noua ta parolă pentru cont.
+        </p>
+      </div>
+
+      <form onSubmit={onSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="rp-pw">Noua Parolă</Label>
+          <div className="relative">
+            <Input 
+              id="rp-pw" 
+              type={showPassword ? "text" : "password"} 
+              required 
+              minLength={8} 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              className="pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
+              title={showPassword ? "Ascunde parola" : "Afișează parola"}
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
+
+        <Button 
+          type="submit" 
+          disabled={loading} 
+          className="w-full bg-white text-black hover:bg-white/90 tracking-widest mt-2"
+        >
+          {loading ? "SE SCHIMBĂ…" : "SCHIMBĂ PAROLA"}
         </Button>
       </form>
     </div>
