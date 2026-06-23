@@ -7,10 +7,10 @@ import { Search, Gavel, Scale, AlertTriangle, ShieldCheck, Car, EyeOff, ShieldAl
 export const Route = createFileRoute("/cod-penal")({
   head: () => ({
     meta: [
-      { title: "CODUL PENAL — FLOW ROMÂNIA" },
-      { name: "description", content: "Codul Penal oficial al comunității FLOW ROMÂNIA. Ghidul juridic complet pentru infracțiuni, pedepse, amenzi și cauțiuni." },
-      { property: "og:title", content: "CODUL PENAL — FLOW ROMÂNIA" },
-      { property: "og:description", content: "Codul Penal oficial al comunității FLOW ROMÂNIA." },
+      { title: "CODUL PENAL — FLOW ROMANIA" },
+      { name: "description", content: "Codul Penal oficial al comunitatii FLOW ROMANIA. Ghidul juridic complet pentru infractiuni, pedepse, amenzi si cautiuni." },
+      { property: "og:title", content: "CODUL PENAL — FLOW ROMANIA" },
+      { property: "og:description", content: "Codul Penal oficial al comunitatii FLOW ROMANIA." },
     ],
   }),
   component: CodPenalPage,
@@ -43,7 +43,7 @@ function CodPenalPage() {
         
         {/* Navigation Breadcrumbs */}
         <div className="flex items-center gap-2 text-xs text-muted-foreground mb-8 font-medium">
-          <Link to="/" className="hover:text-foreground transition-colors">ACASĂ</Link>
+          <Link to="/" className="hover:text-foreground transition-colors">ACASA</Link>
           <span className="text-muted-foreground">/</span>
           <span className="text-silver font-semibold uppercase">CODUL PENAL</span>
         </div>
@@ -56,8 +56,8 @@ function CodPenalPage() {
           </h1>
           <div className="mx-auto mt-6 hairline w-32" />
           <p className="mt-6 text-sm text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed">
-            Codul de legi oficial aplicat pe teritoriul FLOW ROMÂNIA. Consultați limitele pedepselor, 
-            amenzile stabilite și condițiile de eliberare pe cauțiune pentru fiecare clasă de infracțiune.
+            Codul de legi oficial aplicat pe teritoriul FLOW ROMANIA. Consultati limitele pedepselor, 
+            amenzile stabilite si conditiile de eliberare pe cautiune pentru fiecare clasa de infractiune.
           </p>
         </div>
 
@@ -66,8 +66,8 @@ function CodPenalPage() {
           {[
             { label: "CATEGORII GENERALE", value: "9", icon: Scale },
             { label: "ARTICOLE DE LEGE", value: articlesData.length.toString(), icon: Gavel },
-            { label: "AMENDĂ MAXIMĂ", value: "75.000 $", icon: AlertTriangle },
-            { label: "PEDEAPSĂ MAXIMĂ", value: "500 MINUTE", icon: ShieldCheck },
+            { label: "AMENDA MAXIMA", value: "75.000 $", icon: AlertTriangle },
+            { label: "PEDEAPSA MAXIMA", value: "500 MINUTE", icon: ShieldCheck },
           ].map((stat, i) => {
             const Icon = stat.icon;
             return (
@@ -93,7 +93,7 @@ function CodPenalPage() {
               <Search className="h-4 w-4 text-muted-foreground mr-3 shrink-0" />
               <input
                 type="text"
-                placeholder="Caută după numărul articolului, denumire sau cuvinte cheie (ex: Art. 1.3, Omor, Alcool)..."
+                placeholder="Cauta dupa numarul articolului, denumire sau cuvinte cheie (ex: Art. 1.3, Omor, Alcool)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="bg-transparent border-0 outline-none w-full py-3 text-sm text-foreground placeholder:text-muted-foreground/60"
@@ -103,7 +103,7 @@ function CodPenalPage() {
                   onClick={() => setSearchQuery("")}
                   className="text-xs text-muted-foreground hover:text-foreground tracking-widest font-mono font-semibold"
                 >
-                  ȘTERGE
+                  STERGE
                 </button>
               )}
             </div>
@@ -113,12 +113,12 @@ function CodPenalPage() {
           <div className="flex flex-wrap gap-2.5">
             {[
               { id: "all", label: "Toate Articolele", icon: Scale },
-              { id: "contra-persoanei", label: "Persoană", icon: ShieldAlert },
+              { id: "contra-persoanei", label: "Persoana", icon: ShieldAlert },
               { id: "ordine-publica", label: "Ordine", icon: ShieldCheck },
-              { id: "convietuire-sociala", label: "Conviețuire", icon: ShieldCheck },
+              { id: "convietuire-sociala", label: "Convietuire", icon: ShieldCheck },
               { id: "moralitate-publica", label: "Moralitate", icon: ShieldAlert },
               { id: "contra-proprietatii", label: "Proprietate", icon: EyeOff },
-              { id: "justitie", label: "Justiție", icon: Gavel },
+              { id: "justitie", label: "Justitie", icon: Gavel },
               { id: "arme", label: "Arme", icon: AlertTriangle },
               { id: "contraventii-rutiere", label: "Amenzi", icon: Car },
               { id: "infractiuni-rutiere", label: "Rutiere", icon: Car },
@@ -147,9 +147,9 @@ function CodPenalPage() {
         {filteredArticles.length === 0 ? (
           <div className="glass rounded-2xl p-20 border-white/5 text-center">
             <ShieldAlert className="h-10 w-10 text-muted-foreground/30 mx-auto mb-4" />
-            <h3 className="text-sm font-semibold text-foreground mb-1">Niciun articol găsit</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-1">Niciun articol gasit</h3>
             <p className="text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed">
-              Nu am găsit niciun articol în Codul Penal care să corespundă criteriilor de căutare. Reîncearcă cu alți termeni.
+              Nu am gasit niciun articol in Codul Penal care sa corespunda criteriilor de cautare. Reincearca cu alti termeni.
             </p>
           </div>
         ) : (
@@ -181,13 +181,13 @@ function CodPenalPage() {
                   <div className="pt-4 border-t border-white/5 space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <div className="text-[9px] tracking-widest text-muted-foreground uppercase">AMENDĂ</div>
+                        <div className="text-[9px] tracking-widest text-muted-foreground uppercase">AMENDA</div>
                         <div className="text-sm font-semibold text-foreground font-mono mt-0.5">
                           {art.amenda || "-"}
                         </div>
                       </div>
                       <div>
-                        <div className="text-[9px] tracking-widest text-muted-foreground uppercase">TIMP ÎNCHISOARE</div>
+                        <div className="text-[9px] tracking-widest text-muted-foreground uppercase">TIMP INCHISOARE</div>
                         <div className="text-sm font-semibold text-foreground font-mono mt-0.5">
                           {art.inchisoare || "-"}
                         </div>

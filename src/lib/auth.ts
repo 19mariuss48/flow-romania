@@ -87,6 +87,11 @@ export const auth = betterAuth({
   advanced: {
     generateId: false // Because we're using varchar(36) UUIDs
   },
+
+  session: {
+    expiresIn: 60 * 60 * 24 * 2, // 2 zile
+    updateAge: 60 * 60 * 24, // reînnoiește dacă e mai veche de o zi
+  },
   databaseHooks: {
     user: {
       create: {

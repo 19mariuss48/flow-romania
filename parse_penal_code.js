@@ -15,14 +15,14 @@ let currentArticle = null;
 
 const catMap = {
     '1': { id: 'contra-persoanei', label: 'Contra Persoanelor' },
-    '2': { id: 'ordine-publica', label: 'Ordinea Publică' },
-    '3': { id: 'convietuire-sociala', label: 'Conviețuire Socială' },
-    '4': { id: 'moralitate-publica', label: 'Moralitate Publică' },
-    '5': { id: 'contra-proprietatii', label: 'Contra Proprietăților' },
-    '6': { id: 'justitie', label: 'Împotriva Justiției' },
+    '2': { id: 'ordine-publica', label: 'Ordinea Publica' },
+    '3': { id: 'convietuire-sociala', label: 'Convietuire Sociala' },
+    '4': { id: 'moralitate-publica', label: 'Moralitate Publica' },
+    '5': { id: 'contra-proprietatii', label: 'Contra Proprietatilor' },
+    '6': { id: 'justitie', label: 'Impotriva Justitiei' },
     '7': { id: 'arme', label: 'Controlul Armelor' },
-    '8': { id: 'contraventii-rutiere', label: 'Contravenții Rutiere' },
-    '9': { id: 'infractiuni-rutiere', label: 'Infracțiuni Rutiere' }
+    '8': { id: 'contraventii-rutiere', label: 'Contraventii Rutiere' },
+    '9': { id: 'infractiuni-rutiere', label: 'Infractiuni Rutiere' }
 };
 
 for (let i = 0; i < lines.length; i++) {
@@ -68,7 +68,7 @@ for (let i = 0; i < lines.length; i++) {
                 currentArticle.description += (currentArticle.description ? ' ' : '') + line;
             }
         } else if (line === '^') {
-            currentArticle.description = "Identic cu prevederile anterioare pentru clasa specifică.";
+            currentArticle.description = "Identic cu prevederile anterioare pentru clasa specifica.";
         }
     }
 }
