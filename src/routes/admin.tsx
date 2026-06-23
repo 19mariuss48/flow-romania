@@ -1,4 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { getSiteContent, updateSiteContent } from "@/lib/api/content.server";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { getUserProfile } from "@/lib/api/profile.server";
@@ -48,6 +50,52 @@ function AdminPage() {
   const [editBio, setEditBio] = useState("");
   const [saving, setSaving] = useState(false);
   const [currentUserFaction, setCurrentUserFaction] = useState("");
+
+  const [activeTab, setActiveTab] = useState("users");
+  const [contentSelector, setContentSelector] = useState("regulament");
+  const [siteContentJson, setSiteContentJson] = useState("");
+  const [loadingContent, setLoadingContent] = useState(false);
+  const [savingContent, setSavingContent] = useState(false);
+
+  // Fetch site content when tab changes to 'content' or selector changes
+  useEffect(() => {
+    if (activeTab === "content" && isAdmin) {
+      loadSiteContent();
+    }
+  }, [activeTab, contentSelector, isAdmin]);
+
+  const loadSiteContent = async () => {
+    setLoadingContent(true);
+    try {
+      const data = await getSiteContent({ data: { id: contentSelector } });
+      if (data) {
+        setSiteContentJson(JSON.stringify(data, null, 2));
+      } else {
+        setSiteContentJson("{\n  // Nu a fost găsit conținut. Apasă Salvare pentru a inițializa.\n}");
+      }
+    } catch (err) {
+      toast.error("Eroare la încărcarea conținutului.");
+    } finally {
+      setLoadingContent(false);
+    }
+  };
+
+  const handleSaveContent = async () => {
+    if (currentUserFaction !== "Fondator") {
+      toast.error("Doar Fondatorii pot modifica conținutul site-ului.");
+      return;
+    }
+    setSavingContent(true);
+    try {
+      const parsed = JSON.parse(siteContentJson);
+      await updateSiteContent({ data: { id: contentSelector, content: parsed } });
+      toast.success("Conținutul a fost salvat cu succes!");
+    } catch (err: any) {
+      toast.error("JSON invalid sau eroare la salvare: " + err.message);
+    } finally {
+      setSavingContent(false);
+    }
+  };
 
   useEffect(() => {
     if (authLoading) return;
@@ -256,7 +304,14 @@ function AdminPage() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid grid-cols-2 w-full max-w-md mb-8 bg-white/5 border border-white/10 rounded-xl p-1">
+            <TabsTrigger value="users" className="rounded-lg data-[state=active]:bg-amber-400 data-[state=active]:text-black text-xs font-bold tracking-wider uppercase transition-all">Jucători</TabsTrigger>
+            <TabsTrigger value="content" className="rounded-lg data-[state=active]:bg-amber-400 data-[state=active]:text-black text-xs font-bold tracking-wider uppercase transition-all">Conținut Site</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="users">
+            <div className="grid lg:grid-cols-12 gap-8">
           {/* Left Column: Users List */}
           <div className="lg:col-span-8 space-y-4">
             <div className="flex items-center justify-between bg-white/5 border border-white/10 rounded-xl p-4">
@@ -452,8 +507,53 @@ function AdminPage() {
               </div>
             )}
           </div>
-
         </div>
+      </TabsContent>
+
+      <TabsContent value="content">
+        <div className="glass rounded-2xl p-6 border-white/5">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-white/5 pb-6">
+            <div>
+              <h2 className="text-xl font-light tracking-wide text-silver-gradient">Editare Conținut (CMS)</h2>
+              <p className="text-xs text-muted-foreground mt-1">Atenție: Acest editor modifică direct datele în format JSON. Asigurați-vă că structura este corectă.</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <select
+                value={contentSelector}
+                onChange={(e) => setContentSelector(e.target.value)}
+                className="bg-black/40 border border-white/10 focus:border-amber-400/40 text-sm h-10 px-4 rounded-md text-foreground outline-none"
+              >
+                <option value="regulament" className="bg-[#0B0B0B]">Regulament & Termeni</option>
+                <option value="cod_penal" className="bg-[#0B0B0B]">Cod Penal</option>
+              </select>
+              <Button 
+                onClick={handleSaveContent}
+                disabled={savingContent || currentUserFaction !== "Fondator"}
+                className="bg-amber-400 hover:bg-amber-500 text-black font-bold tracking-widest text-xs h-10 gap-2"
+              >
+                <Save className="h-4 w-4" />
+                {savingContent ? "SE SALVEAZĂ..." : "SALVEAZĂ"}
+              </Button>
+            </div>
+          </div>
+
+          <div className="relative">
+            {loadingContent && (
+              <div className="absolute inset-0 bg-black/60 z-10 flex flex-col items-center justify-center rounded-xl">
+                <div className="w-8 h-8 rounded-full border-t-2 border-amber-400 animate-spin mb-2" />
+                <span className="text-xs tracking-widest text-amber-400 animate-pulse">SE ÎNCARCĂ...</span>
+              </div>
+            )}
+            <textarea
+              value={siteContentJson}
+              onChange={(e) => setSiteContentJson(e.target.value)}
+              className="w-full h-[600px] bg-[#0A0A0A] border border-white/10 rounded-xl p-4 font-mono text-sm text-silver focus:border-amber-400/40 focus:outline-none resize-y"
+              spellCheck={false}
+            />
+          </div>
+        </div>
+      </TabsContent>
+    </Tabs>
       </main>
       <SiteFooter />
     </div>

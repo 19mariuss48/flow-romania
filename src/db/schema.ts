@@ -143,3 +143,8 @@ export const pageMetrics = mysqlTable("page_metrics", {
   views_count: int("views_count").default(0).notNull(),
 });
 
+export const siteContent = mysqlTable("site_content", {
+  id: varchar("id", { length: 255 }).primaryKey(),
+  content: json("content").notNull(),
+  updated_at: datetime("updated_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+});

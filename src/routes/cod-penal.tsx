@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getSiteContent, updateSiteContent } from "@/lib/api/content.server";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Search, Gavel, Scale, AlertTriangle, ShieldCheck, Car, EyeOff, ShieldAlert } from "lucide-react";
@@ -21,8 +22,34 @@ import { articlesData } from "@/data/cod-penal-data";
 function CodPenalPage() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  
+  const [contentData, setContentData] = useState<{ articlesData: any[] } | null>(null);
+  const [loadingContent, setLoadingContent] = useState(true);
 
-  const filteredArticles = articlesData.filter((art) => {
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const data = await getSiteContent({ data: { id: "cod_penal" } });
+        if (data) {
+          setContentData(data as any);
+        } else {
+          const defaultData = { articlesData };
+          setContentData(defaultData);
+          await updateSiteContent({ data: { id: "cod_penal", content: defaultData } });
+        }
+      } catch (err) {
+        console.error("Failed to load cod penal", err);
+        setContentData({ articlesData });
+      } finally {
+        setLoadingContent(false);
+      }
+    };
+    fetchContent();
+  }, []);
+
+  const activeArticlesData = contentData?.articlesData || [];
+
+  const filteredArticles = activeArticlesData.filter((art: any) => {
     const matchesCategory = activeCategory === "all" || art.category === activeCategory;
     const matchesSearch = 
       art.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -30,6 +57,14 @@ function CodPenalPage() {
       art.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  if (loadingContent) {
+    return (
+      <div className="min-h-screen bg-[#0B0B0B] text-foreground flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full border-t-2 border-amber-400 animate-spin mb-4" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0B0B0B] text-foreground flex flex-col justify-between relative overflow-hidden">
@@ -65,7 +100,7 @@ function CodPenalPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {[
             { label: "CATEGORII GENERALE", value: "9", icon: Scale },
-            { label: "ARTICOLE DE LEGE", value: articlesData.length.toString(), icon: Gavel },
+            { label: "ARTICOLE DE LEGE", value: activeArticlesData.length.toString(), icon: Gavel },
             { label: "AMENDA MAXIMA", value: "75.000 $", icon: AlertTriangle },
             { label: "PEDEAPSA MAXIMA", value: "500 MINUTE", icon: ShieldCheck },
           ].map((stat, i) => {

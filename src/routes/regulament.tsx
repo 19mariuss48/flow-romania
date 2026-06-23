@@ -22,6 +22,7 @@ import {
   BookOpen
 } from "lucide-react";
 import { getPageViews, incrementPageViews } from "@/lib/api/metrics.server";
+import { getSiteContent, updateSiteContent } from "@/lib/api/content.server";
 
 export const Route = createFileRoute("/regulament")({
   head: () => ({
@@ -89,10 +90,42 @@ const lockedTopics = [
 function RegulamentPage() {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   
+  // CMS State
+  const [contentData, setContentData] = useState<{
+    regulamenteData: any[];
+    termeniData: any[];
+    jafuriData: any;
+  } | null>(null);
+  const [loadingContent, setLoadingContent] = useState(true);
+
   // States for general regulament sub-view
   const [activeCategory, setActiveCategory] = useState("gameplay");
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedRules, setExpandedRules] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const data = await getSiteContent({ data: { id: "regulament" } });
+        if (data) {
+          setContentData(data as any);
+        } else {
+          // Auto-seed
+          const defaultData = { regulamenteData, termeniData, jafuriData };
+          setContentData(defaultData);
+          await updateSiteContent({ data: { id: "regulament", content: defaultData } });
+        }
+      } catch (err) {
+        console.error("Failed to load regulament from DB", err);
+        setContentData({ regulamenteData, termeniData, jafuriData });
+      } finally {
+        setLoadingContent(false);
+      }
+    };
+    fetchContent();
+  }, []);
+  
+
 
   const toggleRule = (categoryKey: string, ruleIndex: number) => {
     const key = `${categoryKey}-${ruleIndex}`;
@@ -138,24 +171,32 @@ function RegulamentPage() {
     }
   };
 
-  const activeData = regulamenteData.find((c) => c.id === activeCategory) || regulamenteData[0];
+  const activeData = contentData?.regulamenteData.find((c) => c.id === activeCategory) || contentData?.regulamenteData[0] || { name: "", description: "", rules: [] };
 
   // Filter rules based on search query
-  const filteredCategories = regulamenteData.map((cat) => {
+  const filteredCategories = contentData?.regulamenteData.map((cat) => {
     const filteredRules = cat.rules.filter(
-      (rule) =>
+      (rule: any) =>
         rule.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         rule.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        rule.details.some((d) => d.toLowerCase().includes(searchQuery.toLowerCase()))
+        rule.details.some((d: string) => d.toLowerCase().includes(searchQuery.toLowerCase()))
     );
     return { ...cat, rules: filteredRules };
-  });
+  }) || [];
 
   const displayData = searchQuery
     ? filteredCategories.find((c) => c.id === activeCategory) || { rules: [] }
     : activeData;
 
-  const totalRulesCount = regulamenteData.reduce((acc, cat) => acc + cat.rules.length, 0);
+  const totalRulesCount = contentData?.regulamenteData.reduce((acc, cat) => acc + cat.rules.length, 0) || 0;
+
+  if (loadingContent) {
+    return (
+      <div className="min-h-screen bg-[#0B0B0B] text-foreground flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full border-t-2 border-amber-400 animate-spin mb-4" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0B0B0B] text-foreground flex flex-col justify-between relative overflow-hidden">
@@ -319,7 +360,7 @@ function RegulamentPage() {
 
             {/* Terms List inside custom visual cards */}
             <div className="space-y-6">
-              {termeniData.map((term, index) => (
+              {contentData?.termeniData.map((term: any, index: number) => (
                 <div key={index} className="glass rounded-2xl p-6 border-white/5 bg-gradient-to-br from-white/[0.01] to-transparent hover:border-white/10 transition-colors shadow-lg">
                   <h3 className="text-lg font-semibold tracking-wide text-white mb-3 flex items-center gap-2 border-b border-white/5 pb-2">
                     <span className="h-1.5 w-1.5 rounded-full bg-silver/60" />
@@ -399,8 +440,8 @@ function RegulamentPage() {
               {/* Left Sidebar Category Tabs */}
               <div className="space-y-2 lg:col-span-1">
                 <div className="text-[10px] text-muted-foreground tracking-widest uppercase mb-4 px-3 font-bold">Capitole</div>
-                {regulamenteData.map((cat) => {
-                  const Icon = cat.icon;
+                {contentData?.regulamenteData.map((cat: any) => {
+                  const Icon = cat.icon || ShieldAlert;
                   const isActive = cat.id === activeCategory;
                   return (
                     <button
@@ -564,11 +605,11 @@ function RegulamentPage() {
                 </h3>
                 
                 <div className="space-y-4">
-                  {jafuriData.tipuri.map((tip, index) => (
+                  {contentData?.jafuriData.tipuri.map((tip: any, index: number) => (
                     <div key={index} className="space-y-2">
                       <span className="text-[11px] font-bold text-white tracking-widest uppercase font-mono">{tip.name}</span>
                       <div className="flex flex-wrap gap-1.5">
-                        {tip.items.map((it, i) => (
+                        {tip.items.map((it: string, i: number) => (
                           <span key={i} className="text-[10px] font-medium text-silver bg-white/5 border border-white/5 px-2.5 py-1 rounded-md">
                             {it}
                           </span>
@@ -587,7 +628,7 @@ function RegulamentPage() {
                 </h3>
                 
                 <div className="space-y-3.5">
-                  {jafuriData.informatii.map((inf, i) => (
+                  {contentData?.jafuriData.informatii.map((inf: string, i: number) => (
                     <div key={i} className="flex items-start gap-3">
                       <span className="h-2 w-2 rounded-full bg-blue-500/80 mt-1.5 shrink-0" />
                       <p className="text-xs text-muted-foreground leading-relaxed">
@@ -618,7 +659,7 @@ function RegulamentPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5 text-xs text-silver">
-                    {jafuriData.participanti.map((p, idx) => (
+                    {contentData?.jafuriData.participanti.map((p: any, idx: number) => (
                       <tr key={idx} className="hover:bg-white/[0.01] transition-colors">
                         <td className="py-3 pl-3 font-medium text-white">{p.jaf}</td>
                         <td className="py-3 text-center font-mono text-emerald-400 font-semibold">{p.min} membrii</td>
@@ -641,7 +682,7 @@ function RegulamentPage() {
               </h3>
 
               <div className="grid md:grid-cols-2 gap-4">
-                {jafuriData.reguli.map((reg, i) => {
+                {contentData?.jafuriData.reguli.map((reg: string, i: number) => {
                   const isInterzis = reg.includes("INTERZIS");
                   return (
                     <div key={i} className={`p-4 rounded-xl border flex items-start gap-3 ${
