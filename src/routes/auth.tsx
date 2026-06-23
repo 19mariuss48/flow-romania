@@ -218,7 +218,7 @@ function RecoveryForm({ onBack }: { onBack: () => void }) {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await authClient.forgetPassword({
+    const { error } = await authClient.requestPasswordReset({
       email,
       redirectTo: `${window.location.origin}/auth`,
     });
