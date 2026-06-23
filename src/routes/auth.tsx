@@ -228,7 +228,7 @@ function RecoveryForm({ onBack }: { onBack: () => void }) {
       if (errStr.includes("too many requests") || error.status === 429) {
         toast.error("Prea multe încercări! Te rugăm să aștepți câteva momente înainte de a încerca din nou.");
       } else {
-        toast.error(error.message || "A apărut o eroare la trimiterea emailului.");
+        toast.error(`Eroare (${error.status}): ${error.code || error.message || JSON.stringify(error)}`);
       }
     } else {
       toast.success("Emailul de recuperare a parolei a fost trimis. Verifică-ți căsuța poștală!");
