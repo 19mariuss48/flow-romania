@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { db } from "@/db";
-import { profiles, applications } from "@/db/schema";
+import { profiles, applications, pageMetrics, forumThreads } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 
 export const getAllProfiles = createServerFn({ method: "POST" })
@@ -38,4 +38,22 @@ export const updateApplicationStatus = createServerFn({ method: "POST" })
       updated_at: new Date()
     }).where(eq(applications.id, data.appId));
     return { success: true };
+  });
+
+export const getViewsStatistics = createServerFn({ method: "GET" })
+  .handler(async () => {
+    const pages = await db.query.pageMetrics.findMany();
+    const threads = await db.query.forumThreads.findMany({
+      orderBy: (threads, { desc }) => [desc(threads.views_count)]
+    });
+
+    return {
+      pages,
+      threads: threads.map(t => ({
+        id: t.id,
+        title: t.title,
+        category: t.category || "General",
+        views_count: t.views_count
+      }))
+    };
   });

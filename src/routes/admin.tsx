@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { getUserProfile } from "@/lib/api/profile.server";
-import { getAllProfiles, adminUpdateProfile } from "@/lib/api/admin.server";
+import { getAllProfiles, adminUpdateProfile, getViewsStatistics } from "@/lib/api/admin.server";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,8 @@ import {
   Ban,
   Database,
   Clock,
-  Briefcase
+  Briefcase,
+  BarChart3
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
@@ -50,6 +51,7 @@ function AdminPage() {
   const [editBio, setEditBio] = useState("");
   const [saving, setSaving] = useState(false);
   const [currentUserFaction, setCurrentUserFaction] = useState("");
+  const [viewsStats, setViewsStats] = useState<{pages: any[], threads: any[]} | null>(null);
 
   const [activeTab, setActiveTab] = useState("users");
   const [contentSelector, setContentSelector] = useState("regulament");
@@ -144,6 +146,9 @@ function AdminPage() {
       try {
         const data = await getAllProfiles();
         setProfiles(data || []);
+        
+        const stats = await getViewsStatistics();
+        setViewsStats(stats as any);
       } catch (err: any) {
         console.error("Fetch profiles error:", err);
         toast.error("Eroare la preluarea utilizatorilor: " + (err.message || "Eroare necunoscută"));
@@ -284,9 +289,10 @@ function AdminPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-2 w-full max-w-md mb-8 bg-white/5 border border-white/10 rounded-xl p-1">
+          <TabsList className="grid grid-cols-3 w-full max-w-2xl mb-8 bg-white/5 border border-white/10 rounded-xl p-1">
             <TabsTrigger value="users" className="rounded-lg data-[state=active]:bg-amber-400 data-[state=active]:text-black text-xs font-bold tracking-wider uppercase transition-all">Jucători</TabsTrigger>
             <TabsTrigger value="content" className="rounded-lg data-[state=active]:bg-amber-400 data-[state=active]:text-black text-xs font-bold tracking-wider uppercase transition-all">Conținut Site</TabsTrigger>
+            <TabsTrigger value="views" className="rounded-lg data-[state=active]:bg-amber-400 data-[state=active]:text-black text-xs font-bold tracking-wider uppercase transition-all">Statistici Vizualizări</TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -529,6 +535,52 @@ function AdminPage() {
               className="w-full h-[600px] bg-[#0A0A0A] border border-white/10 rounded-xl p-4 font-mono text-sm text-silver focus:border-amber-400/40 focus:outline-none resize-y"
               spellCheck={false}
             />
+          </div>
+        </div>
+      </TabsContent>
+
+      {/* Views Statistics Tab */}
+      <TabsContent value="views" className="space-y-8">
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* General Pages Views */}
+          <div className="glass rounded-2xl p-6 border-white/10">
+            <h3 className="text-sm font-bold tracking-wider text-amber-400 uppercase flex items-center gap-2 mb-6">
+              <BarChart3 className="h-4 w-4" />
+              Vizualizări Pagini (Regulamente, etc.)
+            </h3>
+            <div className="space-y-3">
+              {viewsStats?.pages?.length ? viewsStats.pages.map((p, i) => (
+                <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-black/40 border border-white/5">
+                  <span className="text-sm font-medium text-silver capitalize">{p.id.replace(/-/g, ' ')}</span>
+                  <span className="text-sm font-bold text-amber-400 px-3 py-1 bg-amber-400/10 rounded-md border border-amber-400/20">{p.views_count} views</span>
+                </div>
+              )) : (
+                <div className="text-sm text-muted-foreground italic p-4 text-center">Nicio pagină nu are vizualizări momentan.</div>
+              )}
+            </div>
+          </div>
+
+          {/* Forum Topics Views */}
+          <div className="glass rounded-2xl p-6 border-white/10">
+            <h3 className="text-sm font-bold tracking-wider text-amber-400 uppercase flex items-center gap-2 mb-6">
+              <BarChart3 className="h-4 w-4" />
+              Vizualizări Topicuri Forum
+            </h3>
+            <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+              {viewsStats?.threads?.length ? viewsStats.threads.map((t, i) => (
+                <div key={i} className="flex flex-col gap-2 p-3 rounded-lg bg-black/40 border border-white/5">
+                  <div className="flex items-start justify-between gap-4">
+                    <Link to="/forum/thread/$threadId" params={{ threadId: t.id }} className="text-sm font-medium text-silver hover:text-amber-400 transition-colors line-clamp-2">
+                      {t.title}
+                    </Link>
+                    <span className="shrink-0 text-xs font-bold text-emerald-400 px-2 py-0.5 bg-emerald-400/10 rounded border border-emerald-400/20">{t.views_count} views</span>
+                  </div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider">{t.category}</div>
+                </div>
+              )) : (
+                <div className="text-sm text-muted-foreground italic p-4 text-center">Niciun topic creat sau vizualizat încă.</div>
+              )}
+            </div>
           </div>
         </div>
       </TabsContent>
