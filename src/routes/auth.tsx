@@ -84,7 +84,7 @@ function SignInForm({ onForgotPassword }: { onForgotPassword: () => void }) {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await authClient.signIn.email({ email, password });
+    const { error } = await authClient.signIn.email({ email, password, rememberMe: true });
     setLoading(false);
     if (error) toast.error(error.message);
     else toast.success("Bine ai revenit pe FLOW.");
