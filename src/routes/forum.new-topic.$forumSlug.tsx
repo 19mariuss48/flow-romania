@@ -134,55 +134,8 @@ function NewTopicPage() {
         params: { threadId: result.threadId } 
       });
     } catch (err: any) {
-      console.warn("Could not submit thread to Supabase. Simulating local mock submission:", err);
-      
-      const generatedId = `local-t-${Date.now()}`;
-      const userDisplayName = profile?.display_name || profile?.username || user.user_metadata?.display_name || user.user_metadata?.username || user.email?.split("@")[0] || "Cetățean";
-      const userAvatar = profile?.avatar_url || user.user_metadata?.avatar_url || "";
-      
-      const newThread = {
-        id: generatedId,
-        forum_slug: forumSlug,
-        category: category,
-        title: title.trim(),
-        content: content.trim(),
-        user_name: userDisplayName,
-        avatar_url: userAvatar,
-        is_pinned: false,
-        is_locked: false,
-        replies_count: 0,
-        views_count: 0,
-        created_at: new Date().toISOString()
-      };
-      
-      const localThreads = JSON.parse(localStorage.getItem("flowro_local_threads") || "[]");
-      localThreads.push(newThread);
-      localStorage.setItem("flowro_local_threads", JSON.stringify(localThreads));
-      
-      const newPost = {
-        id: `local-p-${Date.now()}`,
-        thread_id: generatedId,
-        user_name: userDisplayName,
-        avatar_url: userAvatar,
-        rank: profile?.faction || "Jucător",
-        content: content.trim(),
-        created_at: newThread.created_at,
-        likes: 0,
-        liked: false
-      };
-      
-      const localPosts = JSON.parse(localStorage.getItem("flowro_local_posts") || "[]");
-      localPosts.push(newPost);
-      localStorage.setItem("flowro_local_posts", JSON.stringify(localPosts));
-
-      // Set cooldown timestamp
-      localStorage.setItem("flowro_last_action_timestamp", Date.now().toString());
-
-      toast.success("Subiectul tău a fost publicat cu succes (Simulare locală)!");
-      navigate({ 
-        to: "/forum/thread/$threadId", 
-        params: { threadId: generatedId } 
-      });
+      console.warn("Could not submit thread:", err);
+      toast.error("A apărut o eroare la publicarea subiectului.");
     } finally {
       setPublishing(false);
     }

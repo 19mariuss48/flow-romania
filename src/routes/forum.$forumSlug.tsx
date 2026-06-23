@@ -34,11 +34,7 @@ export const Route = createFileRoute("/forum/$forumSlug")({
   component: SubForumPage,
 });
 
-// Premium High-Fidelity Mock Fallback threads per section to make the forum look fully active
-const mockThreadsData: Record<string, any[]> = {};
 
-// Default threads fallback for unconfigured sections
-const genericThreadsFallback: any[] = [];
 
 function SubForumPage() {
   const { forumSlug } = Route.useParams();
@@ -67,33 +63,19 @@ function SubForumPage() {
         }
       }
 
-      const localThreads = JSON.parse(localStorage.getItem("flowro_local_threads") || "[]")
-        .filter((t: any) => t.forum_slug === forumSlug);
-
       try {
         // 1. Fetch forum details by slug
         const fm = await getForumDetails({ data: { slug: forumSlug } });
         if (!fm) throw new Error("Forum not found");
         
         setForumDetails(fm);
-        // Wait, category_id might need to be resolved to title. Since we don't return category title from getForumDetails, let's keep CategoryName generic or fetch it inside getForumDetails. For now, fallback generic is fine, or we can use the forum title.
         setCategoryName("SECȚIUNE");
 
         // 2. Fetch live threads
         const ths = await getForumThreads({ data: { forumId: fm.id } });
-        
-        if (ths && ths.length > 0) {
-          setThreads([...localThreads, ...ths]);
-        } else {
-          setThreads(localThreads);
-        }
+        setThreads(ths || []);
       } catch (err) {
-        console.warn("Failed to load live threads. Loading fallback mock data:", err);
-        // Set mock fallbacks based on slug
-        const mockFallback = mockThreadsData[forumSlug] || genericThreadsFallback;
-        setThreads([...localThreads, ...mockFallback]);
-        
-        // Generate mock forum title from slug for clean fallback rendering
+        console.warn("Failed to load forum details:", err);
         const fallbackTitle = forumSlug
           .replace("-", " ")
           .replace(/\b\w/g, c => c.toUpperCase());
@@ -103,6 +85,7 @@ function SubForumPage() {
           description: "Portal comunitar activ pentru FLOW ROMÂNIA. Adaugă topice, dezbate subiecte și susține-ți opinia.",
           icon: "◆"
         });
+        setThreads([]);
       } finally {
         setLoading(false);
       }
@@ -217,7 +200,6 @@ function SubForumPage() {
                 } : t;
 
                 const initial = thread.user_name ? thread.user_name.replace("@", "").charAt(0).toUpperCase() : "C";
-                const isMock = String(thread.id).startsWith("mock-");
                 
                 return (
                   <Link
@@ -272,12 +254,7 @@ function SubForumPage() {
                             <Calendar className="h-3 w-3" />
                             {new Date(thread.created_at).toLocaleDateString('ro-RO')}
                           </span>
-                          {isMock && (
-                            <>
-                              <span className="h-1 w-1 bg-white/20 rounded-full" />
-                              <span className="text-amber-400/70 text-[9px] font-bold font-mono">SIMULAT</span>
-                            </>
-                          )}
+
                         </div>
                       </div>
                     </div>

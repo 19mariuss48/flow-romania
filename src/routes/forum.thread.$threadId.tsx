@@ -32,36 +32,7 @@ export const Route = createFileRoute("/forum/thread/$threadId")({
   component: ThreadDetailPage,
 });
 
-// Premium Mock Discussions for Fallback to make the site look extremely complete
-const mockDiscussions: Record<string, { thread: any; posts: any[] }> = {
-  "mock-t1": {
-    thread: { id: "mock-t1", title: "Actualizare Server v0.9.5 - Note de Patch (Lansare Moduri Noi)", is_pinned: true, is_locked: false, forum_slug: "anunturi", forum_name: "Anunțuri Oficiale" },
-    posts: [
-      { id: "p1", user_name: "alexandru.r", avatar_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80", rank: "Fondator", content: "Salutare tuturor! Suntem încântați să vă prezentăm notele de patch pentru versiunea v0.9.5 a serverului de joc.\n\nÎn acest update, am implementat:\n1. O nouă gamă de mașini de patrulare pentru Poliție și SMURD.\n2. Optimizări majore ale bazei de date (latența a scăzut la 28ms).\n3. Noul sistem avansat de inventar cu drag-and-drop și sloturi rapide.\n\nVă așteptăm la joc! Lăsați feedback-ul vostru mai jos.", created_at: "2026-05-28T10:00:00.000Z", likes: 42, liked: true },
-      { id: "p2", user_name: "cristian.b", avatar_url: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80", rank: "Moderator", content: "Superb update! Noul inventar arată demențial și sloturile rapide ajută foarte mult în scenariile tensionate de roleplay. Felicitări developerilor!", created_at: "2026-05-28T11:20:00.000Z", likes: 12 },
-      { id: "p3", user_name: "andreea.v", avatar_url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&auto=format&fit=crop&q=80", rank: "Veteran", content: "Latența scăzută se simte perfect în zonele aglomerate din Los Santos. Jobul de mecanic funcționează acum mult mai fluid! Keep up the good work!", created_at: "2026-05-28T12:05:00.000Z", likes: 8 }
-    ]
-  },
-  "mock-t4": {
-    thread: { id: "mock-t4", title: "Regulament Oficial Jucători FiveM FLOW ROMÂNIA (Obligatoriu Citit)", is_pinned: true, is_locked: true, forum_slug: "regulamente", forum_name: "Regulamente" },
-    posts: [
-      { id: "p4", user_name: "mirela.s", avatar_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80", rank: "Fondator", content: "Regulamentul oficial al comunității de roleplay FLOW ROMÂNIA.\n\nFiecare jucător este rugat să citească și să asimileze regulile de mai jos:\n1. **Meta-gaming (MG):** Este interzisă utilizarea informațiilor OOC în scopuri IC.\n2. **Power-gaming (PG):** Este interzis roleplay-ul nerealist în care nu dai șanse egale celeilalte persoane.\n3. **Deathmatch (DM):** Uciderea sau rănirea altui jucător fără un motiv solid IC (RP bun) este strict interzisă.\n\nNerespectarea acestor reguli va atrage sancțiuni administrative.", created_at: "2026-05-20T12:00:00.000Z", likes: 104, liked: false }
-    ]
-  },
-  "mock-t9": {
-    thread: { id: "mock-t9", title: "Recrutări Academia de Poliție deschise (Sesiunea Q2)", is_pinned: true, is_locked: false, forum_slug: "politia-romana", forum_name: "Poliția Română" },
-    posts: [
-      { id: "p5", user_name: "andrei.p", avatar_url: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80", rank: "Inspector Poliție", content: "Inspectoratul de Poliție FLOW anunță deschiderea oficială a sesiunii de recrutare Q2!\n\nCăutăm cetățeni responsabili, disciplinați și dornici de carieră militară.\nCerințe:\n- Vârstă minimă IRL: 16 ani.\n- Minim 20 de ore de joc pe server.\n- Cunoașterea perfectă a codului penal și a regulamentului de poliție.\n\nDepuneți CV-ul (Aplicația) direct prin Panoul de Control al Profilului de pe acest site!", created_at: "2026-05-28T08:00:00.000Z", likes: 35 }
-    ]
-  }
-};
 
-const genericThreadFallback = {
-  thread: { id: "mock-generic", title: "Subiect Forum", is_pinned: false, is_locked: false, forum_slug: "discutii-generale", forum_name: "Discuții Generale" },
-  posts: [
-    { id: "p-g1", user_name: "alexandru.r", avatar_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80", rank: "Fondator", content: "Bine ai venit pe noul forum oficial FLOW ROMÂNIA! Acesta este un subiect demonstrativ deschis pentru a arăta funcționalitatea live a noului sistem de forum.", created_at: "2026-05-30T10:00:00.000Z", likes: 5 }
-  ]
-};
 
 function ThreadDetailPage() {
   const { threadId } = Route.useParams();
@@ -102,47 +73,6 @@ function ThreadDetailPage() {
       }
     }
 
-    // Check if it's a local thread in localStorage
-    if (threadId.startsWith("local-t-")) {
-      try {
-        const localThreads = JSON.parse(localStorage.getItem("flowro_local_threads") || "[]");
-        const th = localThreads.find((t: any) => t.id === threadId);
-        if (th) {
-          const getForumName = (slug: string) => {
-            if (slug === "anunturi") return "Anunțuri Oficiale";
-            if (slug === "regulamente") return "Regulamente";
-            if (slug === "sugestii") return "Sugestii și Feedback";
-            if (slug === "prezintate") return "Prezintă-te";
-            if (slug === "discutii-generale") return "Discuții Generale";
-            if (slug === "media") return "Media";
-            if (slug === "evenimente") return "Evenimente Comunitate";
-            return "Forum";
-          };
-          setThreadDetails({
-            id: th.id,
-            title: th.title,
-            is_pinned: th.is_pinned,
-            is_locked: th.is_locked,
-            views_count: th.views_count || 0,
-            forum_name: getForumName(th.forum_slug),
-            forum_slug: th.forum_slug
-          });
-
-          // Load local posts for this thread
-          const localPosts = JSON.parse(localStorage.getItem("flowro_local_posts") || "[]")
-            .filter((p: any) => p.thread_id === threadId);
-          setPosts(localPosts);
-        } else {
-          setThreadDetails(null);
-        }
-      } catch (err) {
-        console.error("Failed to load local thread:", err);
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
-
     try {
       const details = await getThreadDetails({ data: { threadId } });
       if (!details) throw new Error("Thread not found");
@@ -150,16 +80,10 @@ function ThreadDetailPage() {
       setThreadDetails(details.thread);
       setPosts(details.posts);
     } catch (err) {
-      console.warn("Failed to load live thread data. Loading fallback mock discussion:", err);
-      // Fetch mock discussion fallbacks
-      const fallback = mockDiscussions[threadId] || genericThreadFallback;
-      setThreadDetails(fallback.thread);
-      
-      // Also get any replies that were posted locally to this mock thread!
-      const localReplies = JSON.parse(localStorage.getItem("flowro_local_posts") || "[]")
-        .filter((p: any) => p.thread_id === threadId);
-        
-      setPosts([...fallback.posts, ...localReplies]);
+      console.warn("Failed to load live thread data:", err);
+      // Removed fallback
+      toast.error("Subiectul nu a fost găsit sau a fost șters.");
+      navigate({ to: "/forum" });
     } finally {
       setLoading(false);
     }

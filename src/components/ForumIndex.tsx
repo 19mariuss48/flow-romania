@@ -101,17 +101,8 @@ export function ForumIndex() {
     fetchForumStructure();
   }, []);
 
+  // Fallback if DB is completely empty (though auto-seed should prevent this)
   const displayCategories = dbCategories.length > 0 ? dbCategories : localFallbackCategories;
-
-  // Read local mock threads/posts to reflect live additions by users
-  let localThreads: any[] = [];
-  let localPosts: any[] = [];
-  if (typeof window !== "undefined") {
-    try {
-      localThreads = JSON.parse(localStorage.getItem("flowro_local_threads") || "[]");
-      localPosts = JSON.parse(localStorage.getItem("flowro_local_posts") || "[]");
-    } catch (e) {}
-  }
 
   return (
     <section id="forum" className="relative py-32 px-6">
@@ -136,19 +127,9 @@ export function ForumIndex() {
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {g.cats.map((c) => {
-                  const cLocalThreads = localThreads.filter(t => t.forum_slug === c.slug);
-                  const localThreadsCount = cLocalThreads.length;
-                  const localPostsCount = localPosts.filter(p => cLocalThreads.some(t => t.id === p.thread_id)).length;
-                  const localLikesCount = cLocalThreads.reduce((acc, t) => acc + (t.likes || 0), 0) + 
-                    localPosts.filter(p => cLocalThreads.some(t => t.id === p.thread_id)).reduce((acc, p) => acc + (p.likes || 0), 0);
-
-                  const baseThreads = c.threads_count ?? 0;
-                  const basePosts = c.posts_count ?? 0;
-                  const baseLikes = 0;
-
-                  const finalThreads = baseThreads + localThreadsCount;
-                  const finalPosts = basePosts + Math.max(0, localPostsCount - localThreadsCount); // numarul raspunsurilor sa se incarce la postari
-                  const finalLikes = baseLikes + localLikesCount;
+                  const finalThreads = c.threads_count ?? 0;
+                  const finalPosts = c.posts_count ?? 0;
+                  const finalLikes = 0; // Aprecierile pot fi calculate in viitor
 
                   return (
                     <Link

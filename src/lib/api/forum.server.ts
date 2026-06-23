@@ -6,9 +6,18 @@ import { eq, desc, inArray } from "drizzle-orm";
 
 export const getForumStructure = createServerFn({ method: "GET" })
   .handler(async () => {
-    const cats = await db.query.forumCategories.findMany({
+    let cats = await db.query.forumCategories.findMany({
       orderBy: (cats, { asc }) => [asc(cats.order_index)]
     });
+    
+    // Auto-seed if empty
+    if (cats.length === 0) {
+      await autoSeedForumStructure();
+      cats = await db.query.forumCategories.findMany({
+        orderBy: (cats, { asc }) => [asc(cats.order_index)]
+      });
+    }
+
     const fms = await db.query.forums.findMany({
       orderBy: (fms, { asc }) => [asc(fms.order_index)]
     });
@@ -205,3 +214,26 @@ export const createPost = createServerFn({ method: "POST" })
 
     return { success: true, postId };
   });
+
+async function autoSeedForumStructure() {
+  const oocCatId = crypto.randomUUID();
+  const icCatId = crypto.randomUUID();
+
+  await db.insert(forumCategories).values([
+    { id: oocCatId, title: "FLOW ROMÂNIA [OOC]", slug: "flow-romania-ooc", order_index: 1 },
+    { id: icCatId, title: "FLOW ROMÂNIA [IC]", slug: "flow-romania-ic", order_index: 2 }
+  ]);
+
+  const forumsList = [
+    { id: crypto.randomUUID(), category_id: oocCatId, title: "Anunțuri Oficiale", slug: "anunturi", description: "Noutăți, jurnale de modificări și știri oficiale.", icon: "📢", order_index: 1 },
+    { id: crypto.randomUUID(), category_id: oocCatId, title: "[FiveM] Staff FLOW", slug: "staff", description: "Aplicații, anunțuri și informații despre echipa administrativă FLOW.", icon: "🛡️", order_index: 2 },
+    { id: crypto.randomUUID(), category_id: oocCatId, title: "[FiveM] Beneficii", slug: "beneficii", description: "Informații despre pachete, VIP și alte avantaje pe server.", icon: "💎", order_index: 3 },
+    { id: crypto.randomUUID(), category_id: oocCatId, title: "Sugestii și Feedback", slug: "sugestii", description: "Ajută-ne să modelăm viitorul FLOW propunând idei noi.", icon: "💡", order_index: 4 },
+    { id: crypto.randomUUID(), category_id: oocCatId, title: "Discuții Generale", slug: "discutii-generale", description: "Discuții libere (Free Chat) și subiecte diverse legate de comunitate.", icon: "💬", order_index: 5 },
+    { id: crypto.randomUUID(), category_id: icCatId, title: "[FiveM] Poliția Română", slug: "politia-romana", description: "Secția de poliție Los Santos. Aplicații și aviziere oficiale.", icon: "🚔", order_index: 1 },
+    { id: crypto.randomUUID(), category_id: icCatId, title: "[FiveM] Spitalul General", slug: "spitalul-general", description: "Departamentul medical al orașului. Informații și recrutări.", icon: "🏥", order_index: 2 },
+    { id: crypto.randomUUID(), category_id: icCatId, title: "[FiveM] Syndicate Business", slug: "syndicate-business", description: "Centrul de afaceri, aplicatii si dezvoltare economica.", icon: "💼", order_index: 3 }
+  ];
+
+  await db.insert(forums).values(forumsList);
+}
