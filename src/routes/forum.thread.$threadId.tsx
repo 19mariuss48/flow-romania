@@ -177,6 +177,15 @@ function ThreadDetailPage() {
       return;
     }
 
+    const lastAction = localStorage.getItem("flowro_last_action_timestamp");
+    if (lastAction) {
+      const diff = Date.now() - parseInt(lastAction);
+      if (diff < 3 * 60 * 1000) {
+        toast.error("Trebuie să aștepți 3 minute între postări.");
+        return;
+      }
+    }
+
     setSubmittingReply(true);
 
     // Check if local thread

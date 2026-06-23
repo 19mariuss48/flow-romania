@@ -94,7 +94,14 @@ function NewTopicPage() {
     e.preventDefault();
     if (!user || !forumDetails) return;
     
-    // Cooldown check removed so users can post announcements freely
+    const lastAction = localStorage.getItem("flowro_last_action_timestamp");
+    if (lastAction) {
+      const diff = Date.now() - parseInt(lastAction);
+      if (diff < 3 * 60 * 1000) {
+        toast.error("Trebuie să aștepți 3 minute între postări.");
+        return;
+      }
+    }
     
     if (title.trim().length < 5) {
       return toast.error("Titlul trebuie să conțină cel puțin 5 caractere.");
