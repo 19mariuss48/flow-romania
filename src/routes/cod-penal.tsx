@@ -60,9 +60,11 @@ function CodPenalPage() {
     handleViews();
   }, []);
 
-  const activeArticlesData = Array.isArray(contentData) 
+  console.log("Fetched contentData:", contentData);
+  
+  const activeArticlesData = (Array.isArray(contentData) && contentData.length > 0) 
     ? contentData 
-    : (contentData?.articlesData || []);
+    : (contentData?.articlesData?.length > 0 ? contentData.articlesData : articlesData);
 
   const filteredArticles = activeArticlesData.filter((art: any) => {
     const matchesCategory = activeCategory === "all" || art.category === activeCategory;
