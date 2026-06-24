@@ -108,7 +108,7 @@ function SubForumPage() {
         <div className="flex items-center gap-2 text-xs text-muted-foreground mb-6 font-medium">
           <Link to="/" className="hover:text-foreground transition-colors">ACASĂ</Link>
           <ChevronRight className="h-3 w-3" />
-          <Link to="/" className="hover:text-foreground transition-colors">FORUM</Link>
+          <Link to="/forum" className="hover:text-foreground transition-colors">FORUM</Link>
           <ChevronRight className="h-3 w-3" />
           <span className="text-muted-foreground uppercase">{categoryName}</span>
           <ChevronRight className="h-3 w-3" />
