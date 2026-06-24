@@ -185,7 +185,7 @@ function SubForumPage() {
             </div>
           ) : (
             <div className="space-y-2.5">
-              {threads.map((t) => {
+              {threads.filter(t => !(forumSlug === "spitalul-general" && t.title.toLowerCase().includes("reclamatii"))).map((t) => {
                 const isCurrentUser = user && (
                   t.user_name === currentUserProfile?.display_name ||
                   t.user_name === currentUserProfile?.username ||

@@ -485,7 +485,22 @@ function ThreadDetailPage() {
 
                         {/* Post body */}
                         <div className="text-sm text-foreground/90 leading-relaxed font-light whitespace-pre-line flex-1">
-                          {post.content}
+                          {post.content ? post.content.split(/(Formular)/g).map((part: string, i: number) => {
+                            if (part === "Formular") {
+                              return (
+                                <a 
+                                  key={i} 
+                                  href="https://docs.google.com/forms/d/e/1FAIpQLSe0EmpwkxumLGjV7kCPJ2B9dy156G5C3uNbtS22c1ozQOM7TA/viewform" 
+                                  target="_blank" 
+                                  rel="noopener noreferrer" 
+                                  className="text-blue-500 font-medium"
+                                >
+                                  Formular
+                                </a>
+                              );
+                            }
+                            return part;
+                          }) : null}
                         </div>
 
                         {/* Action buttons */}
