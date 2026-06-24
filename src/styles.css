@@ -89,9 +89,17 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -webkit-user-select: none; /* Disable text selection for Safari */
+    user-select: none; /* Disable text selection globally */
     background-image:
       radial-gradient(900px 500px at 80% -10%, rgba(255,255,255,0.04), transparent 60%),
       radial-gradient(700px 400px at 10% 110%, rgba(255,255,255,0.03), transparent 60%);
+  }
+  
+  /* Re-enable selection on input fields so users can type and select their own text */
+  input, textarea {
+    -webkit-user-select: auto;
+    user-select: auto;
   }
 
   .glass {
