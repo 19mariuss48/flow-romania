@@ -163,7 +163,7 @@ export function SiteHeader() {
           </div>
 
           {/* Navigation Items - flex-wrap on mobile, original layout on PC */}
-          <div className="flex w-full lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2 justify-center mt-3 lg:mt-0 lg:w-auto">
+          <div className="flex w-full lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2 justify-center mt-3 lg:mt-0 lg:w-auto z-20">
             <nav className="grid grid-cols-3 sm:flex sm:flex-wrap lg:flex-nowrap items-start justify-center gap-y-3 gap-x-2 sm:gap-2 w-full sm:w-auto">
               {nav.map((n) => {
                 const Icon = n.icon;
