@@ -206,11 +206,16 @@ function SubForumPage() {
                     key={thread.id}
                     to="/forum/thread/$threadId"
                     params={{ threadId: thread.id }}
-                    className="group relative glass rounded-xl p-4 md:p-5 hover:bg-white/[0.03] border-white/5 hover:border-white/15 transition-all duration-300 flex items-center justify-between gap-4 cursor-pointer"
+                    className="group relative glass rounded-xl p-4 md:p-5 hover:bg-white/[0.04] border-white/5 hover:border-white/15 transition-all duration-300 flex flex-col gap-3 cursor-pointer"
                   >
-                    <div className="flex items-center gap-4 min-w-0 flex-1">
+                    {/* Glowing effect for pinned threads */}
+                    {thread.is_pinned && (
+                      <div className="absolute inset-0 rounded-xl border border-amber-400/20 shadow-[0_0_15px_rgba(251,191,36,0.05)] pointer-events-none" />
+                    )}
+
+                    <div className="flex items-start gap-4">
                       {/* Author Avatar */}
-                      <div className="h-10 w-10 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center text-silver text-sm shrink-0">
+                      <div className="h-10 w-10 rounded-full bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center text-silver text-sm shrink-0 mt-0.5 relative z-10">
                         {thread.avatar_url ? (
                           <img src={thread.avatar_url} alt="Avatar" className="h-full w-full object-cover" />
                         ) : (
@@ -218,62 +223,54 @@ function SubForumPage() {
                         )}
                       </div>
 
-                      {/* Thread Title & Author info */}
-                      <div className="space-y-1.5 min-w-0">
+                      {/* Content Area */}
+                      <div className="space-y-1.5 min-w-0 flex-1 relative z-10">
                         <div className="flex flex-wrap items-center gap-2">
-                          {thread.is_pinned && (
-                            <span className="inline-flex items-center gap-0.5 text-[8px] font-bold tracking-widest bg-amber-400/10 border border-amber-400/20 text-amber-400 px-1.5 py-0.5 rounded uppercase">
-                              <Pin className="h-2 w-2 shrink-0 fill-amber-400" />
-                              Fixat
-                            </span>
-                          )}
-                          {thread.is_locked && (
-                            <span className="inline-flex items-center gap-0.5 text-[8px] font-bold tracking-widest bg-rose-400/10 border border-rose-400/20 text-rose-400 px-1.5 py-0.5 rounded uppercase">
-                              <Lock className="h-2 w-2 shrink-0" />
-                              Închis
-                            </span>
-                          )}
-                          {thread.category && (
-                            <span className="inline-flex items-center gap-0.5 text-[9px] font-bold tracking-widest bg-white/5 border border-white/10 text-silver px-2 py-0.5 rounded uppercase">
-                              {thread.category}
-                            </span>
-                          )}
-                          
-                          <h3 className="text-sm md:text-base font-medium text-foreground tracking-wide group-hover:text-silver-gradient transition duration-300 truncate">
+                          <span className="text-[10px] sm:text-xs text-muted-foreground font-medium">
+                            <strong className="text-silver hover:underline">@{thread.user_name}</strong> a postat un subiect
+                          </span>
+                          <span className="h-1 w-1 bg-white/20 rounded-full" />
+                          <span className="text-[10px] text-muted-foreground font-light flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            {new Date(thread.created_at).toLocaleDateString('ro-RO')}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2 pt-1 pb-1">
+                          <h3 className="text-base md:text-lg font-medium text-foreground tracking-wide group-hover:text-silver-gradient transition duration-300">
                             {thread.title}
                           </h3>
                         </div>
 
-                        {/* Thread Metadata */}
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-muted-foreground font-light">
-                          <span>
-                            deschis de <strong className="text-silver hover:underline">@{thread.user_name}</strong>
-                          </span>
-                          <span className="h-1 w-1 bg-white/20 rounded-full" />
-                          <span className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            {new Date(thread.created_at).toLocaleDateString('ro-RO')}
-                          </span>
-
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Replies & Views counters (Right side) */}
-                    <div className="flex items-center gap-6 shrink-0 text-right pr-2">
-                      <div className="hidden sm:block space-y-0.5">
-                        <div className="text-[10px] text-muted-foreground tracking-widest uppercase">VIZUALIZĂRI</div>
-                        <div className="text-xs font-semibold text-silver font-mono flex items-center gap-1 justify-end">
-                          <Eye className="h-3.5 w-3.5 text-muted-foreground/60" />
-                          {typeof thread.views_count === 'number' ? thread.views_count.toLocaleString() : (thread.views_count || 0)}
-                        </div>
-                      </div>
-
-                      <div className="space-y-0.5">
-                        <div className="text-[10px] text-muted-foreground tracking-widest uppercase">RĂSPUNSURI</div>
-                        <div className="text-xs font-semibold text-silver font-mono flex items-center gap-1 justify-end">
-                          <MessageSquare className="h-3.5 w-3.5 text-muted-foreground/60" />
-                          {thread.replies_count.toLocaleString()}
+                        <div className="flex flex-wrap items-center gap-2">
+                          {thread.is_pinned && (
+                            <span className="inline-flex items-center gap-0.5 text-[8px] font-bold tracking-widest bg-amber-400/10 border border-amber-400/20 text-amber-400 px-2 py-1 rounded uppercase shadow-[0_0_10px_rgba(251,191,36,0.1)]">
+                              <Pin className="h-2.5 w-2.5 shrink-0 fill-amber-400" />
+                              Fixat
+                            </span>
+                          )}
+                          {thread.is_locked && (
+                            <span className="inline-flex items-center gap-0.5 text-[8px] font-bold tracking-widest bg-rose-400/10 border border-rose-400/20 text-rose-400 px-2 py-1 rounded uppercase">
+                              <Lock className="h-2.5 w-2.5 shrink-0" />
+                              Închis
+                            </span>
+                          )}
+                          {thread.category && (
+                            <span className="inline-flex items-center gap-0.5 text-[9px] font-bold tracking-widest bg-white/5 border border-white/10 text-silver px-2.5 py-1 rounded uppercase">
+                              {thread.category}
+                            </span>
+                          )}
+                          
+                          <div className="flex items-center gap-2 ml-auto sm:ml-0">
+                            <span className="inline-flex items-center gap-1.5 text-[10px] text-muted-foreground font-mono bg-white/5 border border-white/5 px-2.5 py-1 rounded-md">
+                              <Eye className="h-3 w-3 text-muted-foreground/60" />
+                              {typeof thread.views_count === 'number' ? thread.views_count.toLocaleString() : (thread.views_count || 0)}
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 text-[10px] text-muted-foreground font-mono bg-white/5 border border-white/5 px-2.5 py-1 rounded-md">
+                              <MessageSquare className="h-3 w-3 text-muted-foreground/60" />
+                              {thread.replies_count.toLocaleString()}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>

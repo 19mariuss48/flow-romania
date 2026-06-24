@@ -427,17 +427,17 @@ function ThreadDetailPage() {
                         : 'border-white/5'
                     }`}
                   >
-                    <div className="grid md:grid-cols-12 gap-px bg-white/5 overflow-hidden rounded-2xl">
+                    <div className="flex flex-col bg-white/5 overflow-hidden rounded-2xl p-5 md:p-6 gap-4">
                       
-                      {/* Left Side: Author Profile Card (3 cols) */}
-                      <div className="md:col-span-3 bg-background/50 p-6 flex md:flex-col items-center gap-4 text-center md:border-r border-white/5 min-w-[200px]">
+                      {/* Header: Author Profile & Metadata */}
+                      <div className="flex items-center gap-4 pb-4 border-b border-white/5">
                         
-                        <div className="relative group">
+                        <div className="relative group shrink-0">
                           {/* Pulsing ring if Staff author */}
                           {isAuthorStaff && (
                             <span className="absolute inset-0 rounded-full border border-white/20 animate-ping pointer-events-none scale-105" />
                           )}
-                          <div className="h-16 w-16 rounded-full border border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-silver text-2xl font-light shrink-0">
+                          <div className="h-12 w-12 md:h-14 md:w-14 rounded-full border border-white/10 overflow-hidden bg-white/5 flex items-center justify-center text-silver text-xl font-light">
                             {post.avatar_url ? (
                               <img src={post.avatar_url} alt="Avatar" className="h-full w-full object-cover" />
                             ) : (
@@ -446,62 +446,60 @@ function ThreadDetailPage() {
                           </div>
                         </div>
 
-                        <div className="md:space-y-1.5 text-left md:text-center flex-1 md:flex-none">
-                          <h4 className="text-sm font-semibold text-foreground tracking-wide flex items-center gap-1 md:justify-center">
-                            @{post.user_name}
-                          </h4>
-                          
-                          {/* Faction Rank / Badge */}
-                          <div className={`text-[10px] tracking-wider font-bold uppercase px-2 py-0.5 rounded-full inline-block ${
-                            isAuthorStaff 
-                              ? 'bg-white text-black font-semibold' 
-                              : 'bg-white/5 text-silver border border-white/5'
-                          }`}>
-                            {mappedRank}
-                          </div>
-
-
-                          {post.fivem_connected && (
-                            <div className="text-[9px] tracking-wider text-emerald-400 font-bold uppercase flex items-center justify-center gap-1.5 mt-2 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.08)]">
-                              <Gamepad2 className="h-3 w-3" />
-                              🎮 FIVEM SYNC
+                        <div className="flex flex-col gap-1 min-w-0 flex-1">
+                          <div className="flex items-center gap-2.5 flex-wrap">
+                            <h4 className="text-sm md:text-base font-semibold text-foreground tracking-wide">
+                              @{post.user_name}
+                            </h4>
+                            
+                            {/* Faction Rank / Badge */}
+                            <div className={`text-[9px] md:text-[10px] tracking-wider font-bold uppercase px-2.5 py-0.5 rounded-full inline-block ${
+                              isAuthorStaff 
+                                ? 'bg-white text-black font-semibold shadow-[0_0_10px_rgba(255,255,255,0.3)]' 
+                                : 'bg-white/5 text-silver border border-white/5'
+                            }`}>
+                              {mappedRank}
                             </div>
-                          )}
+
+                            {post.fivem_connected && (
+                              <div className="text-[8px] md:text-[9px] tracking-wider text-emerald-400 font-bold uppercase flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                                <Gamepad2 className="h-2.5 w-2.5" />
+                                🎮 SYNC
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-mono mt-0.5">
+                            <span className={isOp ? "text-silver" : ""}>
+                              {isOp ? "SUBIECT DESCHIS" : `RĂSPUNS #${index}`}
+                            </span>
+                            <span className="opacity-50">•</span>
+                            <span>
+                              {new Date(post.created_at).toLocaleString('ro-RO')}
+                            </span>
+                          </div>
                         </div>
                       </div>
 
-                      {/* Right Side: Message Content (9 cols) */}
-                      <div className="md:col-span-9 bg-background/20 p-6 flex flex-col justify-between gap-6">
-                        
-                        {/* Header metadata */}
-                        <div className="flex items-center justify-between text-[10px] text-muted-foreground font-mono pb-3 border-b border-white/5">
-                          <span>
-                            {isOp ? "SUBIECT DESCHIS" : `RĂSPUNS #${index}`}
-                          </span>
-                          <span>
-                            {new Date(post.created_at).toLocaleString('ro-RO')}
-                          </span>
-                        </div>
-
-                        {/* Post body */}
-                        <div className="text-sm text-foreground/90 leading-relaxed font-light whitespace-pre-line flex-1">
-                          {post.content ? post.content.split(/(Formular)/g).map((part: string, i: number) => {
-                            if (part === "Formular") {
-                              return (
-                                <a 
-                                  key={i} 
-                                  href="https://docs.google.com/forms/d/e/1FAIpQLSe0EmpwkxumLGjV7kCPJ2B9dy156G5C3uNbtS22c1ozQOM7TA/viewform" 
-                                  target="_blank" 
-                                  rel="noopener noreferrer" 
-                                  className="text-blue-500 font-medium"
-                                >
-                                  Formular
-                                </a>
-                              );
-                            }
-                            return part;
-                          }) : null}
-                        </div>
+                      {/* Content Body */}
+                      <div className="text-sm text-foreground/90 leading-relaxed font-light whitespace-pre-line py-2">
+                        {post.content ? post.content.split(/(Formular)/g).map((part: string, i: number) => {
+                          if (part === "Formular") {
+                            return (
+                              <a 
+                                key={i} 
+                                href="https://docs.google.com/forms/d/e/1FAIpQLSe0EmpwkxumLGjV7kCPJ2B9dy156G5C3uNbtS22c1ozQOM7TA/viewform" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="text-blue-500 font-medium hover:underline"
+                              >
+                                Formular
+                              </a>
+                            );
+                          }
+                          return part;
+                        }) : null}
+                      </div>
 
                         {/* Action buttons */}
                         <div className="flex items-center justify-between pt-3 border-t border-white/5 mt-auto">
