@@ -533,9 +533,6 @@ function ThreadDetailPage() {
                             </span>
                           )}
                         </div>
-
-                      </div>
-
                     </div>
                   </div>
                 );
