@@ -170,20 +170,22 @@ export function SiteHeader() {
                 const isHash = n.href.startsWith("/#");
                 const isExternal = n.href.startsWith("http");
               
+              const wrapperClass = "flex flex-col items-center gap-1.5 group cursor-pointer w-full sm:min-w-[5rem] lg:min-w-[6rem] shrink-0";
+              
               const itemContent = (
-                <div className="flex flex-col items-center gap-1.5 group cursor-pointer w-full sm:w-20 lg:w-24 shrink-0">
+                <>
                   <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.03] border border-white/5 group-hover:bg-white/[0.08] group-hover:border-white/15 transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
                     <Icon className="h-4 w-4 text-silver group-hover:text-white transition-colors duration-300" />
                   </div>
                   <span className="text-[8px] sm:text-[9px] lg:text-[10px] font-bold tracking-[0.2em] pl-[0.2em] text-center text-silver group-hover:text-white transition-colors duration-300 whitespace-nowrap">
                     {n.label}
                   </span>
-                </div>
+                </>
               );
 
               if (isExternal) {
                 return (
-                  <a key={n.label} href={n.href} target="_blank" rel="noopener noreferrer">
+                  <a key={n.label} href={n.href} target="_blank" rel="noopener noreferrer" className={wrapperClass}>
                     {itemContent}
                   </a>
                 );
@@ -191,14 +193,14 @@ export function SiteHeader() {
 
               if (isHash) {
                 return (
-                  <a key={n.label} href={n.href}>
+                  <a key={n.label} href={n.href} className={wrapperClass}>
                     {itemContent}
                   </a>
                 );
               }
 
               return (
-                <Link key={n.label} to={n.href}>
+                <Link key={n.label} to={n.href} className={wrapperClass}>
                   {itemContent}
                 </Link>
               );
