@@ -170,7 +170,7 @@ export function SiteHeader() {
                 const isHash = n.href.startsWith("/#");
                 const isExternal = n.href.startsWith("http");
               
-              const wrapperClass = "flex flex-col items-center gap-1.5 group cursor-pointer w-full sm:min-w-[5rem] lg:min-w-[6rem] shrink-0";
+              const wrapperClass = "flex flex-col items-center gap-1.5 group cursor-pointer w-full sm:w-auto sm:min-w-[5rem] lg:min-w-[6rem] shrink-0";
               
               const itemContent = (
                 <>
