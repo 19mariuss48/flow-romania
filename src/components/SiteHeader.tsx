@@ -96,7 +96,7 @@ export function SiteHeader() {
   }, []);
 
   const authContent = loading ? null : user ? (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <button className="h-9 w-9 rounded-full bg-white text-black overflow-hidden flex items-center justify-center hover:bg-white/90 transition shadow-[0_0_30px_-8px_rgba(255,255,255,0.4)] cursor-pointer">
           {avatarUrl ? (
