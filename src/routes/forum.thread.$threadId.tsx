@@ -482,7 +482,7 @@ function ThreadDetailPage() {
                       </div>
 
                       {/* Content Body */}
-                      <div className="text-sm text-foreground/90 leading-relaxed font-light whitespace-pre-line py-2">
+                      <div className="text-sm text-foreground/90 leading-relaxed font-light whitespace-pre-line py-2 select-text">
                         {post.content ? post.content.split(/(Formular)/g).map((part: string, i: number) => {
                           if (part === "Formular") {
                             return (
