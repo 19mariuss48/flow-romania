@@ -15,11 +15,13 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" }
   },
-  nitro: { 
-    preset: "vercel",
-    externals: {
-      external: ["better-auth", "kysely", "zod", "@better-auth/kysely-adapter", "better-auth/adapters/drizzle"]
-    },
-    output: { dir: ".vercel/output" }
-  }
+  ...(process.env.VERCEL ? {
+    nitro: { 
+      preset: "vercel",
+      externals: {
+        external: ["better-auth", "kysely", "zod", "@better-auth/kysely-adapter", "better-auth/adapters/drizzle"]
+      },
+      output: { dir: ".vercel/output" }
+    }
+  } : {})
 });
