@@ -185,30 +185,39 @@ export function Widgets() {
 
               <div className="grid grid-cols-3 gap-4 pt-2">
                 <div>
-                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.uptime || "99.8%"}</div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.uptime || "0h"}</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">UPTIME</div>
                 </div>
                 <div>
-                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.ping || "--ms"}</div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">LATENȚĂ</div>
-                </div>
-                <div>
-                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.discord || "0"}</div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">DISCORD</div>
-                </div>
-                <div>
-                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.version || "v1.0"}</div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.version || "v2.0"}</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">VERSIUNE</div>
                 </div>
                 <div>
-                  {serverStatus?.restartPhase === 'countdown' ? (
-                    <>
-                      <div className="text-xl font-light text-rose-400">
-                        {Math.floor((serverStatus.restartTime || 0) / 60).toString().padStart(2, '0')}:{((serverStatus.restartTime || 0) % 60).toString().padStart(2, '0')}
-                      </div>
-                      <div className="text-[10px] tracking-widest text-rose-400/80 mt-1 animate-pulse">RESTART ÎN</div>
-                    </>
-                  ) : serverStatus?.restartPhase === 'restarting' ? (
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.nextRestart || "--:--"}</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">URMĂTORUL RESTART</div>
+                </div>
+                <div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.lastRestart || "--:--"}</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">ULTIMUL RESTART</div>
+                </div>
+                <div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.nextDv || "--:--"}</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">URMĂTORUL DV</div>
+                </div>
+                <div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.lastDv || "--:--"}</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">ULTIMUL DV</div>
+                </div>
+                <div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.queue || "0"}</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">QUEUE</div>
+                </div>
+                <div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.whitelist ? 'ON' : 'OFF'}</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">WHITELIST</div>
+                </div>
+                <div>
+                  {serverStatus?.restartPhase === 'restarting' ? (
                     <>
                       <div className="text-lg font-light text-amber-400 mt-1 animate-pulse">RESTARTING</div>
                       <div className="text-[10px] tracking-widest text-muted-foreground mt-1">STARE</div>
@@ -224,33 +233,6 @@ export function Widgets() {
                       <div className="text-[10px] tracking-widest text-muted-foreground mt-1">STARE</div>
                     </>
                   )}
-                </div>
-                <div>
-                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.queue || "0"}</div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">QUEUE</div>
-                </div>
-                <div>
-                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.whitelist ? 'ON' : 'OFF'}</div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">WHITELIST</div>
-                </div>
-                <div>
-                  {serverStatus?.dvPhase === 'countdown' ? (
-                    <>
-                      <div className="text-xl font-light text-amber-400">
-                        {Math.floor((serverStatus.dvTime || 0) / 60).toString().padStart(2, '0')}:{((serverStatus.dvTime || 0) % 60).toString().padStart(2, '0')}
-                      </div>
-                      <div className="text-[10px] tracking-widest text-amber-400/80 mt-1">DV ÎN</div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="text-xl font-light text-silver-gradient">{serverStatus?.lastDvTime || "--:--"}</div>
-                      <div className="text-[10px] tracking-widest text-muted-foreground mt-1">ULTIMUL DV</div>
-                    </>
-                  )}
-                </div>
-                <div>
-                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.lastRestart || "--:--"}</div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">ULTIMUL RESTART</div>
                 </div>
               </div>
 
