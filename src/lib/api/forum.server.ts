@@ -362,6 +362,54 @@ export const toggleLike = createServerFn({ method: "POST" })
     }
   });
 
+export const getLatestThreads = createServerFn({ method: "GET" })
+  .handler(async () => {
+    const cacheKey = "latest_threads_global";
+    const cached = getCache(cacheKey);
+    if (cached) return cached;
+
+    const threads = await db.query.forumThreads.findMany({
+      orderBy: (threads, { desc }) => [desc(threads.created_at)],
+      limit: 6
+    });
+
+    if (threads.length === 0) return [];
+
+    const userIds = [...new Set(threads.map(t => t.user_id))];
+    const forumIds = [...new Set(threads.map(t => t.forum_id))];
+
+    const [users, fms] = await Promise.all([
+      db.query.profiles.findMany({ where: inArray(profiles.id, userIds) }),
+      db.query.forums.findMany({ where: inArray(forums.id, forumIds) })
+    ]);
+
+    const result = threads.map(t => {
+      const user = users.find(u => u.id === t.user_id);
+      const forum = fms.find(f => f.id === t.forum_id);
+      
+      const diffMs = Date.now() - new Date(t.created_at).getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+      let timeStr = `${diffMins}m`;
+      if (diffMins >= 1440) {
+        timeStr = `${Math.floor(diffMins / 1440)}z`;
+      } else if (diffMins >= 60) {
+        timeStr = `${Math.floor(diffMins / 60)}h`;
+      }
+      if (diffMins === 0) timeStr = "Acum";
+
+      return {
+        id: t.id,
+        t: t.title,
+        a: user?.username || "Cetățean",
+        c: forum?.title?.replace("[FiveM] ", "") || t.category || "General",
+        time: timeStr
+      };
+    });
+
+    setCache(cacheKey, result, 60);
+    return result;
+  });
+
 async function autoSeedForumStructure() {
   const oocCatId = crypto.randomUUID();
   const icCatId = crypto.randomUUID();

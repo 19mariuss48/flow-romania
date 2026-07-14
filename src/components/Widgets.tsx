@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import { getTopDonators } from "../lib/api/tebex.server";
 import { getServerStatus } from "../lib/api/status.server";
+import { getLatestThreads } from "../lib/api/forum.server";
 import { useState, useEffect } from "react";
 
 function getCountdown(targetDate: string) {
@@ -40,14 +42,7 @@ function Widget({ title, children, live }: { title: string; children: React.Reac
   );
 }
 
-const topics = [
-  { t: "Aplicație Poliție — Agent Andrei Popescu", a: "andrei.p", c: "Poliție", time: "12m" },
-  { t: "Anunț Reorganizare Familie de Mafie", a: "don.vito", c: "Mafia Italiană", time: "47m" },
-  { t: "Showroom Auto: Gama GT 2026", a: "garage.flow", c: "Media", time: "1h" },
-  { t: "Recrutare S.M.U.R.D. — Sesiunea Q2 Deschisă", a: "dr.ionescu", c: "S.M.U.R.D.", time: "2h" },
-  { t: "Actualizare Server v0.9.4 Note Patch", a: "staff.flow", c: "Update-uri", time: "3h" },
-  { t: "Eveniment Cursă Ilegală: Premiu 100k", a: "razvan.t", c: "Evenimente", time: "5h" },
-];
+
 
 const members = [
   { n: "alexandru.r", rank: "VIP DIAMOND", amount: "50", currency: "EUR" },
@@ -62,6 +57,13 @@ export function Widgets() {
   const { data: topDonators = [], isLoading } = useQuery({
     queryKey: ["topDonators"],
     queryFn: () => getTopDonators(),
+    refetchInterval: 30000,
+  });
+
+  const { data: latestThreads = [], isLoading: isLoadingThreads } = useQuery({
+    queryKey: ["latestThreadsGlobal"],
+    queryFn: () => getLatestThreads(),
+    refetchInterval: 15000,
   });
 
   const { data: serverStatus } = useQuery({
@@ -72,99 +74,16 @@ export function Widgets() {
 
   const [timeLeft, setTimeLeft] = useState({ d: "00", h: "00", m: "00", s: "00" });
 
-  // Test states for restart simulation
-  const [restartPhase, setRestartPhase] = useState<'countdown' | 'restarting' | 'online' | 'offline'>('countdown');
-  const [restartTime, setRestartTime] = useState(120); // 2 minutes in seconds
-  const [lastRestartTime, setLastRestartTime] = useState<string>('--:--');
-
-  // Test states for DV
-  const [dvPhase, setDvPhase] = useState<'countdown' | 'idle'>('countdown');
-  const [dvTime, setDvTime] = useState(300); // 5 min
-  const [lastDvTime, setLastDvTime] = useState<string>('--:--');
-
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (dvPhase === 'countdown') {
-      timer = setInterval(() => {
-        setDvTime((prev) => {
-          if (prev <= 1) {
-            setDvPhase('idle');
-            const now = new Date();
-            setLastDvTime(`${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`);
-            setDvTime(300);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    } else if (dvPhase === 'idle') {
-      timer = setInterval(() => {
-        setDvTime((prev) => {
-          if (prev <= 1) {
-            setDvPhase('countdown');
-            setDvTime(300);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [dvPhase]);
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-
-    if (restartPhase === 'countdown') {
-      timer = setInterval(() => {
-        setRestartTime((prev) => {
-          if (prev <= 1) {
-            setRestartPhase('restarting');
-            setRestartTime(60); // 1 minute for restarting phase
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    } else if (restartPhase === 'restarting') {
-      timer = setInterval(() => {
-        setRestartTime((prev) => {
-          if (prev <= 1) {
-            setRestartPhase('online');
-            setRestartTime(60); // 1 minute for online phase
-            const now = new Date();
-            setLastRestartTime(`${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    } else if (restartPhase === 'online') {
-      timer = setInterval(() => {
-        setRestartTime((prev) => {
-          if (prev <= 1) {
-            setRestartPhase('offline');
-            setRestartTime(60); // 1 minute for offline phase
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    } else if (restartPhase === 'offline') {
-      timer = setInterval(() => {
-        setRestartTime((prev) => {
-          if (prev <= 1) {
-            setRestartPhase('countdown');
-            setRestartTime(120); // 2 minutes for countdown phase
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-
-    return () => clearInterval(timer);
-  }, [restartPhase]);
+    if (!serverStatus?.launchDate) return;
+    
+    setTimeLeft(getCountdown(serverStatus.launchDate));
+    const interval = setInterval(() => {
+      setTimeLeft(getCountdown(serverStatus.launchDate));
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [serverStatus?.launchDate]);
 
   useEffect(() => {
     if (!serverStatus?.launchDate) return;
@@ -183,21 +102,31 @@ export function Widgets() {
     <section className="relative py-24 px-6">
       <div className="mx-auto max-w-7xl grid lg:grid-cols-3 gap-6">
         <Widget title="ULTIMELE SUBIECTE">
-          <ul className="space-y-4">
-            {topics.map((t) => (
-              <li key={t.t} className="group">
-                <a href="#" className="block">
-                  <div className="text-sm text-foreground/90 group-hover:text-foreground transition leading-snug">{t.t}</div>
-                  <div className="mt-1 flex items-center gap-3 text-[10px] tracking-wider text-muted-foreground">
-                    <span>@{t.a}</span>
-                    <span className="h-px w-3 bg-white/20" />
-                    <span className="text-silver">{t.c}</span>
-                    <span className="ml-auto">{t.time}</span>
-                  </div>
-                </a>
-              </li>
-            ))}
-          </ul>
+          {isLoadingThreads ? (
+            <div className="flex justify-center py-4">
+              <span className="text-xs text-muted-foreground">Se încarcă...</span>
+            </div>
+          ) : latestThreads.length === 0 ? (
+            <div className="flex justify-center py-4 text-center">
+              <span className="text-xs text-muted-foreground">Niciun subiect momentan.</span>
+            </div>
+          ) : (
+            <ul className="space-y-4">
+              {latestThreads.map((t) => (
+                <li key={t.id} className="group">
+                  <Link to="/forum/thread/$threadId" params={{ threadId: t.id }} className="block">
+                    <div className="text-sm text-foreground/90 group-hover:text-foreground transition leading-snug">{t.t}</div>
+                    <div className="mt-1 flex items-center gap-3 text-[10px] tracking-wider text-muted-foreground">
+                      <span>@{t.a}</span>
+                      <span className="h-px w-3 bg-white/20" />
+                      <span className="text-silver">{t.c}</span>
+                      <span className="ml-auto">{t.time}</span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </Widget>
 
         <Widget title="ULTIMELE DONAȚII">
@@ -238,7 +167,7 @@ export function Widgets() {
           )}
         </Widget>
 
-        <Widget title="STATUS SERVER" live={restartPhase !== 'offline'}>
+        <Widget title="STATUS SERVER" live={serverStatus?.restartPhase !== 'offline'}>
           <div className="space-y-5">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Locuri Jucători</span>
@@ -256,11 +185,11 @@ export function Widgets() {
 
               <div className="grid grid-cols-3 gap-4 pt-2">
                 <div>
-                  <div className="text-xl font-light text-silver-gradient">99.8%</div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.uptime || "99.8%"}</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">UPTIME</div>
                 </div>
                 <div>
-                  <div className="text-xl font-light text-silver-gradient">28ms</div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.ping || "--ms"}</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">LATENȚĂ</div>
                 </div>
                 <div>
@@ -268,23 +197,23 @@ export function Widgets() {
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">DISCORD</div>
                 </div>
                 <div>
-                  <div className="text-xl font-light text-silver-gradient">v2.00</div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.version || "v1.0"}</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">VERSIUNE</div>
                 </div>
                 <div>
-                  {restartPhase === 'countdown' ? (
+                  {serverStatus?.restartPhase === 'countdown' ? (
                     <>
                       <div className="text-xl font-light text-rose-400">
-                        {Math.floor(restartTime / 60).toString().padStart(2, '0')}:{(restartTime % 60).toString().padStart(2, '0')}
+                        {Math.floor((serverStatus.restartTime || 0) / 60).toString().padStart(2, '0')}:{((serverStatus.restartTime || 0) % 60).toString().padStart(2, '0')}
                       </div>
                       <div className="text-[10px] tracking-widest text-rose-400/80 mt-1 animate-pulse">RESTART ÎN</div>
                     </>
-                  ) : restartPhase === 'restarting' ? (
+                  ) : serverStatus?.restartPhase === 'restarting' ? (
                     <>
                       <div className="text-lg font-light text-amber-400 mt-1 animate-pulse">RESTARTING</div>
                       <div className="text-[10px] tracking-widest text-muted-foreground mt-1">STARE</div>
                     </>
-                  ) : restartPhase === 'offline' ? (
+                  ) : serverStatus?.restartPhase === 'offline' ? (
                     <>
                       <div className="text-xl font-light text-red-500">OFFLINE</div>
                       <div className="text-[10px] tracking-widest text-muted-foreground mt-1">STARE</div>
@@ -297,7 +226,7 @@ export function Widgets() {
                   )}
                 </div>
                 <div>
-                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.queue || "12"}</div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.queue || "0"}</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">QUEUE</div>
                 </div>
                 <div>
@@ -305,22 +234,22 @@ export function Widgets() {
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">WHITELIST</div>
                 </div>
                 <div>
-                  {dvPhase === 'countdown' ? (
+                  {serverStatus?.dvPhase === 'countdown' ? (
                     <>
                       <div className="text-xl font-light text-amber-400">
-                        {Math.floor(dvTime / 60).toString().padStart(2, '0')}:{(dvTime % 60).toString().padStart(2, '0')}
+                        {Math.floor((serverStatus.dvTime || 0) / 60).toString().padStart(2, '0')}:{((serverStatus.dvTime || 0) % 60).toString().padStart(2, '0')}
                       </div>
                       <div className="text-[10px] tracking-widest text-amber-400/80 mt-1">DV ÎN</div>
                     </>
                   ) : (
                     <>
-                      <div className="text-xl font-light text-silver-gradient">{lastDvTime}</div>
+                      <div className="text-xl font-light text-silver-gradient">{serverStatus?.lastDvTime || "--:--"}</div>
                       <div className="text-[10px] tracking-widest text-muted-foreground mt-1">ULTIMUL DV</div>
                     </>
                   )}
                 </div>
                 <div>
-                  <div className="text-xl font-light text-silver-gradient">{lastRestartTime}</div>
+                  <div className="text-xl font-light text-silver-gradient">{serverStatus?.lastRestart || "--:--"}</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">ULTIMUL RESTART</div>
                 </div>
               </div>
