@@ -9,8 +9,8 @@ export const getServerStatus = createServerFn({ method: "GET" }).handler(async (
   const syncedData = getCache<any>("fivem_server_sync_data") || {};
 
   const status = {
-    players: 0,
-    maxPlayers: 300,
+    players: syncedData.players ?? 0,
+    maxPlayers: syncedData.maxPlayers ?? 300,
     launchDate: launchDateStr || "2026-06-30T18:00:00Z",
     
     // Default fallback values if no API sync yet
@@ -18,14 +18,14 @@ export const getServerStatus = createServerFn({ method: "GET" }).handler(async (
     uptime: syncedData.uptime ?? "0h",
     version: "v2.0",
     
-    restartPhase: syncedData.restartPhase ?? "online", // offline, online
+    restartPhase: syncedData.status === "ONLINE" ? "online" : (syncedData.restartPhase ?? "online"),
     nextRestart: syncedData.nextRestart ?? "--:--",
     lastRestart: syncedData.lastRestart ?? "--:--",
     
     nextDv: syncedData.nextDv ?? "--:--",
     lastDv: syncedData.lastDv ?? "--:--",
     
-    whitelist: false,
+    whitelist: syncedData.whitelisted === "ON" || syncedData.whitelist || false,
   };
 
   try {
@@ -43,9 +43,12 @@ export const getServerStatus = createServerFn({ method: "GET" }).handler(async (
         if (data && typeof data.clients === 'number') {
           status.players = data.clients;
           status.maxPlayers = data.sv_maxclients || 300;
+          status.restartPhase = "online";
         }
       } else {
-        status.restartPhase = "offline";
+        if (syncedData.status !== "ONLINE") {
+          status.restartPhase = "offline";
+        }
       }
     }
   } catch (error) {
