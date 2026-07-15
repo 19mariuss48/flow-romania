@@ -2,7 +2,7 @@ import { json } from "@tanstack/react-start";
 import { createAPIFileRoute } from "@tanstack/react-start/api";
 import { setCache } from "@/lib/api/cache.server";
 
-export const APIRoute = createAPIFileRoute("/api/server-sync")({
+export const Route = createAPIFileRoute("/api/server-sync")({
   POST: async ({ request }) => {
     try {
       const data = await request.json();
