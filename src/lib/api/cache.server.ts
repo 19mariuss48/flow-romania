@@ -9,7 +9,11 @@ type CacheEntry<T> = {
   expires: number;
 };
 
-const cache = new Map<string, CacheEntry<any>>();
+const _global = globalThis as any;
+if (!_global.__server_cache) {
+  _global.__server_cache = new Map<string, CacheEntry<any>>();
+}
+const cache = _global.__server_cache;
 
 export function getCache<T>(key: string): T | null {
   const entry = cache.get(key);

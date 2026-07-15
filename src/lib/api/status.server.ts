@@ -7,6 +7,7 @@ export const getServerStatus = createServerFn({ method: "GET" }).handler(async (
 
   // Check if we have synced data from FiveM API
   const syncedData = getCache<any>("fivem_server_sync_data") || {};
+  console.log("[FLOW-DEBUG] Date cache primite din FiveM:", syncedData);
 
   const status = {
     players: syncedData.players ?? 0,
