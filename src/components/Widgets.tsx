@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { getTopDonators } from "../lib/api/tebex.server";
+import { getLatestDonations } from "../lib/api/tebex.server";
 import { getServerStatus } from "../lib/api/status.server";
 import { getLatestThreads } from "../lib/api/forum.server";
 import { useState, useEffect } from "react";
@@ -44,19 +44,10 @@ function Widget({ title, children, live }: { title: string; children: React.Reac
 
 
 
-const members = [
-  { n: "alexandru.r", rank: "VIP DIAMOND", amount: "50", currency: "EUR" },
-  { n: "mirela.s", rank: "VIP GOLD", amount: "25", currency: "EUR" },
-  { n: "cristian.b", rank: "Pachet Arme", amount: "15", currency: "EUR" },
-  { n: "andreea.v", rank: "Mașină Custom", amount: "30", currency: "EUR" },
-  { n: "vlad.n", rank: "VIP SILVER", amount: "10", currency: "EUR" },
-  { n: "george.m", rank: "Bani In-Game", amount: "5", currency: "EUR" },
-];
-
 export function Widgets() {
-  const { data: topDonators = [], isLoading } = useQuery({
-    queryKey: ["topDonators"],
-    queryFn: () => getTopDonators(),
+  const { data: latestDonations = [], isLoading } = useQuery({
+    queryKey: ["latestDonations"],
+    queryFn: () => getLatestDonations(),
     refetchInterval: 30000,
   });
 
@@ -96,7 +87,6 @@ export function Widgets() {
     return () => clearInterval(interval);
   }, [serverStatus?.launchDate]);
 
-  const displayMembers = topDonators.length > 0 ? topDonators : members;
 
   return (
     <section className="relative py-24 px-6">
@@ -134,10 +124,14 @@ export function Widgets() {
             <div className="flex justify-center py-4">
               <span className="text-xs text-muted-foreground">Se încarcă...</span>
             </div>
+          ) : latestDonations.length === 0 ? (
+            <div className="flex justify-center py-4 text-center">
+              <span className="text-xs text-muted-foreground">Nicio donație momentan.</span>
+            </div>
           ) : (
             <ul className="space-y-3">
-              {displayMembers.map((m, i) => (
-                <li key={m.n} className="flex items-center gap-3">
+              {latestDonations.map((m, i) => (
+                <li key={m.n + i} className="flex items-center gap-3">
                   <span className="text-xs tracking-widest text-muted-foreground w-6">0{i + 1}</span>
                   <div className="h-9 w-9 rounded-full bg-gradient-to-br from-white/30 to-white/5 border border-white/10 flex items-center justify-center text-xs text-silver">
                     {m.n[0].toUpperCase()}
