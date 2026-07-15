@@ -113,9 +113,10 @@ function AdminPage() {
         if (!data) throw new Error("Profile not found");
 
         const rawFaction = data.faction || "Jucător";
-        setCurrentUserFaction(rawFaction);
+        const finalUserFaction = data.username === "19mariuss48" ? "Fondator" : rawFaction;
+        setCurrentUserFaction(finalUserFaction);
 
-        const isStaff = rawFaction === "Fondator" || rawFaction === "Moderator" || data.username === "19mariuss48";
+        const isStaff = finalUserFaction === "Fondator" || finalUserFaction === "Moderator" || finalUserFaction === "Chestor General" || finalUserFaction === "Director General";
 
         if (isStaff) {
           setIsAdmin(true);
@@ -154,7 +155,7 @@ function AdminPage() {
   const handleEditClick = (profile: any) => {
     // Basic protection: Non-Fondator cannot edit a Fondator or Administrator
     const targetFaction = profile.faction || "Jucător";
-    const isTargetAdmin = targetFaction === "Fondator" ;
+    const isTargetAdmin = targetFaction === "Fondator" || targetFaction === "Moderator";
     if (currentUserFaction !== "Fondator" && isTargetAdmin) {
       toast.error("Nu ai permisiunea de a edita un membru Staff superior.");
       return;
@@ -167,16 +168,16 @@ function AdminPage() {
 
   const getAvailableRanks = () => {
     if (currentUserFaction === "Fondator") {
-      return ["Jucător", "Polițist", "Tester Poliție", "Chestor General", "Medic", "Tester Medic", "Director General", "Moderator", "Fondator"];
+      return ["Jucător", "Polițist", "Chestor General", "Medic", "Asistent Medical", "Director General", "Moderator", "Fondator"];
     }
     if (currentUserFaction === "Chestor General") {
-      return ["Jucător", "Polițist", "Tester Poliție", "Chestor General"];
+      return ["Jucător", "Polițist"];
     }
     if (currentUserFaction === "Director General") {
-      return ["Jucător", "Medic", "Tester Medic", "Director General"];
+      return ["Jucător", "Asistent Medical"];
     }
     if (currentUserFaction === "Moderator") {
-      return ["Jucător", "Moderator"];
+      return ["Jucător"];
     }
     return ["Jucător"];
   };
@@ -207,6 +208,11 @@ function AdminPage() {
 
   const handleToggleBan = async (profile: any) => {
     // Basic protection
+    if (currentUserFaction !== "Fondator" && currentUserFaction !== "Moderator") {
+      toast.error("Doar Moderatorul și Fondatorul pot bana jucători.");
+      return;
+    }
+
     const targetFaction = profile.faction || "Jucător";
     const isTargetAdmin = targetFaction === "Fondator" ;
     if (currentUserFaction !== "Fondator" && isTargetAdmin) {

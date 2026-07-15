@@ -53,7 +53,7 @@ export function SiteHeader() {
       if (profile) {
         setAvatarUrl(profile.avatar_url);
         setDisplayName(profile.display_name || profile.username);
-        setIsAdmin(profile.faction === "Fondator" || profile.faction === "Moderator" || profile.username === "19mariuss48");
+        setIsAdmin(profile.faction === "Fondator" || profile.faction === "Moderator" || profile.faction === "Chestor General" || profile.faction === "Director General" || profile.username === "19mariuss48");
       }
     }).catch(console.error);
 
