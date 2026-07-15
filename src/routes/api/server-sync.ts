@@ -6,6 +6,7 @@ export const APIRoute = createAPIFileRoute("/api/server-sync")({
   POST: async ({ request }) => {
     try {
       const data = await request.json();
+      console.log("[FLOW-DEBUG] Date primite pe API /api/server-sync:", data);
       
       // Expected payload: { uptime: string, queue: number, restartPhase?: string, restartTime?: number, dvPhase?: string, dvTime?: number, secret: string }
       
