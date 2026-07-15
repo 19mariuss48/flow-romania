@@ -113,16 +113,9 @@ function AdminPage() {
         if (!data) throw new Error("Profile not found");
 
         const rawFaction = data.faction || "Jucător";
-        const adminRanks = ["Fondator", "Co-Fondator", "Owner", "Manager", "Admin", "Staff"];
-        const isSuperAdmin = data.username === "19mariuss48" || adminRanks.includes(rawFaction);
-        const finalUserFaction = isSuperAdmin ? rawFaction : rawFaction;
-        setCurrentUserFaction(finalUserFaction);
+        setCurrentUserFaction(rawFaction);
 
-        const isStaff = isSuperAdmin ||
-          finalUserFaction === "Chestor General" ||
-          finalUserFaction === "Director General" ||
-          finalUserFaction === "Moderator" ||
-          rawFaction?.includes("Poliți");
+        const isStaff = rawFaction === "Fondator" || rawFaction === "Moderator" || data.username === "19mariuss48";
 
         if (isStaff) {
           setIsAdmin(true);
